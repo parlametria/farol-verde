@@ -1,0 +1,59 @@
+{% load static wagtailcore_tags wagtailuserbar wagtailfontawesome %}
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>{{ page.seo_title }}</title>
+    <meta name="description" content="{{page.search_description}}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    {# Global stylesheets #}
+    {% block extra_css %}
+    {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-651Y1S10FX"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-651Y1S10FX');
+    </script>
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    {% wagtailuserbar %}
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Patua+One&display=swap" rel="stylesheet">
+    
+    {% fontawesome_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/variables.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/elements.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
+
+    {% include 'header.html' %}
+
+    {% block content %}{% endblock %}
+
+    <div class="footer--normal">
+        {% include 'footer.html' %}
+    </div>
+    <div class="footer--mobile" hidden>
+        {% include 'footer-mobile.html' %}
+    </div>
+    {# Global javascript #}
+
+    {% block extra_js %}
+    {% endblock %}
+</body>
+
+</html>

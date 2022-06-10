@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static i18n wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/home/home.css' %}">
+
+<section id="frontpage">
+    <div class="frontpage-content container">
+        <div class="frontpage-text">
+            <h1><b>{{ page.heading|richtext }}</b></h1>
+            <h4>{{page.subheading|richtext }}</h4>
+        </div>
+    </div>
+</section>
+
+{% if page.clients %}
+<section id="testimonial">
+    <div class="testimonial-content container">
+        <h2 class="testimonial-title">Quem já adotou o Sistema?</h2>
+        <div class="testimonial-brands">
+            {% for client in page.clients %}
+            <a href="{{client.value.link}}">
+                {% image client.value.image max-160x160 as image%}
+                <img src="{{ image.url }}" alt="{{ client.value.name }}">
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<script type="text/javascript" src="{% static 'js/animations/general.js' %}"></script>
+
+{% endblock %}

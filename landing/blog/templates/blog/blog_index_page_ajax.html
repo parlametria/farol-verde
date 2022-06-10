@@ -1,0 +1,49 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if not have_new_post %}
+    <div id="posts-filters" class="hide">
+        <div class="filters-text shadow"></div>
+        <button class="clear-filters shadow">
+            <span>
+                {{ filtered_posts|length }} resultado{% if filtered_posts|length > 1 %}s{% endif %}
+            </span>
+            <span>
+                <i class="fa fa-times-circle"></i>
+                LIMPAR BUSCA
+            </span>
+        </button>
+    </div>
+{% endif %}
+
+{% for post in filtered_posts %}
+    <div class="post {{ post.category|lower }}">
+        <div class="post-header">
+            <h3 class="post-header__title"><a href="{% pageurl post %}">{{ post.title }}</a></h3>
+            <div class="post-header__info">
+                <span class="shadow">{{ post.specific.date|date:"d M" }}</span>
+                {% if post.category %}
+                    <a class="post-header__category color--{{ post.category|lower }}" href="/blog/?category={{post.category|lower}}">{{ post.category|lower }}</a>
+                {% endif %}
+            </div>
+        </div>
+        <a href="{% pageurl post %}">
+            <div class="post-img" style="background-image: url('{{ post.specific.cover_image.url }}')"></div>
+        </a>
+        <div class="post-content">
+            {{ post.specific.intro_text }}
+            <a href="{% pageurl post %}">Ler mais</a>
+        </div>
+    </div>
+{% empty %}
+    {% if not have_new_post %}
+        <div class="no-result">
+            <h3>Sua pesquisa não retornou resultados</h3>
+            <p>Talvez você possa encontrar o que está procurando na barra ao lado,<br> ou navegando pelas tags mais utilizadas:</p>
+            <div class="tag-cloud">
+                {% for tag in tags|slice:":15" %}
+                    <a href="/blog/?tag={{ tag }}"><b>{{ tag|upper }}</b></a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

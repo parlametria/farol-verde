@@ -1,0 +1,8 @@
+<div class="content-header__tags">
+    <span class="shadow">TAGS</span>
+    {% for post in all_posts %}
+        {% for post_tag in post.tags.all %}
+        <a href="/blog?tag={{ post_tag }}">{{ post_tag }}</a>
+        {% endfor %}
+    {% endfor %}
+</div>

@@ -1,0 +1,58 @@
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/blog/components/sidebar-panels.css' %}">
+
+{% for panel in panels %}
+    {% if panel.value.tag in tags %}
+        <div class="sidebar-panel">
+            <div class="toggle-component open">
+                <div class="toggle-component-header">
+                    <h3>{{ panel.value.title|richtext }}</h3>
+                    <i class="fa fa-lg fa-caret-down"></i>
+                </div>
+                <ul class="toggle-component-body">
+                    {% for post in all_posts %}
+                        {% for post_tag in post.tags.all %}
+                            {% if panel.value.tag == post_tag.name %}
+                                <li class="sidebar-card {{ post.category|lower }}">
+                                    <a href="{{ post.url }}">
+                                        <h4>{{ post.title }}</h4>
+                                        <span class="shadow">{{ post.specific.date|date:"d M" }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    <div class="toggle-component-footer">
+                        <a href="/blog/?tag={{ panel.value.tag }}">VER TODOS</a>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+
+<div id="tags-list" class="sidebar-panel">
+    <div class="toggle-component">
+        <div class="toggle-component-header">
+            <h3>Tags</h3>
+            <i class="fa fa-lg fa-caret-down"></i>
+        </div>
+        <ul class="toggle-component-body">
+            {% for tag in tags|slice:":20" %}
+                <a href="/blog/?tag={{tag}}">{{tag}}</a>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    const toggleElements = document.querySelectorAll('.toggle-component');
+
+    toggleElements.forEach((toggleEl) => 
+        toggleEl.addEventListener('click',
+            () => toggleEl.classList.toggle('open')
+        )
+    );
+</script>

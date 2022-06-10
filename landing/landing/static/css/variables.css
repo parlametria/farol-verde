@@ -1,0 +1,11 @@
+:root {
+    --primary-color: #30bfd3;
+    --secondary-color: #ff3d72;
+    --dark-blue: #052b47;
+    --purple-color: #849bc9;
+    --light-color: #F0FCFC;
+    --shadow-color: #BABABA;
+    --dark-gray: #777;
+    
+    --gap-size: 1.5rem;
+}
