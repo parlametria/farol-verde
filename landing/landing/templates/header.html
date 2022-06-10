@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<header>
+    <div class="header-content container">
+        <a href="/" class="header-menu-item">Home</a>
+        <a href="/blog" class="header-menu-item">Blog</a>
+    </div>
+</header>
+
+<script>
+    const headerMenuItems = document.querySelectorAll('.header-menu-item')
+    
+    var path = window.location.href.split('/')
+    path = path.filter(elem => elem != '')
+    
+    headerMenuItems.forEach((item) => {
+        item.classList.remove('active')
+        if(path.length > 2 && item.getAttribute('href') == "/" + path[2])
+            item.classList.add('active')
+    })
+</script>

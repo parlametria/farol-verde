@@ -1,0 +1,43 @@
+version: "3.3"
+
+services:
+
+  wagtail_server:
+    env_file:
+      - variables.env
+    build:
+      context: ./
+    ports:
+      - "4000:8000"
+    volumes:
+      - ./landing:/landing
+      - wagtail:/tmp/wagtail_db
+      - media:/landing/media
+    container_name: wagtail_server
+    depends_on:
+      - wagtail_db
+    entrypoint: ["/bin/bash", "run.sh"]
+
+  wagtail_db:
+    env_file:
+      - variables.env
+    image: postgres:13.1
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
+      interval: 10s
+      timeout: 45s
+      retries: 10
+    restart: always
+    expose:
+      - "5656"
+    volumes:
+      - backups:/var/lib/postgresql/data
+    container_name: wagtail_db
+    command: -p 5656
+    ports:
+      - "5656:5656"
+
+volumes:
+  wagtail:
+  media:
+  backups:

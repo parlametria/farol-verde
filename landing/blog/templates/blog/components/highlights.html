@@ -1,0 +1,14 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div id="highlights">
+    {% for post in all_posts|slice:":3" %}
+        <div class="highlight card {{ post.category|lower }} fade-up">
+            <div class="tag-mark highlight-tag">{{ post.category }}</div>
+                <a style="background-image: url('{{ post.cover_image.url}}')" href="{{ post.url }}" class="highlight-image"></a>
+                <a href="{{ post.url }}" class="highlight-footer">
+                    <span class="shadow highlight-date">{{ post.specific.date|date:"d M" }}</span>
+                    <h3>{{ post.title }}</h3>
+                </a>
+        </div>
+    {% endfor %}
+</div>
