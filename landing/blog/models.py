@@ -119,7 +119,6 @@ class BlogPost(Page):
         index.SearchField("intro_text"),
         index.SearchField("body"),
         index.FilterField("tags"),
-        index.FilterField("name"),
     ]
 
     content_panels = Page.content_panels + [
