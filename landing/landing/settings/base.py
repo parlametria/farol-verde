@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "blog",
     "wagtailfontawesome",
     "wagtail_color_panel",
+    "wagtail.contrib.modeladmin",
+    "wagtailstreamforms",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",

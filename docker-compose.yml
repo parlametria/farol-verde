@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
 
-  wagtail_server:
+  farol_verde_server:
     env_file:
       - variables.env
     build:
@@ -11,14 +11,14 @@ services:
       - "4000:8000"
     volumes:
       - ./landing:/landing
-      - wagtail:/tmp/wagtail_db
+      - farol_verde:/tmp/farol_verde_db
       - media:/landing/media
-    container_name: wagtail_server
+    container_name: farol_verde_server
     depends_on:
-      - wagtail_db
+      - farol_verde_db
     entrypoint: ["/bin/bash", "run.sh"]
 
-  wagtail_db:
+  farol_verde_db:
     env_file:
       - variables.env
     image: postgres:13.1
@@ -32,12 +32,12 @@ services:
       - "5656"
     volumes:
       - backups:/var/lib/postgresql/data
-    container_name: wagtail_db
+    container_name: farol_verde_db
     command: -p 5656
     ports:
       - "5656:5656"
 
 volumes:
-  wagtail:
+  farol_verde:
   media:
   backups:

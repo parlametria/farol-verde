@@ -272,7 +272,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "tablib"
-version = "3.2.0"
+version = "3.2.1"
 description = "Format agnostic tabular data library (XLS, JSON, YAML, CSV)"
 category = "main"
 optional = false
@@ -311,6 +311,14 @@ description = "Backported and Experimental Type Hints for Python 3.6+"
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "unidecode"
+version = "1.3.4"
+description = "ASCII transliterations of Unicode text"
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "urllib3"
@@ -383,6 +391,22 @@ Django = ">=1.7.1"
 wagtail = ">=1.4.0"
 
 [[package]]
+name = "wagtailstreamforms"
+version = "3.19"
+description = "Wagtail forms in a streamfield"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Unidecode = ">=0.04.14,<2.0"
+wagtail = ">=2,<2.17"
+
+[package.extras]
+docs = ["sphinxcontrib-spelling (>=2.3.0)", "Sphinx (>=1.5.2)", "sphinx-autobuild (>=0.6.0)", "karma-sphinx-theme (>=0.0.6)"]
+test = ["mock (==4.0.2)", "isort[pyproject] (==4.3.21)", "flake8 (==3.7.9)", "flake8-blind-except (==0.1.1)", "flake8-debugger (==3.1.0)"]
+
+[[package]]
 name = "webencodings"
 version = "0.5.1"
 description = "Character encoding aliases for legacy web content"
@@ -433,7 +457,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "5a935f841dbe4513ca7b7bcc4be65d7eb3ee0089c9a64a84f82eda4c2d533d61"
+content-hash = "06bad93a212650aefa1eb90d5e56b089ae5df1d78320844d39cf829b8625e74b"
 
 [metadata.files]
 anyascii = [
@@ -579,8 +603,8 @@ sqlparse = [
     {file = "sqlparse-0.4.2.tar.gz", hash = "sha256:0c00730c74263a94e5a9919ade150dfc3b19c574389985446148402998287dae"},
 ]
 tablib = [
-    {file = "tablib-3.2.0-py3-none-any.whl", hash = "sha256:1ba12da7b0b17e33f5997fb1bc8ed560aae3535f5892ae5e5c01a056c47d4d78"},
-    {file = "tablib-3.2.0.tar.gz", hash = "sha256:12d8686454c721de88d8ca5adf07e1f419ef6dbcecedf65e8950d4a329daf3a0"},
+    {file = "tablib-3.2.1-py3-none-any.whl", hash = "sha256:870d7e688f738531a14937a055e8bba404fbc388e77d4d500b2c904075d1019c"},
+    {file = "tablib-3.2.1.tar.gz", hash = "sha256:a57f2770b8c225febec1cb1e65012a69cf30dd28be810e0ff98d024768c7d0f1"},
 ]
 telepath = [
     {file = "telepath-0.2-py35-none-any.whl", hash = "sha256:801615094d3d964e178183099bf04020f4ff9c84ec43945d40b096df0a5767ee"},
@@ -589,6 +613,10 @@ telepath = [
 typing-extensions = [
     {file = "typing_extensions-4.1.1-py3-none-any.whl", hash = "sha256:21c85e0fe4b9a155d0799430b0ad741cdce7e359660ccbd8b530613e8df88ce2"},
     {file = "typing_extensions-4.1.1.tar.gz", hash = "sha256:1a9462dcc3347a79b1f1c0271fbe79e844580bb598bafa1ed208b94da3cdcd42"},
+]
+unidecode = [
+    {file = "Unidecode-1.3.4-py3-none-any.whl", hash = "sha256:afa04efcdd818a93237574791be9b2817d7077c25a068b00f8cff7baa4e59257"},
+    {file = "Unidecode-1.3.4.tar.gz", hash = "sha256:8e4352fb93d5a735c788110d2e7ac8e8031eb06ccbfe8d324ab71735015f9342"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},
@@ -605,6 +633,10 @@ wagtail-color-panel = [
 wagtailfontawesome = [
     {file = "wagtailfontawesome-1.2.1-py2.py3-none-any.whl", hash = "sha256:76b1c64c4f1042d468a83e4352f74b57bda4a4aa09cdfeeb8663dead5ed632be"},
     {file = "wagtailfontawesome-1.2.1.tar.gz", hash = "sha256:6c1bd2d6061880848de6374ceb75d38a8c9b0debb1d4aef8a2fdc9d565a8f417"},
+]
+wagtailstreamforms = [
+    {file = "wagtailstreamforms-3.19-py3-none-any.whl", hash = "sha256:aca7385e1ffe0946ef41436bb7d3f68eaa5c556b5f4004156c94ef7b72fe8ccd"},
+    {file = "wagtailstreamforms-3.19.tar.gz", hash = "sha256:72de91df65d4e4385f2e9838fb3b974b3c38c7809f77e43b392c9d57647c3764"},
 ]
 webencodings = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},

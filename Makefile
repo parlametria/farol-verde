@@ -1,4 +1,4 @@
-SERVER_CONTAINER=wagtail_server
+SERVER_CONTAINER=farol_verde_server
 
 attach:
 	docker exec -it $(SERVER_CONTAINER) bash 

@@ -4,8 +4,9 @@ from wagtail.core.models import Page
 
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.core.blocks import StructBlock, URLBlock, RichTextBlock
+from wagtail.core.blocks import StructBlock, URLBlock
 from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
+from wagtailstreamforms.blocks import WagtailFormBlock
 
 
 class LandingPage(Page):
@@ -14,27 +15,16 @@ class LandingPage(Page):
     heading = RichTextField(
         null=False, blank=False, default="<h1><b>Bem vindo ao boilerplate Wagtail da Pencil.</b></h1>"
     )
+
     subheading = RichTextField(
         null=False,
         blank=False,
         default="<h4>Esse é o subheading do boilerplate.</h4>",
     )
 
-    features = StreamField(
-        [
-            (
-                "features",
-                StructBlock(
-                    [
-                        ("image", ImageChooserBlock()),
-                        ("text", RichTextBlock()),
-                    ]
-                ),
-            )
-        ],
-        null=True,
-        blank=True,
-    )
+    surveys = StreamField([
+        ('form', WagtailFormBlock()),
+    ], blank=True, null=True)
 
     clients = StreamField(
         [
@@ -55,6 +45,6 @@ class LandingPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel("heading"),
         FieldPanel("subheading"),
-        StreamFieldPanel("features"),
+        StreamFieldPanel("surveys"),
         StreamFieldPanel("clients"),
     ]

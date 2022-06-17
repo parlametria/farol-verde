@@ -1,11 +1,3 @@
-#frontpage {  
-    background-color: white;  
-    background: url('/static/img/people-talking-each-other-before-meeting.webp');
-    background-size: cover;
-    background-position: 40vw;
-    background-repeat: no-repeat;
-}
-
 #frontpage .frontpage-content {
     display: flex;
     height: 100vh;
@@ -17,14 +9,12 @@
     justify-content: center;
     gap: 20px;
     height: 100%;
-    width: 60%;
+    width: 100%;
     z-index: 2;
     background: linear-gradient(90deg, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, .6) 80%, rgba(255, 255, 255, 0) 100%);
 }
 
-#frontpage .frontpage-text > h1, #frontpage .frontpage-text > h4 {
-    color: var(--dark-blue);
-}
+#frontpage .frontpage-text > is(h1, h4) {color: var(--dark-blue);}
 
 #frontpage .frontpage-text > h4 {
     width: 65%;
