@@ -11,6 +11,8 @@ from wagtailstreamforms.blocks import WagtailFormBlock
 
 class LandingPage(Page):
     is_creatable = False
+    ajax_template = 'home/landing_page.html'
+
 
     heading = RichTextField(
         null=False, blank=False, default="<h1><b>Bem vindo ao boilerplate Wagtail da Pencil.</b></h1>"
