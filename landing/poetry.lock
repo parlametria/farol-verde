@@ -72,6 +72,18 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-debug-toolbar"
+version = "3.4.0"
+description = "A configurable set of panels that display various debug information about the current request/response."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=3.2"
+sqlparse = ">=0.2.0"
+
+[[package]]
 name = "django-filter"
 version = "21.1"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
@@ -106,6 +118,14 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 Django = ">=2.2"
+
+[[package]]
+name = "django-template-debug"
+version = "0.3.5"
+description = "A small collection of template tags for debugging and introspecting templates"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "django-treebeard"
@@ -457,7 +477,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "06bad93a212650aefa1eb90d5e56b089ae5df1d78320844d39cf829b8625e74b"
+content-hash = "60d4af6c415ddd13e747eee2629a7e60057944e2d7387dabe455096b816919ae"
 
 [metadata.files]
 anyascii = [
@@ -485,6 +505,10 @@ django = [
     {file = "Django-3.2.12-py3-none-any.whl", hash = "sha256:9b06c289f9ba3a8abea16c9c9505f25107809fb933676f6c891ded270039d965"},
     {file = "Django-3.2.12.tar.gz", hash = "sha256:9772e6935703e59e993960832d66a614cf0233a1c5123bc6224ecc6ad69e41e2"},
 ]
+django-debug-toolbar = [
+    {file = "django-debug-toolbar-3.4.0.tar.gz", hash = "sha256:ae6bec2c1ce0e6900b0ab0443e1427eb233d8e6f57a84a0b2705eeecb8874e22"},
+    {file = "django_debug_toolbar-3.4.0-py3-none-any.whl", hash = "sha256:42c1c2e9dc05bb57b53d641e3a6d131fc031b92377b34ae32e604a1fe439bb83"},
+]
 django-filter = [
     {file = "django-filter-21.1.tar.gz", hash = "sha256:632a251fa8f1aadb4b8cceff932bb52fe2f826dd7dfe7f3eac40e5c463d6836e"},
     {file = "django_filter-21.1-py3-none-any.whl", hash = "sha256:f4a6737a30104c98d2e2a5fb93043f36dd7978e0c7ddc92f5998e85433ea5063"},
@@ -496,6 +520,9 @@ django-modelcluster = [
 django-taggit = [
     {file = "django-taggit-2.1.0.tar.gz", hash = "sha256:a9f41e4ad58efe4b28d86f274728ee87eb98eeae90c9eb4b4efad39e5068184e"},
     {file = "django_taggit-2.1.0-py3-none-any.whl", hash = "sha256:61547a23fc99967c9304107414a09e662b459f4163dbbae32e60b8ba40c34d05"},
+]
+django-template-debug = [
+    {file = "django-template-debug-0.3.5.tar.gz", hash = "sha256:d7fd8234b26d9df4b30aa3f33d9283c6ef9525b94e0ddb3e91c48ee8b7472049"},
 ]
 django-treebeard = [
     {file = "django-treebeard-4.5.1.tar.gz", hash = "sha256:80150017725239702054e5fa64dc66e383dc13ac262c8d47ee5a82cb005969da"},

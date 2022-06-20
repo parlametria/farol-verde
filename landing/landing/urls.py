@@ -16,7 +16,7 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
-    path('sitemap.xml', sitemap),
+    path("sitemap.xml", sitemap),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

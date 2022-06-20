@@ -1,89 +1,9 @@
-#frontpage .frontpage-content {
-    display: flex;
-    height: 100vh;
-    place-items: center;
-}
-#frontpage .frontpage-text {
+section h3 {font-weight: bold;}
+
+#presentation {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    height: 100%;
-    width: 100%;
-    z-index: 2;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, .6) 80%, rgba(255, 255, 255, 0) 100%);
+    gap: 1rem;
 }
 
-#frontpage .frontpage-text > is(h1, h4) {color: var(--dark-blue);}
-
-#frontpage .frontpage-text > h4 {
-    width: 65%;
-    animation: fade-up 1s linear;
-}
-
-#frontpage .frontpage-text > h1 {
-    width: 50%;
-}
-
-.testimonial-title {
-    margin: 1rem auto 1rem auto;
-}
-
-#testimonial {
-    padding: 30px;
-    margin-top: 30px;
-}
-#testimonial h2 {
-    font-weight: 500;
-}
-#testimonial .testimonial-content {
-    display: flex;
-    flex-direction: column;
-    place-items: center;
-    width: 60%;
-}
-#testimonial .testimonial-brands {
-    display: flex;
-    justify-content: space-around;
-}
-#testimonial .testimonial-brand {
-    object-fit: contain;
-    width: 160px;
-    height: 160px;
-    margin: 0 20px;
-}
-
-@media (max-width: 768px) {
-    .header-content {
-        padding: 0;
-    }
-
-    #frontpage {
-        background-size: cover;
-        background-position: -50vw;
-    }
-    .frontpage-content .container {
-        width: 100%;
-        padding: 0px;
-    }
-
-    #frontpage .frontpage-text {
-        width: 100%;
-        padding: 0 5%;
-        padding-bottom: 30px;
-        margin-top: -30px;
-        background: linear-gradient(0deg, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, .6) 50%, rgba(255, 255, 255, 0) 90%);
-        justify-content: flex-end;
-    }
-
-    #frontpage .frontpage-text > h4,
-    #frontpage .frontpage-text > h1 {
-        width: 100%;
-        text-align: center;
-    }
-
-    #testimonial .testimonial-content {
-        text-align: center;
-        width: 100%;
-    }
-}
+#presentation button { align-self: center; }

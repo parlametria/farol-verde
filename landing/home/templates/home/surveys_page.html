@@ -1,22 +1,13 @@
 {% extends "base.html" %}
 {% load static i18n wagtailcore_tags wagtailimages_tags %}
+{% load streamforms_tags %}
 
 {% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/home/home.css' %}">
 
 <div class="container">
-    <section id="presentation">
-        <h3>Apresentação</h3>
-        <p class="presentation__text">{{page.heading|richtext}}</p>
-        <a href="/survey"><button>Responda a Enquete</button></a>
-    </section>
-
-    <hr>
-
-    <section id="partners">
-        <h3>Parceiros</h3>
-    </section>
+    {% streamforms_form slug="enquete" reference="e1f1ccf0-b59c-49dd-92a2-f8e32ae8d310" action="." %}
 </div>
 
 <script type="text/javascript" src="{% static 'js/animations/general.js' %}"></script>

@@ -6,97 +6,144 @@ import django.db.models.deletion
 import wagtail.core.blocks
 import wagtail.core.fields
 import wagtail.images.blocks
+from wagtail.core.models import Page, Site
+from home.models import LandingPage
+import wagtailstreamforms
+
+
+def create_set_home_page(apps, schema_editor):
+    root = Page.get_first_root_node()
+
+    home_page = LandingPage(title="Home")
+
+    root.add_child(instance=home_page)
+    root.save()
+
+    site = Site.objects.get(id=1)
+    site.root_page = home_page
+    site.save()
+
 
 class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('wagtailforms', '0004_add_verbose_name_plural'),
-        ('contenttypes', '0002_remove_content_type_name'),
+        ("wagtailforms", "0004_add_verbose_name_plural"),
+        ("contenttypes", "0002_remove_content_type_name"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('wagtailcore', '0040_page_draft_title'),
-        ('wagtailredirects', '0006_redirect_increase_max_length'),
-        ('wagtailcore', '0062_comment_models_and_pagesubscription'),
+        ("wagtailcore", "0040_page_draft_title"),
+        ("wagtailredirects", "0006_redirect_increase_max_length"),
+        ("wagtailcore", "0062_comment_models_and_pagesubscription"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HomePage',
+            name="LandingPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.page",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.AddField(
-            model_name='homepage',
-            name='marcas',
-            field=wagtail.core.fields.StreamField([('marcas', wagtail.core.blocks.StreamBlock([('marca', wagtail.images.blocks.ImageChooserBlock())], icon='image', template='blocks/brands.html'))], null=True),
-        ),
-        migrations.RenameModel(
-            old_name='HomePage',
-            new_name='LandingPage',
-        ),
-        migrations.RenameField(
-            model_name='landingpage',
-            old_name='marcas',
-            new_name='clients',
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.core.blocks.StreamBlock([('marca', wagtail.images.blocks.ImageChooserBlock())], icon='image', template='blocks/brands.html'))], null=True),
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.core.blocks.StreamBlock([('marca', wagtail.images.blocks.ImageChooserBlock())], icon='image', template='blocks/brands.html'))], blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.core.blocks.StreamBlock([('Brand', wagtail.images.blocks.ImageChooserBlock())], icon='image', template='blocks/brands.html'))], blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.images.blocks.ImageChooserBlock())], blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.core.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock()), ('link', wagtail.core.blocks.CharBlock(max_length=100))]))], blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.core.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock()), ('link', wagtail.core.blocks.URLBlock())]))], blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.core.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock()), ('link', wagtail.core.blocks.CharBlock(max_length=100))]))], blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='landingpage',
-            name='clients',
-            field=wagtail.core.fields.StreamField([('clients', wagtail.core.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock()), ('link', wagtail.core.blocks.URLBlock(max_length=100))]))], blank=True, null=True),
+            model_name="LandingPage",
+            name="clients",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "clients",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                ("image", wagtail.images.blocks.ImageChooserBlock()),
+                                ("link", wagtail.core.blocks.URLBlock(max_length=100)),
+                            ]
+                        ),
+                    )
+                ],
+                blank=True,
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='landingpage',
-            name='heading',
-            field=wagtail.core.fields.RichTextField(default='<h1><b>Bem vindo ao boilerplate Wagtail da Pencil.</b></h1>'),
+            model_name="landingpage",
+            name="heading",
+            field=wagtail.core.fields.RichTextField(
+                default="<h1><b>Bem vindo ao boilerplate Wagtail da Pencil.</b></h1>"
+            ),
         ),
         migrations.AddField(
-            model_name='landingpage',
-            name='subheading',
-            field=wagtail.core.fields.RichTextField(default='<h4>Esse é o subheading do boilerplate.</h4>'),
+            model_name="landingpage",
+            name="subheading",
+            field=wagtail.core.fields.RichTextField(
+                default="<h4>Esse é o subheading do boilerplate.</h4>"
+            ),
         ),
         migrations.AddField(
-            model_name='landingpage',
-            name='features',
-            field=wagtail.core.fields.StreamField([('features', wagtail.core.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock()), ('text', wagtail.core.blocks.RichTextBlock())]))], blank=True, null=True),
+            model_name="landingpage",
+            name="features",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "features",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                ("image", wagtail.images.blocks.ImageChooserBlock()),
+                                ("text", wagtail.core.blocks.RichTextBlock()),
+                            ]
+                        ),
+                    )
+                ],
+                blank=True,
+                null=True,
+            ),
         ),
+        migrations.RemoveField(
+            model_name="landingpage",
+            name="features",
+        ),
+        migrations.AddField(
+            model_name="landingpage",
+            name="surveys",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "form",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                ("form", wagtailstreamforms.blocks.FormChooserBlock()),
+                                (
+                                    "form_action",
+                                    wagtail.core.blocks.CharBlock(
+                                        help_text='The form post action. "" or "." for the current page or a url',
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "form_reference",
+                                    wagtailstreamforms.blocks.InfoBlock(
+                                        help_text="This form will be given a unique reference once saved",
+                                        required=False,
+                                    ),
+                                ),
+                            ]
+                        ),
+                    )
+                ],
+                blank=True,
+                null=True,
+            ),
+        ),
+        migrations.RunPython(create_set_home_page),
     ]

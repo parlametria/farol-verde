@@ -2,39 +2,46 @@ html {
     overflow-x: hidden;
 }
 body {
-    font-family: "Raleway", sans-serif;
+    font-family: 'Roboto', sans-serif;
     padding: 0;
     margin: 0;
     overflow-x: hidden;
 }
 section {
+    padding: 2rem;
     scroll-snap-type: y mandatory;
     scroll-snap-align: start;
 }
-section:not(#frontpage, #summary){
-    margin: 25px 0;
-}
+
 button {
-    padding: 10px 45px;
-    border-radius: 400px;
+    padding: 10px;
+    background-color: var(--primary-color);
     color: white;
+    border: none;
+    border-radius: .25rem;
+    font-size: 1.125rem;
     font-weight: bold;
     transition: 0.25s;
+    width: fit-content;
 }
+
 button :disabled {
     background-color: #666;
     border-color: white;
 }
+
 button:hover:not(:disabled) {
     cursor: pointer;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
+
 .shadow {
     color: var(--shadow-color) !important;
     font-weight: bold;
     text-transform: uppercase;
     font-size: .8rem;
 }
+
 .hide {
     display: none !important;
 }
@@ -60,15 +67,9 @@ h5 {
     font-weight: 400;
 }
 
-h1 {
-    font-size: 3rem;
-}
-h2 {
-    font-size: 2.2rem;
-}
-h3 {
-    font-size: 1.3rem;
-}
+h1 {font-size: 3rem;}
+h2 {font-size: 2.2rem;}
+h3 {font-size: 1.3rem;}
 h4 {
     font-size: 1.125rem;
     line-height: 1.5em;
@@ -99,60 +100,12 @@ a:hover {
     margin-left: -30px;
 }
 .container {
-    width:100%;
+    width: 80%;
     height: 100%;
     padding-right: 15px;
     padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-@media (max-width: 319px) {
-    .container {
-        width: 95%;
-    }
-}
-
-@media (min-width: 320px) {
-    .container {
-        width: 312px;
-    }
-}
-
-@media (min-width: 375px) {
-    .container {
-        width: 366px;
-    }
-}
-
-@media (min-width: 425px) {
-    .container {
-        width: 414px;
-    }
-}
-
-@media (min-width: 620px) {
-    .container {
-        width: 605px;
-    }
-}
-
-@media (min-width: 768px) {
-    .container {
-        width: 750px;
-    }
-}
-
-@media (min-width: 992px) {
-    .container {
-        width: 970px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        width: 1170px;
-    }
+    margin-inline: auto;
+    max-width: 90rem;
 }
 
 @media (max-width: 768px) {
