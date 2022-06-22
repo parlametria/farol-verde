@@ -1,4 +1,5 @@
 from email.policy import default
+from pyexpat import model
 from django.db import models
 
 from django import forms
@@ -79,7 +80,9 @@ class BlogIndexPage(Page):
         tags = [tag["tags__name"] for tag in tags]
 
         context = super().get_context(request)
-        context["filtered_posts"] = list(filtered_post)[start_count : start_count + 10] # TODO: remover isso e usar paginação
+        context["filtered_posts"] = list(filtered_post)[
+            start_count : start_count + 10
+        ]  # TODO: remover isso e usar paginação
         context["have_new_post"] = start_count > 0
         context["all_posts"] = children_objects
         context["tags"] = tags
@@ -145,7 +148,6 @@ class BlogPost(Page):
             return self.get_siblings().live().first()
 
 
-
 @register_snippet
 class BlogCategory(models.Model):
     name = models.CharField(max_length=255)
@@ -163,3 +165,25 @@ class BlogCategory(models.Model):
 
     class Meta:
         verbose_name_plural = "blog categories"
+
+class CandidateIndexPage(Page):
+    is_creatable = False
+
+    parent_page_types = [
+        "home.LandingPage",
+    ]
+
+    subpage_types = [
+        "blog.Candidate",
+    ]
+
+class Candidate(Page):
+    id_actor = models.IntegerField(blank=False, unique=True)
+    id_parlametria = models.IntegerField(blank=False, unique=True)
+    # id_serenata=id_perfil_politico on perfil.parlametria.org.br api
+    id_serenata = models.IntegerField(blank=False, unique=True)
+    name = models.CharField(max_length=255)
+
+    parent_page_types = [
+        "blog.CandidateIndexPage",
+    ]
