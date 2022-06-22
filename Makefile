@@ -1,7 +1,7 @@
 SERVER_CONTAINER=farol_verde_server
 
 attach:
-	docker exec -it $(SERVER_CONTAINER) bash 
+	docker exec -it $(SERVER_CONTAINER) bash
 
 up:
 	docker-compose up
@@ -20,3 +20,9 @@ migrate:
 
 makemigrations:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py makemigrations
+
+parla-import:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py parlametria --import
+
+rollback:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py migrate blog zero

@@ -1,4 +1,5 @@
 from email.policy import default
+from pyexpat import model
 from django.db import models
 
 from django import forms
@@ -164,3 +165,25 @@ class BlogCategory(models.Model):
 
     class Meta:
         verbose_name_plural = "blog categories"
+
+class CandidateIndexPage(Page):
+    is_creatable = False
+
+    parent_page_types = [
+        "home.LandingPage",
+    ]
+
+    subpage_types = [
+        "blog.Candidate",
+    ]
+
+class Candidate(Page):
+    id_actor = models.IntegerField(blank=False, unique=True)
+    id_parlametria = models.IntegerField(blank=False, unique=True)
+    # id_serenata=id_perfil_politico on perfil.parlametria.org.br api
+    id_serenata = models.IntegerField(blank=False, unique=True)
+    name = models.CharField(max_length=255)
+
+    parent_page_types = [
+        "blog.CandidateIndexPage",
+    ]
