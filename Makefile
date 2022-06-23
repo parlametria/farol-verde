@@ -23,6 +23,3 @@ makemigrations:
 
 parla-import:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py parlametria --import
-
-rollback:
-	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py migrate blog zero
