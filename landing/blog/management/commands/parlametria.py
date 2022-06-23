@@ -1,7 +1,9 @@
 import requests
 from time import sleep
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand, CommandError, OutputWrapper
+from django.core.management.color import Style
+
 from django.template.defaultfilters import slugify
 from wagtail.core.models import Page
 
@@ -13,10 +15,6 @@ SERENATA_API = "https://api-perfilpolitico.serenata.ai/api"
 
 
 class Command(BaseCommand):
-    SLEEP = True  # for dev
-    SLEEP_TIME = 2
-    candidate_index: CandidateIndexPage = None
-
     def add_arguments(self, parser):
         parser.add_argument(
             "--import",
@@ -26,8 +24,22 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options["import"]:
-            self.candidate_index = self._get_or_create_candidates_index()
-            self._import_candidates()
+            parla_fetcher = ParlametriaFetcher(self.stdout, self.style)
+            parla_fetcher.start_fetch()
+
+
+class ParlametriaFetcher:
+    SLEEP = True  # for dev
+    SLEEP_TIME = 2
+    candidate_index: CandidateIndexPage = None
+
+    def __init__(self, stdout: OutputWrapper, style: Style):
+        self.stdout = stdout
+        self.style = style
+
+    def start_fetch(self):
+        self.candidate_index = self._get_or_create_candidates_index()
+        self._import_candidates()
 
     def _get_or_create_candidates_index(self) -> CandidateIndexPage:
         root: Page = Page.objects.filter(slug="root").first()
@@ -57,7 +69,7 @@ class Command(BaseCommand):
 
         if actors.status_code != 200:
             # raise CommandError(f"Could not get actors data from {url}")
-            self.stdout.write(self.style.ERROR(f"Could not get actors data from {url}"))
+            self.stdout.write(self.style.ERROR(f"\tCould not get actors data from {url}"))
             return
 
         for row in actors.json():
@@ -77,16 +89,16 @@ class Command(BaseCommand):
         nome_autor: str,
     ):
         url = f"{PERFIL_API}/parlamentares/{id_autor_parlametria}/info"
-        self.stdout.write(f"Fetching actor data from {url}")
+        self.stdout.write(f"\tFetching actor data from {url}")
         perfil_data = requests.get(url)
 
         if perfil_data.status_code != 200:
             self.stdout.write(
                 self.style.ERROR(
-                    f"Could not get perfil data from {url}\n"
-                    "Name: {nome_autor}\n"
-                    "Id Autor: {id_autor}\n"
-                    "Id Parlametria {id_autor_parlametria}\n"
+                    f"\tCould not get perfil data from {url}\n"
+                    f"\tName: {nome_autor}\n"
+                    f"\tId Autor: {id_autor}\n"
+                    f"\tId Parlametria {id_autor_parlametria}\n"
                 )
             )
             return
@@ -107,7 +119,7 @@ class Command(BaseCommand):
         if found is not None:
             self.stdout.write(
                 self.style.WARNING(
-                    f"Candidate id_autor={id_autor} already saved in database, skipping."
+                    f"\t\tCandidate id_autor={id_autor} already saved in database, skipping."
                 )
             )
             return
@@ -129,11 +141,11 @@ class Command(BaseCommand):
         except Exception as ex:
             self.stdout.write(
                 self.style.ERROR(
-                    f"Could not create candidate with data:\n"
-                    f"\tnome_autor={nome_autor}\n"
-                    f"\tid_autor={id_autor}\n"
-                    f"\tid_parlametria{id_parlametria}\n"
-                    f"\tid_serenata{id_serenata}\n"
+                    f"\t\tCould not create candidate with data:\n"
+                    f"\t\t\tnome_autor={nome_autor}\n"
+                    f"\t\t\tid_autor={id_autor}\n"
+                    f"\t\t\tid_parlametria{id_parlametria}\n"
+                    f"\t\t\tid_serenata{id_serenata}\n"
                 )
             )
-            self.stdout.write(self.style.ERROR(str(ex)))
+            self.stdout.write(self.style.ERROR("\t\t" + str(ex)))
