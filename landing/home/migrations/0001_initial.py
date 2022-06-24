@@ -85,36 +85,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="landingpage",
-            name="subheading",
-            field=wagtail.core.fields.RichTextField(
-                default="<h4>Esse é o subheading do boilerplate.</h4>"
-            ),
-        ),
-        migrations.AddField(
-            model_name="landingpage",
-            name="features",
-            field=wagtail.core.fields.StreamField(
-                [
-                    (
-                        "features",
-                        wagtail.core.blocks.StructBlock(
-                            [
-                                ("image", wagtail.images.blocks.ImageChooserBlock()),
-                                ("text", wagtail.core.blocks.RichTextBlock()),
-                            ]
-                        ),
-                    )
-                ],
-                blank=True,
-                null=True,
-            ),
-        ),
-        migrations.RemoveField(
-            model_name="landingpage",
-            name="features",
-        ),
-        migrations.AddField(
-            model_name="landingpage",
             name="surveys",
             field=wagtail.core.fields.StreamField(
                 [

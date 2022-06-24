@@ -72,8 +72,7 @@ MIDDLEWARE = [
 ]
 
 WAGTAILSTREAMFORMS_FORM_TEMPLATES = (
-    ("streamforms/form_block.html", "Default Form Template"),  # default
-    ("home/surveys/survey.html", "Custom Form Template"),
+    ("home/surveys/survey.html", "Default Form Template"),
 )
 
 ROOT_URLCONF = "landing.urls"
