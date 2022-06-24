@@ -41,11 +41,12 @@ class ParlametriaFetcher:
         self._import_candidates()
 
     def _get_or_create_candidates_index(self) -> CandidateIndexPage:
-        # https://stackoverflow.com/questions/24976561/wagtail-pages-giving-none-url-with-live-status
-        home: Page = Page.objects.filter(slug="home").first()
         candidate_index = CandidateIndexPage.objects.filter(slug="candidatos").first()
 
         if not candidate_index:
+            # https://stackoverflow.com/questions/24976561/wagtail-pages-giving-none-url-with-live-status
+            home: Page = Page.objects.filter(slug="home").first()
+
             candidate_index = CandidateIndexPage(
                 title="Candidatos",
                 slug="candidatos",
@@ -95,6 +96,16 @@ class ParlametriaFetcher:
         id_autor_parlametria: int,
         nome_autor: str,
     ):
+        found = CandidatePage.objects.filter(id_autor=id_autor).first()
+
+        if found is not None:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"\tCandidate id_autor={id_autor} already saved in database, skipping."
+                )
+            )
+            return
+
         url = f"{PERFIL_API}/parlamentares/{id_autor_parlametria}/info"
         self.stdout.write(f"\tFetching actor data from {url}")
         perfil_data = requests.get(url)
@@ -121,16 +132,6 @@ class ParlametriaFetcher:
     def _make_candidate(
         self, id_autor: int, id_parlametria: int, id_serenata: int, nome_autor: str
     ):
-        found = CandidatePage.objects.filter(id_autor=id_autor).first()
-
-        if found is not None:
-            self.stdout.write(
-                self.style.WARNING(
-                    f"\t\tCandidate id_autor={id_autor} already saved in database, skipping."
-                )
-            )
-            return
-
         try:
             slug = slugify(f"{nome_autor} {id_autor}")
 
