@@ -30,8 +30,6 @@ class Command(BaseCommand):
 
 
 class ParlametriaFetcher:
-    SLEEP = True  # for dev
-    SLEEP_TIME = 2
     candidate_index: CandidateIndexPage = None
 
     def __init__(self, stdout: OutputWrapper, style: Style):
@@ -60,36 +58,36 @@ class ParlametriaFetcher:
         return candidate_index
 
     def _import_candidates(self):
-        self.stdout.write(f"Fetching all actors from {LEGGO_API}")
-        base_autores = requests.get(f"{LEGGO_API}/autores/")
+        """
+        {LEGGO_API}/atores/agregados json format
+        [
+            {
+                "id_autor": int,
+                "id_autor_parlametria": int,
+                "nome_autor": str,
+                "partido": str,
+                "uf": str,
+                "casa_autor": str,
+                "bancada":str,
+                "total_documentos": int,
+                "peso_documentos": float
+            }
+        ]
+        """
+        self.stdout.write(f"Fetching all actors from {LEGGO_API}/atores/agregados")
+        base_autores = requests.get(f"{LEGGO_API}/atores/agregados")
 
         if base_autores.status_code != 200:
-            raise CommandError(f"Could not get candidates data from {LEGGO_API}")
-
-        for row in base_autores.json():
-            self._get_actors(row["id_leggo"])
-
-    def _get_actors(self, id_leggo: str):
-        url = f"{LEGGO_API}/atores/{id_leggo}"
-        self.stdout.write(f"Fetching actors data from {url}")
-        actors = requests.get(url)
-
-        if actors.status_code != 200:
-            # raise CommandError(f"Could not get actors data from {url}")
-            self.stdout.write(
-                self.style.ERROR(f"\tCould not get actors data from {url}")
+            raise CommandError(
+                f"Could not get candidates data from {LEGGO_API}/atores/agregados"
             )
-            return
 
-        for row in actors.json():
+        for actor in base_autores.json():
             self._get_actor_data(
-                row["id_autor"],
-                row["id_autor_parlametria"],
-                row["nome_autor"],
+                actor["id_autor"],
+                actor["id_autor_parlametria"],
+                actor["nome_autor"],
             )
-
-            if self.SLEEP:
-                sleep(self.SLEEP_TIME)
 
     def _get_actor_data(
         self,
