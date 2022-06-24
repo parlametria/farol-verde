@@ -8,6 +8,7 @@ from wagtail.core.models import Site, Page
 import wagtailstreamforms.blocks
 from home.models import SurveysPage
 
+
 def create_survey_page(apps, schema_apps):
     site = Site.objects.get(id=1)
     home = site.root_page
