@@ -1,0 +1,12 @@
+{% if field.help_text == 'category_category' %}
+    <div class="category">{{ field.label_tag }}</div>
+{% elif field.help_text == 'title_title' %}
+    <div class="title">{{ field.label_tag }}</div>
+{% else %}
+    <div class="field-row">
+            {{ field.label_tag }}
+            {{ field }}
+
+            {{ field.errors }}
+        {% endif %}
+    </div>

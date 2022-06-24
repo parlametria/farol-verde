@@ -31,13 +31,13 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 # Application definition
 
 INSTALLED_APPS = [
+    "wagtailstreamforms",
     "home",
     "search",
     "blog",
     "wagtailfontawesome",
     "wagtail_color_panel",
     "wagtail.contrib.modeladmin",
-    "wagtailstreamforms",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -70,6 +70,11 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
+
+WAGTAILSTREAMFORMS_FORM_TEMPLATES = (
+    ('streamforms/form_block.html', 'Default Form Template'),  # default
+    ('home/surveys/survey.html', 'Custom Form Template'),
+)
 
 ROOT_URLCONF = "landing.urls"
 

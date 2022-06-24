@@ -1,0 +1,51 @@
+form {
+    display: grid;
+}
+
+.form-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.field-row {
+    display: grid;
+    grid-gap: .5rem;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+}
+
+.field-row input[type='text'] {
+    padding: .5rem;
+    border: 1px solid #CED4DA;
+    border-radius: .5rem;
+}
+
+.category {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+}
+
+.title {
+    font-weight: bold;
+    margin-bottom: .5rem;
+}
+
+main {
+    padding-top: 2rem;
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+input[type="submit"] {
+    color: white;
+    background: var(--primary-color);
+    padding: .5rem .75rem;
+    border-radius: .25rem;
+    font-weight: 700;
+    border: none;
+    justify-self: center;
+}
