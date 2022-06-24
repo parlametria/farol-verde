@@ -145,6 +145,7 @@ class BlogPost(Page):
             return self.get_siblings().live().first()
 
 
+
 @register_snippet
 class BlogCategory(models.Model):
     name = models.CharField(max_length=255)
