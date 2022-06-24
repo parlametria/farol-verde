@@ -5,9 +5,10 @@ from django.core.management.base import BaseCommand, CommandError, OutputWrapper
 from django.core.management.color import Style
 
 from django.template.defaultfilters import slugify
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Site
 
-from blog.models import Candidate, CandidateIndexPage
+# from home.models import LandingPage
+from candidate.models import CandidatePage, CandidateIndexPage
 
 LEGGO_API = "https://api.parlametria.org.br"
 PERFIL_API = "https://perfil.parlametria.org.br/api"
@@ -42,13 +43,19 @@ class ParlametriaFetcher:
         self._import_candidates()
 
     def _get_or_create_candidates_index(self) -> CandidateIndexPage:
-        root: Page = Page.objects.filter(slug="root").first()
+        # https://stackoverflow.com/questions/24976561/wagtail-pages-giving-none-url-with-live-status
+        home: Page = Page.objects.filter(slug="home").first()
         candidate_index = CandidateIndexPage.objects.filter(slug="candidatos").first()
 
         if not candidate_index:
-            candidate_index = CandidateIndexPage(title="Candidatos", slug="candidatos")
-            root.add_child(instance=candidate_index)
-            root.save()
+            candidate_index = CandidateIndexPage(
+                title="Candidatos",
+                slug="candidatos",
+                description="Lista de candidatos",
+            )
+            home.add_child(instance=candidate_index)
+            home.save()
+            candidate_index.save()
 
         return candidate_index
 
@@ -69,7 +76,9 @@ class ParlametriaFetcher:
 
         if actors.status_code != 200:
             # raise CommandError(f"Could not get actors data from {url}")
-            self.stdout.write(self.style.ERROR(f"\tCould not get actors data from {url}"))
+            self.stdout.write(
+                self.style.ERROR(f"\tCould not get actors data from {url}")
+            )
             return
 
         for row in actors.json():
@@ -114,7 +123,7 @@ class ParlametriaFetcher:
     def _make_candidate(
         self, id_autor: int, id_parlametria: int, id_serenata: int, nome_autor: str
     ):
-        found = Candidate.objects.filter(id_actor=id_autor).first()
+        found = CandidatePage.objects.filter(id_autor=id_autor).first()
 
         if found is not None:
             self.stdout.write(
@@ -127,8 +136,8 @@ class ParlametriaFetcher:
         try:
             slug = slugify(f"{nome_autor} {id_autor}")
 
-            candidate = Candidate(
-                id_actor=id_autor,
+            candidate = CandidatePage(
+                id_autor=id_autor,
                 id_parlametria=id_parlametria,
                 id_serenata=id_serenata,
                 name=nome_autor,

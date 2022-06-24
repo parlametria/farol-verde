@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "home",
     "search",
     "blog",
+    "candidate",
     "wagtailfontawesome",
     "wagtail_color_panel",
     "wagtail.contrib.forms",
