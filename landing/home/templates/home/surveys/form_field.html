@@ -4,9 +4,8 @@
     <div class="title">{{ field.label_tag }}</div>
 {% else %}
     <div class="field-row">
-            {{ field.label_tag }}
-            {{ field }}
-
-            {{ field.errors }}
-        {% endif %}
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
     </div>
+{% endif %}

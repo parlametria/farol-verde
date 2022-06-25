@@ -2,11 +2,6 @@ form {
     display: grid;
 }
 
-.form-title {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-}
-
 .field-row {
     display: grid;
     grid-gap: .5rem;
