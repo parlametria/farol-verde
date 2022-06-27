@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/home/surveys.css' %}">
 
 <main class="container">
-    {{page.surveys}}
+    {% include_block page.surveys %}
 </main>
 
 <script type="text/javascript" src="{% static 'js/animations/general.js' %}"></script>
