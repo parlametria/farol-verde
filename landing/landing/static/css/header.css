@@ -28,4 +28,18 @@ header {
     gap: 2rem;
 }
 
+@media screen and (max-width: 850px) {
+    .header__brandings {
+        gap: .75rem;
+    }
+
+    .header__brandings img {height: 1.25rem;}
+}
+
+@media screen and (max-width: 500px) {
+    .header__brandings {
+        visibility: hidden;
+    }
+}
+
 .header__brandings img {max-height: 2rem;}
