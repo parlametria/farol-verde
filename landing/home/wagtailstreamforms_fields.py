@@ -24,7 +24,7 @@ class CategoryField(BaseField):
         options.update(
             {
                 "help_text": "category_category",
-                "required": True,
+                "required": False,
             }
         )
         return options
@@ -50,7 +50,7 @@ class CategoryField(BaseField):
         options.update(
             {
                 "help_text": "title_title",
-                "required": True,
+                "required": False,
             }
         )
         return options
@@ -66,7 +66,7 @@ class RadioField(BaseField):
     def get_options(self, block_value):
         options = super().get_options(block_value)
         print(block_value)
-        choices = [(c, c["value"]) for c in block_value.get("choices")]
+        choices = [(c['id'], c['value']) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
@@ -90,7 +90,7 @@ class DropdownField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c, c["value"]) for c in block_value.get("choices")]
+        choices = [(c['id'], c["value"]) for c in block_value.get("choices")]
         if block_value.get("empty_label"):
             choices.insert(0, ("", block_value.get("empty_label")))
         options.update({"choices": choices})
@@ -117,7 +117,7 @@ class MultiSelectField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c, c["value"]) for c in block_value.get("choices")]
+        choices = [(c['id'], c["value"]) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
@@ -142,7 +142,7 @@ class CheckboxesField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c, c["value"]) for c in block_value.get("choices")]
+        choices = [(c['id'], c["value"]) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
