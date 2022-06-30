@@ -1,0 +1,80 @@
+<div id="personal-data">
+    <h2>Informações do Candidato</h2>
+    <div class="title">Dados pessoais</div>
+    <div class="field-row">
+        <input name="name" id="name" type="text" required placeholder="Nome Completo">
+    </div>
+
+    <div class="field-row">
+        <input name="birthday" id="birthday" type="date" required placeholder="Data de nascimento">
+        <input name="cpf" id="cpf" type="text" required placeholder="CPF">
+    </div>
+
+    <div class="field-row">
+        <input name="email" id="email" type="email" required placeholder="E-mail">
+        <input name="email-confirm" id="email-confirm" type="email" required placeholder="Confirma e-mail">
+    </div>
+
+    <div class="field-row inline">
+        <div class="title"> É o responsável pelo preenchimento deste formulário?</div>
+        <label for="yes">
+            <input type="radio" onchange="checkResponsible()" name="responsible-yes" required name="responsible" value="yes"> Sim
+        </label>
+        <label for="no">
+            <input type="radio" onchange="checkResponsible()" name="responsible-no" id="no" name="responsible" value="no"> Não
+        </label>
+    </div>
+
+    <div class="field-row responsible-field hide">
+        <input type="text" required name="" id="responsible-name" placeholder="Responsável pelo preenchimento">
+    </div>
+
+    <div class="field-row inline">
+        <div class="title">Candidatura a qual vaga no pleito de 2022:</div>
+        <label for="deputado"><input type="radio" required name="deputado" id="deputado" name="candidate" value="deputado"> Deputado Federal</label>
+        <label for="senador"><input type="radio" name="senador" id="senador" name="candidate" value="senador"> Senador</label>
+    </div>
+
+    <div class="title">Redes sociais</div>
+    <div class="social-networks">
+        <div class="field-row">
+            <input name="twitter" id="twitter" type="text" placeholder="Twitter">
+        </div>
+        <div class="field-row">
+            <input name="facebook" id="facebook" type="text" placeholder="Facebook">
+        </div>
+        <div class="field-row">
+            <input name="instagram" id="instagram" type="text" placeholder="Instagram">
+        </div>
+        <div class="field-row">
+            <input name="youtube" id="youtube" type="text" placeholder="YouTube">
+        </div>
+    </div>
+
+    <div class="title">Contato de Gabinete/Campanha</div>
+    <div class="field-row">
+        <input type="text" required name="gabinete-nome" id="gabinete-nome" placeholder="Nome Completo do Contato">
+        <input type="phone" required name="gabinete-tel" id="gabinete-tel" placeholder="Telefone">
+    </div>
+    <div class="field-row">
+        <input type="email" required name="gabinete-mail" id="gabinete-mail" placeholder="E-mail">
+    </div>
+
+    <div class="title">Domicílio Eleitoral</div>
+    <div class="field-row">
+        <input type="text" required name="domicilio-eleitoral-municipio" id="domicilio-eleitoral-municipio" placeholder="Município">
+        <input type="text" required name="domicilio-eleitoral-uf" id="domicilio-eleitoral-uf" placeholder="UF">
+    </div>
+
+    <hr>
+</div>
+
+<script>
+    var responsibleName = document.querySelector('.responsible-field');
+    var responsibleYes = document.getElementById('yes')
+
+    function checkResponsible() {
+        responsibleName.classList.add('hide')
+        if (responsibleYes.checked) responsibleName.classList.remove('hide')
+    }
+</script>

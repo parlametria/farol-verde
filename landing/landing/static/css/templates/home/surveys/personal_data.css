@@ -1,0 +1,34 @@
+#personal-data .field-row {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#personal-data .inline {
+    justify-content: flex-start;
+    grid-gap: 2.5rem;
+    align-items: center;
+    margin-top: 2.5rem;
+}
+
+#personal-data .title {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+#personal-data > .title {margin-top: 2.5rem;}
+
+#personal-data .inline .title {
+    margin-right: 3.75rem;
+}
+
+hr {margin-block: 2.5rem}
+
+.social-networks {
+    display: grid;
+    justify-content: flex-start;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+}
+
