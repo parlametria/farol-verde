@@ -1,20 +1,50 @@
+main.container {padding-inline: 2rem;}
+
 form {
     display: grid;
     margin-bottom: 2rem;
 }
 
-.field-row {
-    display: grid;
-    grid-gap: .5rem;
-    margin-bottom: 1rem;
-    padding-left: 1rem;
+h2 {font-weight: 300;}
+
+form h2 {
+    font-weight: 700;
+    margin-bottom: 1.75rem;
 }
 
-.field-row input[type='text'] {
-    padding: .5rem;
-    border: 1px solid #CED4DA;
-    border-radius: .5rem;
+.field-row {
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: .5rem;
+    margin-bottom: 1rem;
 }
+
+.field-row ul {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: flex-start;
+    grid-gap: 2.75rem;
+    margin-inline-start: 2.75rem;
+    padding-inline-start: .5rem;
+}
+
+.field-row input, select {
+    padding: .5rem 1rem;
+    border: 1px solid #CED4DA;
+    border-radius: .25rem;
+    height: 1.75rem;
+}
+
+.field-row input::placeholder {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+.field-row input[type="radio"] {
+    margin: 0;
+}
+
+select {background: white;}
 
 .category {
     font-size: 1.125rem;
@@ -22,8 +52,9 @@ form {
 }
 
 .title {
-    font-weight: bold;
-    margin-bottom: .5rem;
+    font-weight: 300;
+    margin-bottom: .75rem;
+    font-size: 24px;
 }
 
 main {
@@ -39,13 +70,34 @@ main {
 input[type="submit"] {
     color: white;
     background: var(--primary-color);
-    padding: .5rem .75rem;
-    border-radius: .25rem;
+    padding: .5rem 1rem;
+    border-radius: 100vmax;
     font-weight: 700;
     border: none;
     justify-self: center;
 }
 
-.field-row li {
-    list-style: none;
+.field-row li {list-style: none;}
+
+.field-row label {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
 }
+
+.field-row.error {
+    background: #ff000033;
+    border-radius: .25rem;
+    padding: 1rem;
+}
+
+.errorlist {
+    border-left: 1px solid black;
+}
+
+.errorlist li {
+    list-style: circle;
+    margin-left: 2rem;
+    font-weight: bold;
+}
+
