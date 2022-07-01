@@ -1,5 +1,6 @@
 form {
     display: grid;
+    margin-bottom: 2rem;
 }
 
 .field-row {
