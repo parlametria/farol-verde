@@ -8,34 +8,9 @@
     {% for field in form.visible_fields %}
         {% include 'home/surveys/form_field.html' %}
     {% endfor %}
-
-    <div class="actions">
-    <a class="btn btn-round modal-toggle">Confirmar envio</a>
-    </div>
-    <div class="modal">
-        <div class="modal-backdrop"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Confirme seus dados</h2>
-                <a class="modal-close">
-                    <img src="{% static 'img/icons/times.svg' %}">
-                </a>
-            </div>
-            
-            <div class="modal-all">
-                <div class="modal-body">
-                </div>
-                <hr>
-                <div class="lgpd_text">
-                    Em atenção à <b> Geral de Proteção de Dados, Lei n. 13.709/2018</b>, o titular concorda com o tratamento de seus dados coletados pela <b>Controladora (Dado Capital, organização social com CNPJ de n. 26.202.950/0001-92, endereço à SEPS 705/905, bloco C, sala 20, Edifício Mont Blanc, Brasília/DF)</b>, para fins exclusivos de cadastro de sistema de usuários e produção de relatórios temáticos, os quais podem ser publicizados. A plataforma <b>Farol Verde</b> observa os princípios e as garantias estabelecidas pela <u>Lei n. 13.709/2018</u> . Dados pessoais anonimizados, sem possibilidade de associação ao indivíduo, poderão ser mantidos por período indefinido. O Titular poderá solicitar via e-mail ou correspondência à Controladora, a qualquer momento, que sejam eliminados os dados pessoais não anonimizados do Titular.
-                </div>
-            </div>
-            
-            <div class="modal-footer">
-            <a class="btn btn-round btn-primary modal-close submit" href="#">{{ value.form.submit_button_text }}</a>
-            </div>
-        </div>
+    <label for="terms-conditions">
+        <input type="checkbox" required>
+        Eu aceito os <a href="/terms-and-conditions">Termos e Condições</a>
+    </label>
+    <input type="submit" value="{{ value.form.submit_button_text }}">
 </form>
-<script src="{% static 'js/components/modal.js' %}"></script>
-<script src="{% static 'js/home/surveys.js' %}"></script>
-<hr>
