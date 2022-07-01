@@ -45,8 +45,7 @@ class ParlametriaFetcher:
 
         if not candidate_index:
             # https://stackoverflow.com/questions/24976561/wagtail-pages-giving-none-url-with-live-status
-            home: Page = Page.objects.filter(slug="home").first()
-
+            home: Page = Page.objects.filter(slug="home-2").first()
             candidate_index = CandidateIndexPage(
                 title="Candidatos",
                 slug="candidatos",
