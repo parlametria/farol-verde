@@ -1,17 +1,31 @@
 footer {
-    width: 100vw;
-    height: 13rem;
+    height: 4rem;
     background: var(--dark-blue);
     padding: 1rem 0;
     position: relative;
 }
 
-footer .footer-content {
+footer .footer__content {
     display: flex;
     flex-direction: column;
-    place-items: center;
+    place-items: flex-end;
     justify-content: space-evenly;
     gap: 30px;
+    max-width: unset;
+    margin-right: 70px;
+    float: right;
+}
+
+footer .footer__brandings {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+footer .footer__brandings span {
+    color: white;
+    font-style: italic;
+    font-weight: 500;
 }
 
 footer a {
@@ -28,7 +42,7 @@ footer .footer-img {
 }
 
 footer img {
-    width: 100px;
+    width: 140px;
 }
 
 footer .footer-menu {

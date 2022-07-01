@@ -1,12 +1,14 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 <header>
-    <div class="header__content container">
-        <a href="/" class="header__logo">Farol Verde</a>
-        <div class="header__brandings">
-            <img src="{% static 'img/Dado Capital.svg' %}">
-            <img src="{% static 'img/Pulso Público.svg' %}">
-            <img src="{% static 'img/RAC.svg' %}">
+    <div class="container">
+        <div class="header__content">
+            <a href="/" class="header__logo"><img src="{% static 'img/logo.svg' %}"></a>
+            <div class="header__links">
+                <a href="/enquete" class="header__item">Enquete</a>
+                <a class="header__item" disabled>Candidatos</a>
+                <a class="header__item" disabled>Blog</a>
+            </div>
         </div>
     </div>
 </header>
