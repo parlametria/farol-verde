@@ -7,6 +7,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/home/surveys/personal_data.css' %}">
 
 <main class="container">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% include_block page.surveys %}
 </main>
 

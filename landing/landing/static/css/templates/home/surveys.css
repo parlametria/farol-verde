@@ -5,10 +5,17 @@ form {
     margin-bottom: 2rem;
 }
 
-h2 {font-weight: 300;}
+h2 {
+    font-weight: 300;
+    font-size: 1.5rem;
+}
 
-form h2 {
+.category label {
     font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.category {
     margin-bottom: 1.75rem;
 }
 
@@ -38,6 +45,7 @@ form h2 {
 .field-row input::placeholder {
     font-family: 'Inter', sans-serif;
     font-weight: 400;
+    font-size: 1rem;
 }
 
 .field-row input[type="radio"] {

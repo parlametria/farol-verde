@@ -3,6 +3,30 @@ from wagtailstreamforms.fields import BaseField, register
 from wagtail.core import blocks
 from django.utils.translation import gettext_lazy as _
 
+@register("category")
+class CategoryField(BaseField):
+    field_class = forms.CharField
+    type = "category"
+    icon = "redirect"
+
+    def get_form_block(self):
+        return blocks.StructBlock(
+            [
+                ("label", blocks.CharBlock()),
+            ],
+            icon=self.icon,
+            label=self.label,
+        )
+
+    def get_options(self, block_value):
+        options = super().get_options(block_value)
+        options.update(
+            {
+                "help_text": "category_category",
+                "required": False,
+            }
+        )
+        return options
 @register("title")
 class CategoryField(BaseField):
     field_class = forms.CharField
@@ -63,7 +87,7 @@ class DropdownField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c['id'], c["value"]) for c in block_value.get("choices")]
+        choices = [(c['value'], c["value"]) for c in block_value.get("choices")]
         if block_value.get("empty_label"):
             choices.insert(0, ("", block_value.get("empty_label")))
         options.update({"choices": choices})
@@ -90,7 +114,7 @@ class MultiSelectField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c['id'], c["value"]) for c in block_value.get("choices")]
+        choices = [(c['value'], c["value"]) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
@@ -115,7 +139,7 @@ class CheckboxesField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c['id'], c["value"]) for c in block_value.get("choices")]
+        choices = [(c['value'], c["value"]) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
