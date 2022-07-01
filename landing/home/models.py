@@ -43,3 +43,15 @@ class SurveysPage(Page):
         StreamFieldPanel("surveys"),
     ]
 
+class TermsPage(Page):
+    is_creatable = False
+    
+    body = RichTextField(
+        null=False,
+        blank=False,
+        default="lorem ipsum grandão"
+    )
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel("body"),
+    ]
