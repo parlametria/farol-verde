@@ -1,3 +1,5 @@
+{% load static %}
+
 <div id="personal-data">
     <h2>Informações do Candidato</h2>
     <div class="title">Dados pessoais</div>
@@ -38,15 +40,19 @@
     <div class="title">Redes sociais</div>
     <div class="social-networks">
         <div class="field-row">
+            <img src="{% static 'img/social_icons/twitter.svg' %}" alt="Twitter">
             <input name="twitter" id="twitter" type="text" placeholder="Twitter">
         </div>
         <div class="field-row">
+            <img src="{% static 'img/social_icons/facebook.svg' %}" alt="facebook">
             <input name="facebook" id="facebook" type="text" placeholder="Facebook">
         </div>
         <div class="field-row">
+            <img src="{% static 'img/social_icons/instagram.svg' %}" alt="instagram">
             <input name="instagram" id="instagram" type="text" placeholder="Instagram">
         </div>
         <div class="field-row">
+            <img src="{% static 'img/social_icons/youtube.svg' %}" alt="youtube">
             <input name="youtube" id="youtube" type="text" placeholder="YouTube">
         </div>
     </div>
