@@ -2,13 +2,16 @@ html {
     overflow-x: hidden;
 }
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
     padding: 0;
     margin: 0;
     overflow-x: hidden;
+    background: url('/static/img/curvas_lateral-dir.svg');
+    background-size: 46vh;
+    background-repeat: no-repeat;
+    background-position: 87vw 0vh;
 }
 section {
-    padding: 2rem;
     scroll-snap-type: y mandatory;
     scroll-snap-align: start;
 }
@@ -74,6 +77,11 @@ h4 {
     font-size: 1.125rem;
     line-height: 1.5em;
 }
+p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
 a:hover {
     text-decoration: underline;
 }
@@ -105,7 +113,52 @@ a:hover {
     padding-right: 15px;
     padding-left: 15px;
     margin-inline: auto;
-    max-width: 90rem;
+    max-width: 750px;
+    margin-left: 70px;
+}
+main.container {
+    flex-grow: 1;
+    background: white;
+}
+
+aside.side-images {
+    width: 33%;
+    position: fixed;
+    height: 100vh;
+    overflow: hidden;
+}
+aside.side-images img {
+    min-width: 100%;
+    position: absolute;
+    bottom: 0;
+    min-height: 100vh;
+}
+
+@keyframes loader-animate {
+    0% {
+        transform: scaleX(0);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+aside.side-images .loader {
+  height: 5px;
+  width: 200%;
+  background: white;
+  opacity: 0.4;
+  animation: loader-animate 25s linear infinite;
+  position: absolute;
+  bottom: 0;
+  left: -100%;
+}
+
+aside + .main {
+    width: 67%;
+    margin-left: 33%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 768px) {
@@ -128,8 +181,20 @@ a:hover {
 }
 
 @media (max-width: 1200px) {
+    body {
+      background: unset;
+    }
     img {
         max-width: 100%;
         height: auto;
     }
+    aside.side-images {
+        display: none;
+    }
+    
+    aside + .main {
+        width: 100%;
+        margin-left: 0;
+    }
 }
+

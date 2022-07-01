@@ -1,25 +1,44 @@
 header {
     display: flex;
+    margin-top: 60px;
     justify-content: center;
-    background: var(--primary-color);
     align-items: center;
     z-index: 700;
     height: 4rem;
-    width: 100vw;
 }
 
 .header__content {
+    height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid var(--dark-gray);
+    padding: 0 20px;
+    background: white;
 }
 
 .header__logo {
-    font-size: 1.25rem;
+    color: var(--primary-color);
+    width: 168px;
+}
+
+.header__links {
+    font-size: 24px;
     font-weight: 700;
+    line-height: 33px;
+    letter-spacing: 0em;
+    display: flex;
+    gap: 3rem;
+}
+
+.header__links a {
+    color: black;
     text-decoration: none;
-    color: white;
+}
+
+.header__links a[disabled] {
+  opacity: .5;
 }
 
 .header__brandings {

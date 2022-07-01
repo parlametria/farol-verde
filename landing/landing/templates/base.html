@@ -30,7 +30,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,700;1,500&display=swap" rel="stylesheet">
     
     {% fontawesome_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/variables.css' %}">
@@ -39,17 +39,28 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
 
-    {% include 'header.html' %}
+    <aside class="side-images">
+      <img src="{% static 'img/side_images/placeholder_1.png' %}">
+      <img src="{% static 'img/side_images/placeholder_2.png' %}">
+      <img src="{% static 'img/side_images/placeholder_3.png' %}">
+      <img src="{% static 'img/side_images/placeholder_4.png' %}">
+      <img src="{% static 'img/side_images/placeholder_5.png' %}">
+      <img src="{% static 'img/side_images/placeholder_6.png' %}">
+      <div class="loader"></div>
+    </aside>
+    <div class="main">
+        {% include 'header.html' %}
 
-    {% block content %}{% endblock %}
-
-    {% comment %} <div class="footer--normal">
-        {% include 'footer.html' %}
+        {% block content %}{% endblock %}
+        <div class="footer--normal">
+            {% include 'footer.html' %}
+        </div>
+        <div class="footer--mobile" hidden>
+            {% include 'footer-mobile.html' %}
+        </div>
     </div>
-    <div class="footer--mobile" hidden>
-        {% include 'footer-mobile.html' %}
-    </div> {% endcomment %}
     {# Global javascript #}
+    <script async src="{% static 'js/side-images.js' %}"></script>
 
     {% block extra_js %}
     {% endblock %}
