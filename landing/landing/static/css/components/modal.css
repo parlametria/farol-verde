@@ -44,6 +44,7 @@
     padding: 1rem;
     border-radius: .5rem;
     z-index: 100000;
+    justify-self: center;
 }
 
 .modal-content .modal-footer {
