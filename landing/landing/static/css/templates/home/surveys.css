@@ -95,10 +95,55 @@ input[type="submit"], .modal-toggle {
     align-items: center;
 }
 
+.field-row li {list-style: none;}
+
+.field-row label {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
 .field-row.error {
-    background: #ff000033;
+    background: #fff;
     border-radius: .25rem;
-    padding: 1rem;
+}
+.requided_error{
+    margin-top:-8px;
+    background:#FFEEEE;
+    padding: 10px 10px;
+    color:red
+}
+.bg_red{
+    background-color: red;
+}
+.bg_white{
+    background-color: white;
+}
+.icon_alert{
+    -webkit-mask: url(../../../img/icons/alert.svg) no-repeat center;
+    mask: url(../../../img/icons/alert.svg) no-repeat center;
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    float: left;
+    margin-top: 2px;
+}
+.messages li.error {
+    background-color: red;
+    list-style-type: none;
+    margin-left: -40px;
+    padding: 15px;
+    font-weight: 900;
+    color: white;
+}
+.field-row.error input{
+    border: 2px solid red;
+}
+.field-row.error ul {
+    border: 2px solid red;
+    margin-inline-start: 0;
+    padding-inline-start: 2.75rem;
+    margin-bottom: 0px;
 }
 
 .errorlist {
