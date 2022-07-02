@@ -10,20 +10,20 @@
         {% include 'home/surveys/form_field.html' %}
     {% endfor %}
 
-    <a class="btn btn-round btn-primary modal-toggle">Confirmar envio</a>
+    <a class="btn btn-round modal-toggle">Confirmar envio</a>
 
     <div class="modal">
         <div class="modal-backdrop"></div>
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Confirme seus dados</h2>
-                <a class="modal-close">x</a>
+                <a class="modal-close">
+                    <img src="{% static 'img/icons/times.svg' %}">
+                </a>
             </div>
-            <div class="modal-body">
-                <div class="spin"></div>
-            </div>
+            <div class="modal-body"></div>
             <div class="modal-footer">
-                  <input class="btn btn-round btn-primary" type="submit" value="{{ value.form.submit_button_text }}">
+                <input class="btn btn-round btn-primary" type="submit" value="{{ value.form.submit_button_text }}">
             </div>
         </div>
 </form>

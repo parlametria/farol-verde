@@ -63,7 +63,7 @@ class RadioField(BaseField):
     def get_options(self, block_value):
         options = super().get_options(block_value)
         print(block_value)
-        choices = [(c['id'], c['value']) for c in block_value.get("choices")]
+        choices = [(c['value'], c['value']) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 

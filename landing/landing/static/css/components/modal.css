@@ -6,36 +6,55 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1000000;
+    z-index: 100000;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal.open {
-    display: block;
+    display: grid;
     opacity: 1;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close img {
+    width: 1rem;
 }
 
 .modal-backdrop {
     opacity: 0.3;
     background: black;
-    width: 100%;
-    height: 100%;
-}
-.modal-content {
-    background: white;
+    width: 100vw;
     position: absolute;
+    height: 100vh;
+}
+
+.modal-content {
+    display: grid;
+    grid-template-rows: 3rem 60vh 3rem;
+    grid-gap: .25rem;
+    background: white;
     width: 80%;
     max-width: 700px;
-    height: 60vh;
-    top: 12vh;
-    left: 61%;
-    transform: translateX(-50%);
+    padding: 1rem;
+    border-radius: .5rem;
+    z-index: 100000;
 }
 
 .modal-content .modal-footer {
-		position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     padding: 15px;
     border-top: 1px solid var(--dark-gray);
+}
+
+.modal-body {
+    overflow-y: auto;
+    padding: 1rem;
 }
