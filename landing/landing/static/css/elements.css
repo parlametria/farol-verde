@@ -1,6 +1,7 @@
 html {
     overflow-x: hidden;
 }
+
 body {
     font-family: 'Noto Sans', sans-serif;
     padding: 0;
@@ -10,6 +11,7 @@ body {
     background-size: 51vh;
     background-repeat: no-repeat;
     background-position: 87vw 0vh;
+    background-attachment: fixed;
 }
 section {
     scroll-snap-type: y mandatory;
@@ -114,7 +116,7 @@ a:hover {
     padding-left: 15px;
     margin-inline: auto;
     max-width: 750px;
-    margin-left: 70px;
+    margin-left: 4.5rem;
 }
 main.container {
     flex-grow: 1;
@@ -186,7 +188,7 @@ aside + .main {
         height: auto;
     }
     aside.side-images {
-        display: none;
+        visibility: hidden;
     }
     
     aside + .main {
@@ -195,8 +197,17 @@ aside + .main {
     }
 }
 
+@media (max-width: 1198px) {
+    aside.side-images {
+        display: none;
+    }
+}
+
 @media (max-width: 1600px) {
     body {
-      background: unset;
+        background: unset;
+    }
+    .container {
+        margin-left: auto;
     }
 }

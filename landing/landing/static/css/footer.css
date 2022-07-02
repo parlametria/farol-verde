@@ -10,10 +10,8 @@ footer .footer__content {
     flex-direction: column;
     place-items: flex-end;
     justify-content: space-evenly;
-    gap: 30px;
+    gap: 2rem;
     max-width: unset;
-    margin-right: 70px;
-    float: right;
 }
 
 footer .footer__brandings {

@@ -1,65 +1,66 @@
-.heading {
-}
 .home__ctas {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     align-items: center;
+    justify-content: space-between;
     text-align: center;
-    padding: 40px 0 70px;
+    padding: 2.5rem 0 4.3rem;
+    grid-column-gap: 2rem;
 }
 
-.home__ctas .label {
-    padding: 20px;
-}
+.home__ctas .label {padding: 1.125rem;}
 
-.home__ctas .cta-candidato {
+.home__ctas > * {
     font-weight: 700;
-}
-.home__ctas .cta-candidato a {
-    color: var(--primary-color);
-    font-size: 24px;
-    text-decoration: unset;
-    border: 1px solid var(--primary-color);
-    border-radius: 33px;
-    padding: 10px 30px;
+    flex: 1;
+    width: 100%;
 }
 
-.home__ctas .cta-eleitor {
-    font-weight: 700;
+.home__ctas > * p:not(.label) {
+  font-size: 24px;
+  border: 1px solid var(--button-color);
+  border-radius: 100vmax;
+  padding: .75rem 1.75rem;
 }
-.home__ctas .cta-eleitor a {
-    color: var(--dark-blue);
-    font-size: 24px;
-    text-decoration: unset;
-    border: 1px solid var(--dark-blue);
-    border-radius: 33px;
-    padding: 10px 30px;
+
+.home__ctas > * a {
+  text-decoration: unset;
+  color: var(--button-color);
+}
+
+.cta-candidato {
+  --button-color: var(--primary-color);
+}
+
+.cta-eleitor {
+  --button-color: var(--dark-blue);
 }
 
 .partners {
-  display: flex;
-  gap: 3rem;
+  display: grid;
+  grid-template-columns: 6rem auto;
+  grid-gap: 3rem;
 }
-.partners-flex {
-  display: flex;
-  gap: 1rem;
+
+.partners__items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  grid-gap: 1rem;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: end;
-  margin-bottom: 60px;
+  margin-bottom: 4rem;
 }
-.partners a {
-  min-width: 110px;
-  max-width: 110px;
+
+.partners.large .partners__items {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
-.partners a.large {
-  min-width: 230px;
-  max-width: 230px;
-}
+
 .partners img {
   width: 100%;
+  max-width: 110px;
 }
+
+.partners.large img { max-width: 230px; }
 
 .partners p {
     font-family: Noto Sans;

@@ -5,6 +5,7 @@ header {
     align-items: center;
     z-index: 700;
     height: 4rem;
+    margin-bottom: 2rem;
 }
 
 .header__content {
