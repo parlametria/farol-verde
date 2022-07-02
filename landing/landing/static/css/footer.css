@@ -1,5 +1,5 @@
 footer {
-    height: 4rem;
+    min-height: 4rem;
     background: var(--dark-blue);
     padding: 1rem 0;
     position: relative;
@@ -16,6 +16,7 @@ footer .footer__content {
 
 footer .footer__brandings {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 2.5rem;
 }
@@ -50,7 +51,7 @@ footer .footer-menu {
     width: 60%;
 }
 
-
+/* 
 @media (max-width: 1200px) {
     .footer--normal {
         display: none;
@@ -80,4 +81,4 @@ footer .footer-menu {
     .footer__icon {
         margin-left: 9px;
     }
-}
+} */

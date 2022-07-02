@@ -4,6 +4,9 @@
     <div class="container">
         <div class="header__content">
             <a href="/" class="header__logo"><img src="{% static 'img/logo.svg' %}"></a>
+            <button class="header__btn" onclick="openMenu()">
+                <img src="{% static 'img/icons/bars.svg' %}">
+            </button>
             <div class="header__links">
                 <a href="/enquete" class="header__item">Enquete</a>
                 <a class="header__item" disabled>Candidatos</a>
