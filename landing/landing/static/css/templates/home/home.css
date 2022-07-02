@@ -71,3 +71,11 @@
     letter-spacing: 0em;
     text-align: left;
 }
+
+
+@media screen and (max-width: 830px) {
+  .partners {
+    display: block;
+    margin-bottom: 1rem;
+  }
+}
