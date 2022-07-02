@@ -37,6 +37,30 @@
     padding: 10px 30px;
 }
 
+.partners {
+  display: flex;
+  gap: 3rem;
+}
+.partners-flex {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: end;
+  margin-bottom: 60px;
+}
+.partners a {
+  min-width: 110px;
+  max-width: 110px;
+}
+.partners a.large {
+  min-width: 230px;
+  max-width: 230px;
+}
+.partners img {
+  width: 100%;
+}
+
 .partners p {
     font-family: Noto Sans;
     font-size: 16px;

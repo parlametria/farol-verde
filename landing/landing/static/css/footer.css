@@ -19,7 +19,7 @@ footer .footer__content {
 footer .footer__brandings {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2.5rem;
 }
 
 footer .footer__brandings span {

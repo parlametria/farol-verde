@@ -7,7 +7,7 @@ body {
     margin: 0;
     overflow-x: hidden;
     background: url('/static/img/curvas_lateral-dir.svg');
-    background-size: 46vh;
+    background-size: 51vh;
     background-repeat: no-repeat;
     background-position: 87vw 0vh;
 }
@@ -181,9 +181,6 @@ aside + .main {
 }
 
 @media (max-width: 1200px) {
-    body {
-      background: unset;
-    }
     img {
         max-width: 100%;
         height: auto;
@@ -198,3 +195,8 @@ aside + .main {
     }
 }
 
+@media (max-width: 1600px) {
+    body {
+      background: unset;
+    }
+}

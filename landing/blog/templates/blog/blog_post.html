@@ -36,7 +36,6 @@
                         <div class="content-header-data">
                             {% if page.category %}
                                 <div class="tag-mark content-mark {{ page.category|lower }}">{{page.category}}</div>
-                                <a hidden class="category__link color--{{ page.category|lower }}" href="/blog/?category={{page.category|lower}}">{{ page.category|lower }}</a>
                             {% endif %}
                             <span class="shadow page__info">{{ page.date|date:"d M" }} <span class="post__readtime">- <span id="time-of-reading"></span>min. de leitura</span></span>
                         </div>
@@ -44,18 +43,7 @@
                 <div class="content-body fade-up">
                     {{ page.body|richtext }}
                 </div>
-                <div class="content-footer">
-                    <a href="/blog/?category={{page.category|lower}}" class="see-more fade-left">
-                        <span class="shadow">VEJA MAIS EM</span>
-                        {% if page.category %}
-                            <button class="btn {{ page.category|lower }}"><i class="fa fa-4x {{ page.category.icon }}"></i><h3>{{page.category}}</h3></button>
-                        {% endif %}
-                    </a>
-                </div>
                 <div class="content-footer--mobile" hidden>
-                    {% if page.category %}
-                        <a href="/blog/?category={{page.category|lower}}" class="link--first footer__link color--{{ page.category|lower }}">ver mais em {{ page.category|lower }}</a>
-                    {% endif %}
                     <span class="link--bottom">
                         <a href="{% pageurl page.previous_post %}" id="footer__link--previous" class="footer__link--black"><i class="fa fa-lg fa-caret-left"></i> anterior</a>
                         <a href="{% pageurl page.next_post %}" id="footer__link--next" class="footer__link--black">próximo <i class="fa fa-lg fa-caret-right"></i></a>

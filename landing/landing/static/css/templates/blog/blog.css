@@ -1,16 +1,6 @@
-h1,
-h2,
-h3,
-h4,
-h5 {
-    margin: 0;
-    font-family: 'Patua One', sans-serif;
+:root {
+    --highlight-color: var(--dark-blue) !important;
 }
-
-#blog {
-    padding: 5rem 0;
-}
-
 .institucional {
     --highlight-color: var(--purple-color) !important;
 }
@@ -51,10 +41,8 @@ h5 {
 /* Below Content */
 .template-blogindexpage .content {
     display: grid;
-    grid-template-columns: 1fr 3fr;
     grid-column-gap: 4.5rem;
     grid-row-gap: var(--gap-size);
-
     margin-bottom: 3rem;
     margin-top: 2rem;
 }

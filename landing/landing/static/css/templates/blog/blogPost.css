@@ -6,13 +6,8 @@
     margin: 3.75rem 0;
 }
 
-main {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-gap: var(--gap-size);
-}
-
 main #sidebar-panels {
+    display: none;
     grid-column-start: 1;
     grid-column-end: 4;
 }

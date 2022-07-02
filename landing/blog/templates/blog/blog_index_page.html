@@ -12,37 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/templates/blog/components/highlights.css' %}">
 
     <div id="blog" class="container">
-        {% include 'blog/components/highlights.html' %}
-
-        <hr>
-
         <div class="content">
-            <div id="search-container" class="fade-up">
-                <input type="text">
-                <i class="icon fa fa-search"></i>
-            </div>
-
-            <div id="category-filters" class="fade-left">
-                <span class="shadow">FILTRAR POR</span>
-                {% for category in categories %}
-                    <button class="btn {{ category|lower }}"><i class="fa fa-4x {{ category.icon }}"></i><h3>{{category}}</h3></button>
-                {% endfor %}
-            </div>
-
-            <div id="category-filters--mobile">
-                <ul class="category-list">
-                    <li id="recent-posts-category" class="category-list__item category-list__item--selected"><a onclick="changeCategoryMobile(event.target.parentNode, '')">+ recentes</a></li>
-                    {% for category in categories %}
-                        <li class="category-list__item"><a onclick="changeCategoryMobile(event.target.parentNode, '{{category}}')">{{ category|lower }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>            
-
-            <div id="sidebar-panels" class="fade-up">
-                {% with page.specific.sidebar_panels as panels %}
-                    {% include 'blog/components/sidebar-panels.html' %}
-                {% endwith %}
-            </div>
 
             <div id="posts-container" class="fade-up">
                 <div class="posts"></div>
