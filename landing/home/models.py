@@ -20,6 +20,12 @@ class LandingPage(Page):
         FieldPanel("heading"),
     ]
 
+    def get_context(self, request):
+        context = super(LandingPage, self).get_context(request)
+        survey_url = SurveysPage.objects.first().url
+        context["survey_url"] = survey_url
+        return context
+
 
 class SurveysPage(Page):
     is_creatable = False
