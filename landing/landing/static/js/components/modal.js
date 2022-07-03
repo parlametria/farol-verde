@@ -14,11 +14,11 @@ function setToggle() {
 }
 
 function setQuestionsModal() {
-  const questions = Array.from(document.querySelectorAll('*:not(.modal) .question:not(.question-modal)'));
+  const questions = Array.from(document.querySelectorAll('.question'));
   
   function makeQuestion(elm) {
     var elm = elm.cloneNode(true)
-    elm.classList.add('question-modal')
+    elm.classList.remove('question')
     let inputs = Array.from(elm.querySelectorAll('input'));
     inputs = inputs.filter(input => input.type !== 'hidden' && (input.type !== 'radio' || input.checked));
     const value = inputs.map(input => input.value)[0];
