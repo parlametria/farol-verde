@@ -8,7 +8,6 @@
     right: 0;
     z-index: 100000;
     align-items: center;
-    justify-content: center;
 }
 
 .modal.open {
@@ -27,11 +26,11 @@
 }
 
 .modal-backdrop {
+    position: absolute;
     opacity: 0.3;
     background: black;
-    width: 100vw;
-    position: absolute;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 }
 
 .modal-content {
@@ -39,12 +38,13 @@
     grid-template-rows: 3rem 60vh 3rem;
     grid-gap: .25rem;
     background: white;
-    width: 80%;
-    max-width: 700px;
+    width: 80vw;
+    max-width: 720px;
     padding: 1rem;
     border-radius: .5rem;
     z-index: 100000;
-    justify-self: center;
+    left: calc(33% + 80px);
+    position: absolute;
 }
 
 .modal-content .modal-footer {
