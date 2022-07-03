@@ -163,6 +163,41 @@ aside + .main {
     flex-direction: column;
 }
 
+.bg_red{
+    background-color: red;
+}
+.bg_white{
+    background-color: white;
+}
+.icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    float: left;
+    margin-top: 2px;
+}
+.messages li.success {
+    background-color: var(--primary-color);
+}
+.messages li.success .icon {
+    -webkit-mask: url(/static/img/icons/check.svg) no-repeat center;
+    mask: url(/static/img/icons/check.svg) no-repeat center;
+}
+.messages li.error {
+    background-color: red;
+}
+.messages li.error .icon {
+    -webkit-mask: url(/static/img/icons/alert.svg) no-repeat center;
+    mask: url(/static/img/icons/alert.svg) no-repeat center;
+}
+.messages li {
+    list-style-type: none;
+    margin-left: -40px;
+    padding: 15px;
+    font-weight: 900;
+    color: white;
+}
+
 @media (max-width: 768px) {
     h1 {
         font-size: 2.2rem;
@@ -189,17 +224,15 @@ aside + .main {
     }
     aside.side-images {
         visibility: hidden;
+        display: none;
     }
     
     aside + .main {
         width: 100%;
         margin-left: 0;
     }
-}
-
-@media (max-width: 1198px) {
-    aside.side-images {
-        display: none;
+    .container {
+      width: 90%;
     }
 }
 

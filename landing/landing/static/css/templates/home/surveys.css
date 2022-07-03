@@ -1,5 +1,4 @@
 form {
-    display: grid;
     margin-bottom: 2rem;
 }
 
@@ -111,29 +110,6 @@ input[type="submit"], .modal-toggle {
     padding: 10px 10px;
     color:red
 }
-.bg_red{
-    background-color: red;
-}
-.bg_white{
-    background-color: white;
-}
-.icon_alert{
-    -webkit-mask: url(../../../img/icons/alert.svg) no-repeat center;
-    mask: url(../../../img/icons/alert.svg) no-repeat center;
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-    float: left;
-    margin-top: 2px;
-}
-.messages li.error {
-    background-color: red;
-    list-style-type: none;
-    margin-left: -40px;
-    padding: 15px;
-    font-weight: 900;
-    color: white;
-}
 .field-row.error input{
     border: 2px solid red;
 }
@@ -152,4 +128,68 @@ input[type="submit"], .modal-toggle {
     list-style: circle;
     margin-left: 2rem;
     font-weight: bold;
+}
+
+div:nth-of-type(9).field-row.question,
+div:nth-of-type(10).field-row.question,
+div:nth-of-type(11).field-row.question,
+div:nth-of-type(12).field-row.question {
+    display: inline-flex;
+    width: calc(50% - 8px);
+    margin: 0 10px 25px 0;
+}
+
+div:nth-of-type(9).field-row.question input,
+div:nth-of-type(10).field-row.question input,
+div:nth-of-type(11).field-row.question input,
+div:nth-of-type(12).field-row.question input {
+    flex: 1;
+}
+
+div:nth-of-type(9).field-row.question label,
+div:nth-of-type(10).field-row.question label,
+div:nth-of-type(11).field-row.question label,
+div:nth-of-type(12).field-row.question label {
+    display: inline-block;
+    width: 0px;
+    padding: 0;
+    overflow: hidden;
+    margin-right: 45px;
+}
+
+div:nth-of-type(9).field-row.question label::before,
+div:nth-of-type(10).field-row.question label::before,
+div:nth-of-type(11).field-row.question label::before,
+div:nth-of-type(12).field-row.question label::before {
+    display: block;
+    content: "";
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    margin: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+div:nth-of-type(9).field-row.question label::before {
+    background-image: url(/static/img/social_icons/twitter.svg);
+}
+div:nth-of-type(10).field-row.question label::before {
+    margin-top: 8px;
+    background-image: url(/static/img/social_icons/facebook.svg);
+}
+div:nth-of-type(11).field-row.question label::before {
+    margin-top: 8px;
+    background-image: url(/static/img/social_icons/instagram.svg);
+}
+div:nth-of-type(12).field-row.question label::before {
+    margin-top: 13px;
+    background-image: url(/static/img/social_icons/youtube.svg);
+}
+div:nth-of-type(10).field-row.question,
+div:nth-of-type(12).field-row.question {
+    margin-right: 0;
+}
+form .actions {
+    text-align: center;
+    margin: 30px;
 }

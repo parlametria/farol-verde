@@ -38,12 +38,12 @@
     grid-template-rows: 3rem 60vh 3rem;
     grid-gap: .25rem;
     background: white;
-    width: 80vw;
+    width: 51%;
     max-width: 720px;
     padding: 1rem;
     border-radius: .5rem;
     z-index: 100000;
-    left: calc(33% + 80px);
+    left: calc(33% + 85px);
     position: absolute;
 }
 
@@ -58,4 +58,19 @@
 .modal-body {
     overflow-y: auto;
     padding: 1rem;
+}
+@media (max-width: 1600px) {
+    .modal-content {
+        left: 40%;
+    }
+}
+@media (max-width: 1200px) {
+    .modal-content {
+        left: unset;
+        position: unset;
+        width: 80%;
+    }
+    .modal.open {
+        justify-items: center;
+    }
 }
