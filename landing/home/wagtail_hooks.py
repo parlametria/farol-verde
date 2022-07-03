@@ -27,13 +27,20 @@ def process_form(page, request, *args, **kwargs):
             email_valid = False
             email_field = list(filter(lambda x: x.label.lower() == 'e-mail', form))
             email_confirmation_field = list(filter(lambda x: x.label.lower() == 'confirmação de e-mail', form))
+            regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
             if len(email_field) and len(email_confirmation_field):
-                regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
                 email_field = email_field[0]
                 email_confirmation_field = email_confirmation_field[0]
                 email_valid = email_field.value() == email_confirmation_field.value() and re.fullmatch(regex, email_field.value())
 
-            if form.is_valid() and cpf_valid and email_valid:
+            # Email Validation
+            contact_email_valid = False
+            contact_email_field = list(filter(lambda x: x.label.lower() == 'e-mail do contato', form))
+            if len(contact_email_field):
+                contact_email_field = contact_email_field[0]
+                contact_email_valid = re.fullmatch(regex, contact_email_field.value())
+
+            if form.is_valid() and cpf_valid and email_valid and contact_email_valid:
                 form_def.process_form_submission(form)
 
                 if form_def.success_message:
@@ -54,6 +61,9 @@ def process_form(page, request, *args, **kwargs):
 
                 if not email_valid:
                     messages.error(request, _('E-mail e confirmação de e-mail inválidos'), fail_silently=True)
+
+                if not contact_email_valid:
+                    messages.error(request, _('E-mail de contato inválido'), fail_silently=True)
 
                 if form_def.error_message:
                     messages.error(request, form_def.error_message, fail_silently=True)
