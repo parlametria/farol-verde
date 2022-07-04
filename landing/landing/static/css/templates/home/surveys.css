@@ -28,7 +28,6 @@ h2 {
     grid-auto-flow: column;
     justify-content: flex-start;
     grid-gap: 2.75rem;
-    margin-inline-start: 2.75rem;
     padding-inline-start: .5rem;
 }
 
@@ -196,3 +195,24 @@ form .actions {
     text-align: center;
     margin: 30px;
 }
+
+
+
+
+.lgpd_text{
+    font-family: 'Noto Sans';
+    font-style: italic;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.modal-all{
+    overflow-y: auto;
+    padding: 1rem;
+}
+.modal-all hr{
+    margin-top: -35px;
+    margin-bottom: 20px;
+}
+
