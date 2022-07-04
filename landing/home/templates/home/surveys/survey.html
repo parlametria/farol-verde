@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/modal.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/spinner.css' %}">
-<form{% if form.is_multipart %} enctype="multipart/form-data"{% endif %} action="{{ value.form_action }}" method="post" novalidate>
+<form class="survey-form" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %} action="{{ value.form_action }}" method="post" novalidate>
     {% csrf_token %}
     {{ form.media }}
     {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
@@ -23,9 +23,10 @@
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
-                <input class="btn btn-round btn-primary" type="submit" value="{{ value.form.submit_button_text }}">
+            <a class="btn btn-round btn-primary modal-close submit" href="#">{{ value.form.submit_button_text }}</a>
             </div>
         </div>
 </form>
 <script src="{% static 'js/components/modal.js' %}"></script>
+<script src="{% static 'js/home/surveys.js' %}"></script>
 <hr>
