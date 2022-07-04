@@ -72,7 +72,10 @@ main {
     margin-bottom: 1rem;
 }
 
-input[type="submit"], .modal-toggle {
+input[type="submit"]:hover, .modal-toggle:hover, .modal-close.submit:hover {
+    text-decoration: none;
+}
+input[type="submit"], .modal-toggle, .modal-close.submit {
     color: white;
     background: var(--primary-color);
     padding: .5rem 1rem;
