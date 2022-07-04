@@ -207,12 +207,5 @@ form .actions {
     line-height: 16px;
 }
 
-.modal-all{
-    overflow-y: auto;
-    padding: 1rem;
-}
-.modal-all hr{
-    margin-top: -35px;
-    margin-bottom: 20px;
-}
+
 
