@@ -15,7 +15,6 @@ header {
     grid-template-columns: 1fr 1fr;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--dark-gray);
     padding-right: 1rem;
     background: white;
 }
