@@ -22,13 +22,14 @@ class LandingPage(Page):
 
     def get_context(self, request):
         context = super(LandingPage, self).get_context(request)
-        survey_url = SurveysPage.objects.first().url
+        survey_url = SurveysPage.objects.get(title="Enquete").url
+        contact_url = SurveysPage.objects.get(title="Contato").url
         context["survey_url"] = survey_url
+        context["contact_url"] = contact_url
         return context
 
 
 class SurveysPage(Page):
-    is_creatable = False
 
     surveys = StreamField(
         [

@@ -22,6 +22,8 @@ def process_form(page, request, *args, **kwargs):
             if len(cpf_field):
                 cpf_field = cpf_field[0]
                 cpf_valid = len(cpf_field) > 0 and len(cpf_field.value()) == 11 and cpf_field.value().isdigit()
+            else:
+                cpf_valid = True
 
             # Email Validation
             email_valid = False
@@ -32,6 +34,8 @@ def process_form(page, request, *args, **kwargs):
                 email_field = email_field[0]
                 email_confirmation_field = email_confirmation_field[0]
                 email_valid = email_field.value() == email_confirmation_field.value() and re.fullmatch(regex, email_field.value())
+            else:
+                email_valid = True
 
             # Email Validation
             contact_email_valid = False
@@ -39,6 +43,8 @@ def process_form(page, request, *args, **kwargs):
             if len(contact_email_field):
                 contact_email_field = contact_email_field[0]
                 contact_email_valid = re.fullmatch(regex, contact_email_field.value())
+            else:
+                contact_email_valid = True
 
             if form.is_valid() and cpf_valid and email_valid and contact_email_valid:
                 form_def.process_form_submission(form)

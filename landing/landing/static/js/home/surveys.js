@@ -26,6 +26,7 @@ function setQuestionsModal() {
 
 function setCPFmask() {
   const cpf = document.querySelector('input[name="cpf"]');
+  if (!cpf) return;
   cpf.type="text";
   cpf.oninput = function (e) {
     if (!e.data) return;
@@ -49,6 +50,7 @@ function setFormSubmit() {
   const submit = document.querySelector('.modal-close.submit').addEventListener('click',(e) => {
     function removeCPFmask() {
       const cpf = document.querySelector('input[name="cpf"]');
+      if(!cpf) return;
       const value = cpf.value.replace(/\.|-/g,'');
       cpf.value = value;
       cpf.type="number";
