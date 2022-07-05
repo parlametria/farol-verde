@@ -128,12 +128,14 @@ aside.side-images {
     position: fixed;
     height: 100vh;
     overflow: hidden;
+    opacity: 0;
 }
 aside.side-images img {
     min-width: 100%;
     position: absolute;
     bottom: 0;
     min-height: 100vh;
+    transition: opacity ease 0.5s;
 }
 
 @keyframes loader-animate {
@@ -149,7 +151,7 @@ aside.side-images .loader {
   width: 200%;
   background: white;
   opacity: 0.4;
-  animation: loader-animate 25s linear infinite;
+  animation: loader-animate 20s linear infinite;
   position: absolute;
   bottom: 0;
   left: -100%;
