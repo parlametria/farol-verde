@@ -46,6 +46,11 @@ header {
 .header__links a {
     color: black;
     text-decoration: none;
+    padding-block: 1rem;
+}
+
+.header__links .active {
+    border-bottom: .25rem solid var(--primary-color);
 }
 
 .header__links a[disabled] {
