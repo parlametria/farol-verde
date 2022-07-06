@@ -1,14 +1,15 @@
 import requests
-from time import sleep
 
 from django.core.management.base import BaseCommand, CommandError, OutputWrapper
 from django.core.management.color import Style
 
 from django.template.defaultfilters import slugify
-from wagtail.core.models import Page, Site
 
-# from home.models import LandingPage
-from candidate.models import CandidatePage, CandidateIndexPage
+from candidate.models import (
+    CandidatePage,
+    CandidateIndexPage,
+    get_or_create_candidates_index,
+)
 
 LEGGO_API = "https://api.parlametria.org.br"
 PERFIL_API = "https://perfil.parlametria.org.br/api"
@@ -37,25 +38,8 @@ class ParlametriaFetcher:
         self.style = style
 
     def start_fetch(self):
-        self.candidate_index = self._get_or_create_candidates_index()
+        self.candidate_index = get_or_create_candidates_index()
         self._import_candidates()
-
-    def _get_or_create_candidates_index(self) -> CandidateIndexPage:
-        candidate_index = CandidateIndexPage.objects.filter(slug="candidatos").first()
-
-        if not candidate_index:
-            # https://stackoverflow.com/questions/24976561/wagtail-pages-giving-none-url-with-live-status
-            home: Page = Page.objects.filter(slug="home-2").first()
-            candidate_index = CandidateIndexPage(
-                title="Candidatos",
-                slug="candidatos",
-                description="Lista de candidatos",
-            )
-            home.add_child(instance=candidate_index)
-            home.save()
-            candidate_index.save()
-
-        return candidate_index
 
     def _import_candidates(self):
         """
