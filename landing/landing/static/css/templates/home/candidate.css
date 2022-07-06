@@ -1,0 +1,84 @@
+.candidate__profile {
+    display: grid;
+    grid-template-columns: 6rem auto;
+    align-items: center;
+    grid-gap: 2.5rem;
+    margin-block: 2rem;
+}
+
+.candidate__profile img {
+    border-radius: 100vmax;
+    object-fit: cover;
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.candidate__name {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.candidate__data {
+    display: grid;
+    font-weight: 700;
+    gap: .25rem;
+}
+
+.candidate__info {
+    display: flex;
+    gap: .75rem;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #777;
+    gap: 3rem;
+}
+
+.tab {
+    background: white;
+    font-size: .75rem;
+    color: #777;
+    padding-block: 1rem;
+    border-radius: 0;
+    border-bottom: .25rem solid white;
+}
+
+.tab:hover {
+    box-shadow: unset !important;
+}
+
+.tab.open {
+    color: black;
+    border-color: black;
+}
+
+.result__content {
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: center;
+    grid-gap: 2rem;
+    margin-block: 3rem;
+}
+
+.result__card {
+    position: relative;
+    padding: 2.5rem 2rem 2rem;
+    border: 1px solid var(--result-color);
+    border-radius: .75rem;
+    font-weight: 700;
+    --result-color: #777;
+}
+
+.Sim {--result-color: #D00000;}
+.Não {--result-color: #329c00;}
+
+.result__title {
+    position: absolute;
+    top: -1rem;
+    left: -1rem;
+    background: var(--result-color);
+    color: white;
+    border-radius: 100vmax;
+    padding: .5rem .75rem;
+}

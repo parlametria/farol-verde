@@ -14,11 +14,6 @@ def create_candidates_pages(apps, schema_editor):
     home.add_child(instance=candidates_page)
     home.save()
 
-def remove_candidates_pages(apps, schema_editor):
-    home = Page.objects.get(title='Home')
-    candidates_page = home.get_children().get(slug="candidates")
-    candidates_page.delete()
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -37,5 +32,5 @@ class Migration(migrations.Migration):
             },
             bases=('wagtailcore.page',),
         ),
-        migrations.RunPython(create_candidates_pages, remove_candidates_pages),
+        migrations.RunPython(create_candidates_pages),
     ]

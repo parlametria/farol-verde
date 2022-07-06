@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static i18n wagtailcore_tags wagtailimages_tags  %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/home/candidate.css' %}">
+
+<main class="container candidate">
+    <div class="candidate__profile">
+        <img src="{{ page.picture.url }}" alt="{{ page.picture.title }}" class="candidate__picture">
+        <div class="candidate__data">
+            <h2 class="candidate__name">{{ page.title }}</h2>
+            <div class="candidate__info"><span>{{ page.charge }}</span> / <span>{{page.party}}</span></div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button onclick="openTab('result')" class="tab open result">resultados enquetes</button>
+        <button onclick="openTab('activity')" class="tab activity">atividade parlamentar</button>
+    </div>
+
+    <div class="result__content">
+        {% include 'home/candidate/result.html' %}
+    </div>
+
+    <div class="activity__content hide">
+        {% include 'home/candidate/activity.html' %}
+    </div>
+</main>
+
+<script src="{% static 'js/candidate.js' %}"></script>
+
+{% endblock %}
+
