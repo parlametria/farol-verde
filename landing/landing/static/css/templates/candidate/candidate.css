@@ -70,8 +70,8 @@
     --result-color: #777;
 }
 
-.Sim {--result-color: #D00000;}
-.Não {--result-color: #329c00;}
+.Não {--result-color: #D00000;}
+.Sim {--result-color: #329c00;}
 
 .result__title {
     position: absolute;

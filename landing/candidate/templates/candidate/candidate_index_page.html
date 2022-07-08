@@ -1,9 +1,17 @@
-{% load wagtailcore_tags %}
+{% extends "base.html" %}
+{% load static i18n wagtailcore_tags wagtailimages_tags  %}
 
-<h1>{{ page.title }}</h1>
+{% block content %}
 
-<div class="intro">{{ page.description }}</div>
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidates.css' %}">
 
-{% for child in page.get_children %}
-    <h2><a href="{% pageurl child %}">{{ child.title }}</a></h2>
-{% endfor %}
+<main class="container candidates">
+    <div class="search">
+        <input type="text" class="search__input" placeholder="Busca">
+        <button class="search__order-by">ordenar por</button>
+    </div>
+
+    {% include 'candidate/components/list.html' %}
+</main>
+
+{% endblock %}
