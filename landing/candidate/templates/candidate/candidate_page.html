@@ -7,7 +7,7 @@
 
 <main class="container candidate">
     <div class="candidate__profile">
-        <img src="{{ page.picture.url }}" alt="{{ page.picture.title }}" class="candidate__picture">
+        <img src="{{page.get_picture}}" alt="{{ page.picture.title }}" class="candidate__picture">
         <div class="candidate__data">
             <h2 class="candidate__name">{{ page.title }}</h2>
             <div class="candidate__info"><span>{{ page.charge }}</span> / <span>{{page.party}}</span></div>

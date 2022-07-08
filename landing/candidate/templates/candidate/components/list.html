@@ -3,7 +3,7 @@
 <div class="candidates__list">
     {% for candidate in candidates_list %}
         <a href="{{candidate.url}}" class="candidate">
-            <img src="{{ candidate.picture.url }}" alt="{{ page.picture.title }}" class="candidate__picture">
+            <img src="{{ candidate.get_picture }}" alt="{{ page.picture.title }}" class="candidate__picture">
             <div class="candidate__data">
                 <div class="candidate__name">{{ candidate.title }}</div>
                 <div class="candidate__info">

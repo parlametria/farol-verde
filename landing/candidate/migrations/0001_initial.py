@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('campaign_name', models.CharField(max_length=255, null=True)),
                 ('cpf', models.CharField(max_length=14, null=True)),
                 ('email', models.EmailField(max_length=254, null=True)),
-                ('picture', models.ImageField(blank=True, null=True, upload_to='')),
+                ('picture', models.ImageField(blank=True, default=None, null=True, upload_to='')),
                 ('charge', models.CharField(max_length=255, null=True)),
                 ('social_media', wagtail.core.fields.StreamField([('twitter', wagtail.core.blocks.URLBlock(max_length=255)), ('facebook', wagtail.core.blocks.URLBlock(max_length=255)), ('instagram', wagtail.core.blocks.URLBlock(max_length=255)), ('youtube', wagtail.core.blocks.URLBlock(max_length=255))], blank=True, null=True)),
                 ('manager_name', models.CharField(max_length=255, null=True)),

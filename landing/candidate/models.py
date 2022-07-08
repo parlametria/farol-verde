@@ -31,7 +31,7 @@ class CandidatePage(Page):
     campaign_name = CharField(null=True, max_length=255)
     cpf = CharField(max_length=14, null=True)
     email = EmailField(null=True)
-    picture = ImageField(null=True, blank=True)
+    picture = ImageField(null=True, blank=True, default=None)
     charge = CharField(null=True, max_length=255)
     social_media = StreamField([
         ('twitter', URLBlock(max_length=255)),
@@ -137,6 +137,14 @@ class CandidatePage(Page):
         ]))
     ], null=True)
 
+    @property
+    def get_picture(self):
+        if self.id_autor is None:
+            return ''
+        if self.picture:
+            return self.picture.url
+        return f"https://www.camara.leg.br/internet/deputado/bandep/{self.id_autor}.jpg"
+
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
         FieldPanel("id_parlametria", classname="full"),
@@ -226,7 +234,7 @@ def make_candidate(form, id_autor, id_parlametria, slug):
         manager_site=form['link-para-o-site-da-campanha'],
         election_state=form['uf'],
         election_city=form['municipio'],
-        picture="media/lula.jpg",
+        picture="",
         opinions=[
             ('opinions', {
                 "clima": form['sou-favoravel-a-inclusao-do-acesso-a-agua-potavel-e-ao-esgotamento-sanitario-no-artigo-5deg-da-constituicao-federal-para-entrarem-formalmente-no-rol-de-direitos-humanos-fundamentais'],
