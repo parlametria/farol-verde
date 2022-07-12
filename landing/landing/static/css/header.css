@@ -61,6 +61,7 @@ header {
 
 .header__links .active {
     border-bottom: .25rem solid var(--primary-color);
+    color: var(--primary-color);
 }
 .header__links .header__item.active a {
     color: var(--primary-color);

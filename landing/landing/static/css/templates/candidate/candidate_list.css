@@ -1,0 +1,94 @@
+.candidate__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+	gap: 2rem;
+  justify-content: center;
+}
+
+.candidate {
+  position: relative;
+  display: grid;
+  grid-template-rows: 7.5rem 4rem;
+  grid-gap: 1rem;
+  max-width: 7.5rem;
+  width: 100%;
+  margin-inline: auto;
+  color: black;
+  text-decoration: none;
+}
+
+.candidate::after {
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 100vmax;
+  font-weight: 700;
+  position: absolute;
+  top: 6.5rem;
+  justify-self: center;
+}
+
+.candidate.Sim::after {
+  content: "é favorável";
+  background-color: var(--primary-color);
+}
+
+.candidate.Não::after {
+  content: "não é favorável";
+  background-color: black;
+}
+
+.candidate.doubt::after {
+  content: "não declarou";
+  background-color: #777;
+}
+
+.candidate:hover {
+  text-decoration: none;
+}
+
+.candidate__data {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.candidate__name {
+	font-size: .875rem;
+  font-weight: bold;
+}
+
+.candidate__picture {
+  position: relative;
+  border-radius: 100vmax;
+  object-fit: cover;
+  width: 120px;
+  height: 120px;
+}
+
+.candidate__info {
+  font-size: 14px;
+	font-size: .75rem;
+}
+
+.empty {
+  display: grid;
+  margin-inline: auto;
+  grid-gap: 1rem;
+  justify-content: center;
+  justify-items: center;
+}
+
+.empty h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.empty img {
+  margin-bottom: 1.25rem;
+}
+
+.empty p {
+  margin: 0;
+  font-size: 1rem;
+}

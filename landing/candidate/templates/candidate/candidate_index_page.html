@@ -3,52 +3,63 @@
 
 {% block content %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidates.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_index_page.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_list.css' %}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script> 
 
-<main class="container candidates">
-    <form action='.' class="search">
-        <div class="search__select">
-            <select id='uf' name='uf'>
-                <option>Selecione uma UF</option>
-                {% for uf in ufs %}
-                    <option value="{{ uf.id }}">{{ uf.name }}</option>
-                {% endfor %}
-            </select>
-            <select id='party' name='party'>
-                <option>Selecione uma Partido</option>
-                {% for party in parties %}
-                    <option value="{{ party.id }}">{{ party.name }}</option>
-                {% endfor %}
-            </select>
-            <input type='text' placeholder='Busca pelo nome' id='search__input'>
-            <div class="search__sortby">
-                <button id="sortby_asc" type='button'></button>
-                <button id="sortby_desc" type='button'></button>
+<main class="candidates">
+    <div class="candidates__content container">
+        <form action='.' id="form" class="query">
+            <div class="query__select">
+                <select id='uf' name='uf'>
+                    <option value=''>UF</option>
+                    {% for uf in uf_list %}
+                        <option value="{{ uf }}">{{ uf }}</option>
+                    {% endfor %}
+                </select>
+                <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
+                <div class="query__sortby">
+                    <label class="btn-toggle">
+                        <input type="radio" name="sortby" value="descending" id="sortby_desc" checked>
+                        <span><i class="fas fa-sort-alpha-down fa-lg"></i></span>
+                    </label>
+                    <label class="btn-toggle">
+                        <input type="radio" name="sortby" value="ascending" id="sortby_asc">
+                        <span><i class="fas fa-sort-alpha-up fa-lg"></i></span>
+                    </label>
+                </div>
             </div>
-        </div>
-        <div class="search__show">
-            <label for='show-senators'>
-                <input type='checkbox' id='show-senators' name='show-senators' checked>
-                Senadores
-            </label>
-            <label for='show-representatives'>
-                <input type='checkbox' id='show-representatives' name='show-representatives' checked>
-                Deputados
-            </label>
-            <div>Como cada candidato votos nos temas da enquete</div>
-        </div>
-        <div class="search__subjects">
-            {% for subject in subjects %}
-                <label for='subject-{{ subject.id }}'>
-                    <input type='checkbox' id='subject-{{ subject.id }}' name='subject-{{ subject.id }}' checked>
-                    {{ subject.name }}
+            <div class="query__heading">Mostrar</div>
+            <div class="query__show">
+                <label for='senators'>
+                    <input type='checkbox' id='senators' name='senators' checked>
+                    Senadores
                 </label>
-            {% endfor %}
-        </div>
+                <label for='deputies'>
+                    <input type='checkbox' id='deputies' name='deputies' checked>
+                    Deputados
+                </label>
+                <div class="query__heading" onclick="toggleSubjects()">
+                    <img src="{% static 'img/icons/voting.svg' %}">
+                    Como cada candidato votos nos temas da enquete:
+                    <i id="toggle-icon" class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <div class="query__subjects">
+                {% for subject in subjects %}
+                    <label class="btn-toggle">
+                        <input type='radio' value="{{subject}}" id='subject-{{subject}}' name='subject'>
+                        <span>{{subject|lower}}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
 
-    </form>
-
-    {% include 'candidate/components/list.html' %}
+    <div id="candidates__container"></div>
 </main>
+
+<script src="{% static 'js/candidate/candidate_list.js' %}"></script>
 
 {% endblock %}

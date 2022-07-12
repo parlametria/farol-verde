@@ -1,0 +1,124 @@
+.candidates {
+    display: grid;
+    flex-grow: 1;
+    grid-gap: 2rem;
+    padding-bottom: 2rem;
+    align-content: baseline;
+}
+
+#candidates__container {
+    display: grid;
+    grid-gap: 2rem;
+}
+
+.candidates__content {
+    display: grid;
+    grid-gap: 2rem;
+}
+
+.query {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+}
+
+.query :is(input, select) {
+    padding: 1rem;
+    border-radius: .25rem;
+    border: 1px solid var(--dark-blue);
+    color: var(--dark-blue);
+    background: white;
+}
+
+input::placeholder {color: var(--dark-blue);}
+
+.query__select {
+    display: flex;
+    gap: .75rem;
+}
+
+#uf {width: 5rem;}
+
+#query__input {flex: 1;}
+
+.query__sortby {
+    border: 1px solid var(--dark-blue);
+    border-radius: .25rem;
+    display: flex;
+    width: 7rem;
+    overflow: hidden;
+}
+
+.query__show {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--dark-blue);
+}
+
+.query__show .query__heading {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 500;
+}
+
+.query__heading {font-weight: 700;}
+
+.query__show .query__heading:hover {text-decoration: underline;}
+
+.query__subjects {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: .5rem;
+    gap: .75rem;
+}
+
+.query__subjects.closed {display: none;}
+
+.query__subjects .btn-toggle {
+    flex: unset;
+    cursor: pointer;
+    padding: .5rem 1rem;
+    border: 1px solid var(--blue);
+    border-radius: 100vmax;
+    overflow: hidden;
+}
+
+.query__subjects .btn-toggle span {
+    font-weight: 700;
+    display: block;
+}
+
+#toggle-icon.closed {transform: rotate(90deg);}
+
+.subject {
+    width: 100vw;
+    background: var(--blue);
+    color: white;
+    padding-block: 2rem;
+    transition: .5s;
+}
+
+.subject.closed {
+    height: 0;
+    font-size: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.subject__content {
+    display: grid;
+    grid-gap: 1.5rem;
+}
+
+.subject__name {text-decoration: underline;}
+
+.subject__description {font-weight: 600;}
+
+.subject__heading {font-weight: 400;}
+
+.subject__header {
+    display: flex;
+    justify-content: space-between;
+}

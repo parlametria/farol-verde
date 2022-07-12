@@ -1,0 +1,39 @@
+{% load static i18n wagtailcore_tags %}
+
+{% if subject|length %}
+    <div class="subject">
+        <div class="subject__content container">
+            <div class="subject__header">
+                <div class="subject__heading">
+                    pergunta da enquete no tema <span class="subject__name">{{subject}}</span>:
+                </div>
+                <i onclick="toggleSubjectDescription()" class="fas fa-times"></i>
+            </div>
+            <div class="subject__description">
+                {{subject_description}}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="container candidate__list">
+    {% for item in candidates_list %}
+        <a href="{{item.candidate.url}}" class="candidate {% if item.opinion == 'Prefiro não responder / Não sei' %} doubt
+        {% else %} {{item.opinion}} {% endif %}">
+            <img src="{{ item.candidate.get_picture }}" alt="{{ page.picture.title }}"
+                class="candidate__picture">
+            <div class="candidate__data">
+                <div class="candidate__name">{{ item.candidate.title }}</div>
+                <div class="candidate__info">
+                    {{ item.candidate.charge }}
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <div class="empty">
+            <img src="{% static 'img/sadboi.svg' %}" alt="">
+            <h2>Sua busca não retornou candidatos</h2>
+            <p>Tente usar outros termos, mas não desista!</p>
+        </div>
+    {% endfor %}
+</div>

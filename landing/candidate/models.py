@@ -12,7 +12,7 @@ from wagtailstreamforms.models import FormSubmission
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
 from django.db.models import CharField, ImageField, EmailField, URLField
 
-from candidate.util import check_deputado, Deputado
+from candidate.util import check_deputado, Deputado, uf_list, subjects_list, subject_dict, subject_descriptions
 
 class CandidatePage(Page):
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
@@ -169,6 +169,8 @@ class CandidatePage(Page):
 
 
 class CandidateIndexPage(Page):
+    ajax_template = 'candidate/candidate_index_ajax.html'
+
     parent_page_types = [
         "home.LandingPage",
     ]
@@ -186,16 +188,42 @@ class CandidateIndexPage(Page):
         FieldPanel("description", classname="full"),
     ]
 
+    def search_results(self, request):
+        queryset = CandidatePage.objects.order_by('title')
+
+        params_functions = {
+            'name': lambda queryset, value: queryset.filter(title__icontains=value),
+            'uf': lambda queryset, value: queryset.filter(election_state=value),
+            'sortby': lambda queryset, value: list(reversed(queryset)) if value == 'descending' else queryset,
+            'senators': lambda queryset, value: queryset.exclude(charge='Senador(a)'),
+            'deputies': lambda queryset, value: queryset.exclude(charge='Deputado(a) Federal'),
+        }
+
+        for param, value in list(request.GET.items()):
+            if param in ['senators', 'deputies']:
+                value = not value
+            if value and param in params_functions:
+                queryset = params_functions[param](queryset, value)
+
+        return queryset
+
+
     def get_context(self, request):
         context = super(CandidateIndexPage, self).get_context(request)
-        ufs = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
-        opinion_subjects = [{'name': 'Clima', 'id': 'clima'}, ]
-        candidates_list = CandidatePage.objects.all()
-        context['subjects'] = opinion_subjects
-        context['candidates_list'] = candidates_list
-        context['ufs'] = ufs
-        return context
 
+        search_results = self.search_results(request)
+        subject = request.GET.get('subject', None)
+        context['subjects'] = subjects_list
+        candidates_opinions = [''] * len(search_results)
+        if subject:
+            candidates_opinions = [candidate.opinions[0].value.get(subject_dict[subject]) for candidate in search_results]
+            context['subject_description'] = subject_descriptions[subject]
+            context['subject'] = subject
+        search_results = zip(search_results, candidates_opinions)
+
+        context['candidates_list'] = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
+        context['uf_list'] = uf_list
+        return context
 
 @receiver(
     post_save, sender=FormSubmission, dispatch_uid="form_submission_link_candidate"
