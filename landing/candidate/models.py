@@ -14,7 +14,8 @@ from wagtailstreamforms.models import FormSubmission
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
 from django.db.models import CharField, ImageField, EmailField, URLField
 
-from candidate.util import check_deputado, Deputado, uf_list, subjects_list, subject_dict, subject_descriptions
+from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions
+from candidate.builders import SurveyCandidateBuilder
 
 class CandidatePage(MetadataPageMixin, Page):
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
@@ -41,7 +42,7 @@ class CandidatePage(MetadataPageMixin, Page):
         ('instagram', URLBlock(max_length=255)),
         ('youtube', URLBlock(max_length=255)),
     ], null=True, blank=True)
-    
+
     manager_name = CharField(null=True, max_length=255)
     manager_email = EmailField(null=True)
     manager_phone = CharField(max_length=50, null=True)
@@ -234,7 +235,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
             candidates_list = paginator.page(page)
         except EmptyPage:
             candidates_list = paginator.page(paginator.num_pages)
-        
+
         context['candidates_list'] = candidates_list
         context['subjects'] = subjects_list
         context['uf_list'] = uf_list
@@ -245,87 +246,11 @@ class CandidateIndexPage(MetadataPageMixin, Page):
     post_save, sender=FormSubmission, dispatch_uid="form_submission_link_candidate"
 )
 def form_submission_link_candidate(sender, instance: FormSubmission, **kwargs):
-
     form = instance.get_data()
-
     role_column = "e-candidatoa-a-qual-vaga-no-pleito-de-2022"
 
     if role_column not in form:
         return  # not a SurveysPage form
 
-    if form[role_column] == "Deputado(a) Federal":
-        cpf = int(form["cpf"])
-        found = check_deputado(cpf)
-
-        if found:
-            return check_candidate_and_add_new(found, instance)
-
-    add_blank_candidate_page(instance)
-
-
-def make_candidate(form, id_autor, id_parlametria, slug):
-    candidates_index = CandidateIndexPage.objects.all().first()
-
-    candidate = CandidatePage(
-        title=form['nome-completo'],
-        slug=slug,
-        id_autor=id_autor,
-        id_parlametria=id_parlametria,
-        campaign_name=form['nome-de-campanha'],
-        cpf=form['cpf'],
-        email=form['e-mail'],
-        charge=form['e-candidatoa-a-qual-vaga-no-pleito-de-2022'],
-        social_media=[('twitter', form['twitter']), ('facebook', form['facebook']), ('instagram', form['instagram']), ('youtube', form['youtube'])],
-        manager_name=form['nome-completo-do-contato'],
-        manager_email=form['e-mail-do-contato'],
-        manager_phone=form['telefone-do-contato'],
-        manager_site=form['link-para-o-site-da-campanha'],
-        election_state=form['uf'],
-        election_city=form['municipio'],
-        picture="",
-        opinions=[
-            ('opinions', {
-                "clima": form['sou-favoravel-a-inclusao-do-acesso-a-agua-potavel-e-ao-esgotamento-sanitario-no-artigo-5deg-da-constituicao-federal-para-entrarem-formalmente-no-rol-de-direitos-humanos-fundamentais'],
-                "agua": form['sou-favoravel-a-politica-de-desmatamento-zero-em-todos-os-biomas-brasileiros-porque-acredito-ser-possivel-manter-e-ate-aumentar-a-producao-agropecuaria-atual-sem-novos-desmatamentos-por-meio-da-conversao-de-pastagens-degradadas-ou-subaproveitadas'],
-                "desmatamento": form['sou-favoravel-a-retomada-dos-processos-demarcatorios-de-terras-indigenas-no-brasil-pois-sei-que-ainda-ha-mais-de-200-processos-pendentes-e-concordo-que-os-povos-e-as-culturas-indigenas-contribuem-para-o-enfrentamento-da-mudanca-climatica-para-a-conservacao-dessas-areas-protegidas-e-da-sociobiodiversidade-brasileira'],
-                "terras_indigenas": form['sou-favoravel-a-uma-reforma-e-a-uma-politica-tributaria-socioambiental-progressiva-e-promotora-de-saude-que-reduza-tributos-sobre-atividades-economicas-com-baixas-emissoes-de-gases-de-efeito-estufa-gee-e-com-baixo-nivel-de-poluicao-e-que-ao-mesmo-tempo-aumente-tributos-para-atividades-altamente-emissoras-de-gee-de-poluentes-ou-nocivas-a-saude'],
-                "reforma_tributaria": form['sou-favoravel-a-reducao-do-consumo-de-produtos-nocivos-a-saude-e-ao-meio-ambiente-tais-como-alcool-e-tabaco-alimentos-ultraprocessados-agrotoxicos-e-combustiveis-fosseis-e-concordo-com-a-adocao-de-medidas-regulatorias-para-esses-produtos-como-tributacao-progressiva-restricao-da-publicidade-garantia-de-ambientes-protegidos-de-seus-efeitos-e-informacao-adequada-para-seu-consumo'],
-                "saude_consumo": form['sou-contra-a-flexibilizacao-das-leis-de-defesa-agropecuaria-pois-os-programas-de-autocontrole-geridos-pelas-empresas-do-setor-nao-devem-substituir-o-poder-publico-na-fiscalizacao-da-qualidade-de-rebanhos-de-lavouras-e-de-seus-produtos-assim-como-nao-concordo-com-a-flexibilizacao-das-regras-para-registro-e-utilizacao-de-agrotoxicos-e-pesticidas-no-brasil'],
-                "agropecuaria": form['sou-favoravel-as-parcerias-entre-o-setor-publico-e-o-setor-privado-para-a-implementacao-e-gestao-sustentavel-de-parques-nacionais-parques-estaduais-e-outras-unidades-de-conservacao-onde-seja-permitido-o-uso-publico'],
-                "unidades_conservacao": form['sou-favoravel-as-parcerias-entre-o-setor-publico-e-o-setor-privado-para-a-implementacao-e-gestao-sustentavel-de-parques-nacionais-parques-estaduais-e-outras-unidades-de-conservacao-onde-seja-permitido-o-uso-publico'],
-                "caca_animais_silvestres": form['sou-contra-a-liberacao-da-caca-de-animais-silvestres-no-brasil-excetuadas-as-situacoes-ja-previstas-na-lei-federal-no-51971967-como-o-controle-de-especies-invasoras-e-de-animais-silvestres-considerados-nocivos-a-agricultura-ou-a-saude-publica'],
-                "mata_atlantica": form['sou-favoravel-ao-fundo-de-restauracao-do-bioma-mata-atlantica-e-me-comprometo-a-apoiar-sua-implantacao-conforme-a-lei-federal-no-114282006-visando-a-conservacao-de-remanescentes-de-vegetacao-nativa-a-pesquisa-cientifica-ou-a-restauracao-pois-sei-que-apenas-7-da-cobertura-original-da-mata-atlantica-ainda-esta-de-pe'],
-                "pantanal": form['sou-contra-o-plantio-de-soja-nas-planicies-inundaveis-do-bioma-pantanal-brasileiro-que-e-considerado-patrimonio-nacional-pela-constituicao-federal-ss-4o-do-art-225-e-reserva-da-biosfera-pelas-nacoes-unidas'],
-                "amazonia_cerrado": form['sou-favoravel-a-destinacao-dos-60-milhoes-de-hectares-de-florestas-publicas-nao-destinadas-na-amazonia-e-no-cerrado-para-o-uso-sustentavel-a-conservacao-ambiental-e-a-protecao-dos-povos-indigenas-quilombolas-pequenos-produtores-extrativistas-e-unidades-de-conservacao-pois-sei-que-esta-medida-e-imprescindivel-para-a-economia-das-regioes-citadas-e-o-equilibrio-climatico-de-todo-o-planeta']
-            })
-        ]
-    )
-
-    candidates_index.add_child(instance=candidate)
-    candidates_index.save()
-
-    return candidate
-
-
-def check_candidate_and_add_new(dep: Deputado, form: FormSubmission):
-    alread_added = CandidatePage.objects.filter(id_autor=dep.id_autor).first()
-    form = form.get_data()
-
-    if alread_added:
-        return alread_added
-
-    slug = slugify(f"{dep.nome_autor} {dep.id_autor}")
-
-    make_candidate(
-        form,
-        dep.id_autor,
-        dep.id_autor_parlametria,
-        slug,
-    )
-
-
-def add_blank_candidate_page(instance: FormSubmission):
-    form = instance.get_data()
-
-    slug = slugify(f"{form['nome-de-campanha']} {instance.id}")
-    make_candidate(form, None, None, slug)
+    builder = SurveyCandidateBuilder(instance.id, form, role_column)
+    builder.create_candidate()
