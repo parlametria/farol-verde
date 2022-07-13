@@ -43,7 +43,7 @@ class CandidatePage(Page):
     manager_name = CharField(null=True, max_length=255)
     manager_email = EmailField(null=True)
     manager_phone = CharField(max_length=50, null=True)
-    manager_site = URLField(null=True)
+    manager_site = URLField(null=True, blank=True)
 
     election_state = CharField(null=True, max_length=255)
     election_city = CharField(null=True, max_length=255)
