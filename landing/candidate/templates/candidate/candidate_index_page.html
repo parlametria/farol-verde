@@ -3,15 +3,76 @@
 
 {% block content %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidates.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_index_page.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_list.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/input-board.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/btn-toggle.css' %}">
 
-<main class="container candidates">
-    <div class="search">
-        <input type="text" class="search__input" placeholder="Busca">
-        <button class="search__order-by">ordenar por</button>
+<main class="candidates">
+    <div class="candidates__content container">
+        <form action='.' id="form" class="query">
+            <input type="hidden" id='page' name='page' value="1">
+            <div class="query__select">
+                <div id='uf'>
+                    <button>UF <i class="fas fa-caret-down"></i></button>
+                    <div class="uf__selector input-board">
+                        <p>Mostrar candidatos do(s) estado(s):</p>
+                        <div class="input-board__content">
+                            {% for uf in uf_list %}
+                                <label class="btn-toggle">
+                                    <input type="checkbox" value="{{ uf }}" name="uf[]">
+                                    <span>{{ uf }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
+                <div class="query__sortby">
+                    <label class="btn-toggle">
+                        <input type="radio" name="sortby" value="descending" id="sortby_desc" checked>
+                        <span><i class="fas fa-sort-alpha-down fa-lg"></i></span>
+                    </label>
+                    <label class="btn-toggle">
+                        <input type="radio" name="sortby" value="ascending" id="sortby_asc">
+                        <span><i class="fas fa-sort-alpha-up fa-lg"></i></span>
+                    </label>
+                </div>
+            </div>
+            <div class="query__heading">Mostrar</div>
+            <div class="query__show">
+                <label for='senators'>
+                    <input type='checkbox' id='senators' name='senators' checked>
+                    Senadores
+                </label>
+                <label for='deputies'>
+                    <input type='checkbox' id='deputies' name='deputies' checked>
+                    Deputados
+                </label>
+                <div class="query__heading" onclick="toggleSubjects()">
+                    <img src="{% static 'img/icons/voting.svg' %}">
+                    Como cada candidato votos nos temas da enquete:
+                    <i id="toggle-icon" class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <div class="query__subjects">
+                {% for subject in subjects %}
+                    <label class="btn-toggle">
+                        <input type='radio' value="{{subject}}" id='subject-{{subject}}' name='subject'>
+                        <span>{{subject|lower}}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        </form>
     </div>
 
-    {% include 'candidate/components/list.html' %}
+    <div id="candidates__container"></div>
 </main>
 
+
 {% endblock %}
+{% block extra_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script> 
+    <script src="{% static 'js/candidate/candidate_list.js' %}"></script>
+{% endblock extra_js %}

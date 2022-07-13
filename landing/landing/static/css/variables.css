@@ -2,10 +2,11 @@
     --primary-color: #3AAA35;
     --secondary-color: #ff3d72;
     --dark-blue: #085D9C;
+    --blue: #1D71B8;
     --purple-color: #849bc9;
     --light-color: #F0FCFC;
     --shadow-color: #BABABA;
-    --dark-gray: #D9D9D9;
-    --gray: #E4E4E4;
+    --dark-gray: #3E3E3E;
+    --gray: #D9D9D9;
     --gap-size: 1.5rem;
 }

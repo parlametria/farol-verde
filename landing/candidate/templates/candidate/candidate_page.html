@@ -28,7 +28,9 @@
     </div>
 </main>
 
-<script src="{% static 'js/candidate.js' %}"></script>
 
 {% endblock %}
 
+{% block extra_js %}
+    <script src="{% static 'js/candidate/candidate.js' %}"></script>
+{% endblock %}

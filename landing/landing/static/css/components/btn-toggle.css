@@ -1,0 +1,34 @@
+.btn-toggle {
+    display: grid;
+    grid-template-columns: 0 1fr;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    background: white;
+    overflow: hidden;
+}
+
+.btn-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    visibility: hidden;
+    padding: 0 !important;
+}
+
+.btn-toggle span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--blue);
+    background-color: white;
+    z-index: 3;
+    font-size: 1rem;
+}
+
+.btn-toggle input:checked + span {
+    background-color: var(--blue);
+    color: white;
+    z-index: 1;
+}

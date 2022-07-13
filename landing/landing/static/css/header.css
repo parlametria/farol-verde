@@ -59,8 +59,8 @@ header {
     padding-block: 1rem;
 }
 
-.header__links .active {
-    border-bottom: .25rem solid var(--primary-color);
+.header__links .header__item.active a {
+    color: var(--primary-color);
 }
 .header__links .header__item.active a {
     color: var(--primary-color);
@@ -78,6 +78,7 @@ header {
   font-weight: 700;
   margin-bottom: 40px;
 }
+
 .breadcrumb li:last-child,
 .breadcrumb li a {
   padding: 0 10px 0 0;

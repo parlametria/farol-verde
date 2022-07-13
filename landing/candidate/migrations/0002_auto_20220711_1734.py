@@ -77,7 +77,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='candidatepage',
             name='manager_site',
-            field=models.URLField(null=True),
+            field=models.URLField(blank=True, null=True),
         ),
         migrations.AddField(
             model_name='candidatepage',

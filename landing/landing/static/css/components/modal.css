@@ -53,7 +53,7 @@
     right: 0;
     padding: 20px 15px;
     text-align: center;
-    border-top: 1px solid var(--dark-gray);
+    border-top: 1px solid var(--gray);
 }
 
 .modal-all{
