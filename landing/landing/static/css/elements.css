@@ -240,25 +240,6 @@ aside + .main {
     z-index: 1;
 }
 
-.breadcrumb__content {
-    display: flex;
-    font-size: 14px;
-    gap: 0.625rem;
-    align-items: center;
-}
-
-.breadcrumb__content * {
-    font-size: .875rem;
-    color: black;
-    font-weight: 700;
-}
-
-.breadcrumb__content .active {
-    text-decoration: underline;
-    color: var(--dark-blue);
-}
-
-
 @media (max-width: 768px) {
     h1 {
         font-size: 2.2rem;
