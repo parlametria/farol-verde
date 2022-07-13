@@ -1,8 +1,27 @@
 from django.template.defaultfilters import slugify
-from typing import Optional, Literal, Union
+from django.apps import apps
+from wagtail.core.models import Page
 
-from candidate.models import CandidatePage, CandidateIndexPage
+from typing import Optional, Union
+from typing_extensions import Literal
+
 from candidate.util import Deputado, Senador, check_deputado, check_senador
+
+
+def get_candidate_page_model() -> Page:
+    """
+    return CandidatePage from candidate.models\n
+    Why ? Because of cyclic import between builders.py and models.py
+    """
+    return apps.get_model("candidate.CandidatePage")
+
+
+def get_candidate_index_page_model() -> Page:
+    """
+    return CandidateIndexPage from candidate.models\n
+    Why ? Because of cyclic import between builders.py and models.py
+    """
+    return apps.get_model("candidate.CandidateIndexPage")
 
 
 class SurveyCandidateBuilder:
@@ -11,7 +30,7 @@ class SurveyCandidateBuilder:
         self.form = form
         self.role_column = role_column
 
-    def create_candidate(self) -> CandidatePage:
+    def create_candidate(self):
         found = (
             self._find_deputado()
             if self._check_role() == "deputado"
@@ -42,9 +61,9 @@ class SurveyCandidateBuilder:
 
         return check_senador(nome, nome_completo, uf)
 
-    def _check_candidate_and_add_new(
-        self, parlamentar: Union[Deputado, Senador]
-    ) -> CandidatePage:
+    def _check_candidate_and_add_new(self, parlamentar: Union[Deputado, Senador]):
+        CandidatePage = get_candidate_page_model()
+
         alread_added: Optional[CandidatePage] = CandidatePage.objects.filter(
             id_autor=parlamentar.id_autor
         ).first()
@@ -60,7 +79,7 @@ class SurveyCandidateBuilder:
             parlamentar.id_autor_parlametria,
         )
 
-    def _add_candidate_page_without_parlametria(self) -> CandidatePage:
+    def _add_candidate_page_without_parlametria(self):
         nome = self.form["nome-de-campanha"]
 
         slug = slugify(f"{nome} {self.self.form_id}")
@@ -71,7 +90,10 @@ class SurveyCandidateBuilder:
         slug: str,
         id_autor: Optional[int] = None,
         id_parlametria: Optional[int] = None,
-    ) -> CandidatePage:
+    ):
+        CandidateIndexPage = get_candidate_index_page_model()
+        CandidatePage = get_candidate_page_model()
+
         candidates_index = CandidateIndexPage.objects.all().first()
 
         candidate = CandidatePage(
