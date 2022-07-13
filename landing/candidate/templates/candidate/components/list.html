@@ -6,9 +6,7 @@
             <img src="{{ candidate.get_picture }}" alt="{{ page.picture.title }}" class="candidate__picture">
             <div class="candidate__data">
                 <div class="candidate__name">{{ candidate.title }}</div>
-                <div class="candidate__info">
-                    {{ candidate.charge }} / {{ candidate.party }}
-                </div>
+                <div class="candidate__info">{{ candidate.charge }}</div>
             </div>
         </a>
     {% endfor %}
