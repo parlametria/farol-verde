@@ -60,20 +60,6 @@
     <div class="main">
         {% include 'header.html' %}
 
-        <div class="breadcrumb container">
-            {% if self.get_ancestors|length > 1 %}
-                <div class="breadcrumb__content">
-                    {% for p in self.get_ancestors %}
-                        {% if p.is_root == False %}
-                            <p><a href="{{ p.url }}">{{ p.title }}</a></p> /
-                        {% endif %}
-                    {% endfor %}
-        
-                    <p class="active"> {{ self.title }}</p>
-                </div>
-            {% endif %}
-        </div>
-
         {% block content %}{% endblock %}
         <div class="footer--normal">
             {% include 'footer.html' %}
