@@ -48,10 +48,7 @@ header {
     padding: 15px;
 }
 
-.header__links .header__item.active {
-    color: var(--primary-color);
-    border-bottom: 3px solid var(--primary-color); 
-}
+.header__links .header__item.active {border-bottom: 3px solid var(--primary-color);}
 
 .header__links .header__item a {
     color: black;
@@ -59,10 +56,6 @@ header {
     padding-block: 1rem;
 }
 
-.header__links .active {
-    border-bottom: .25rem solid var(--primary-color);
-    color: var(--primary-color);
-}
 .header__links .header__item.active a {
     color: var(--primary-color);
 }
@@ -79,6 +72,7 @@ header {
   font-weight: 700;
   margin-bottom: 40px;
 }
+
 .breadcrumb li:last-child,
 .breadcrumb li a {
   padding: 0 10px 0 0;
