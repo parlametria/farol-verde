@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 
@@ -13,7 +14,7 @@ from wagtailstreamforms.models import FormSubmission
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
 from django.db.models import CharField, ImageField, EmailField, URLField
 
-from candidate.util import check_deputado, Deputado
+from candidate.util import check_deputado, Deputado, uf_list, subjects_list, subject_dict, subject_descriptions
 
 class CandidatePage(MetadataPageMixin, Page):
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
@@ -170,6 +171,8 @@ class CandidatePage(MetadataPageMixin, Page):
 
 
 class CandidateIndexPage(MetadataPageMixin, Page):
+    ajax_template = 'candidate/candidate_index_ajax.html'
+
     parent_page_types = [
         "home.LandingPage",
     ]
@@ -187,12 +190,56 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         FieldPanel("description", classname="full"),
     ]
 
+    def search_results(self, request):
+        queryset = CandidatePage.objects.order_by('title')
+
+        charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
+        charges = []
+
+        params_functions = {
+            'name': lambda queryset, value: queryset.filter(title__icontains=value),
+            'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
+            'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
+        }
+
+        request_items = dict(request.GET)
+        for param, value in list(request_items.items()):
+            if param in charges_dict.keys():
+                charges.append(charges_dict[param])
+            if param != 'uf[]':
+                value = value[0]
+            if value and param in params_functions:
+                queryset = params_functions[param](queryset, value)
+
+        return queryset.filter(charge__in=charges)
+
+
     def get_context(self, request):
         context = super(CandidateIndexPage, self).get_context(request)
-        candidates_list = CandidatePage.objects.all()
-        context['candidates_list'] = candidates_list
-        return context
 
+        search_results = self.search_results(request)
+        subject = request.GET.get('subject', None)
+        candidates_opinions = [''] * len(search_results)
+
+        if subject:
+            candidates_opinions = [candidate.opinions[0].value.get(subject_dict[subject]) for candidate in search_results]
+            context['subject_description'] = subject_descriptions[subject]
+            context['subject'] = subject
+        search_results = zip(search_results, candidates_opinions)
+        search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
+
+        paginator = Paginator(search_results, 20)
+        page = request.GET.get('page', 1)
+        try:
+            candidates_list = paginator.page(page)
+        except EmptyPage:
+            candidates_list = paginator.page(paginator.num_pages)
+        
+        context['candidates_list'] = candidates_list
+        context['subjects'] = subjects_list
+        context['uf_list'] = uf_list
+
+        return context
 
 @receiver(
     post_save, sender=FormSubmission, dispatch_uid="form_submission_link_candidate"

@@ -63,7 +63,7 @@ footer .footer-menu {
 
     .footer--mobile footer {
         height: 7.5625rem;
-        background: var(--dark-gray);
+        background: var(--gray);
     }
 
     .footer--mobile a {

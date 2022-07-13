@@ -100,7 +100,7 @@ a:hover {
     grid-template-rows: 90px auto;
 }
 .card .card-title {
-    color: var(--dark-blue);
+    color: var(--blue);
     display: flex;
     place-items: center;
 }
@@ -236,9 +236,6 @@ aside + .main {
     aside + .main {
         width: 100%;
         margin-left: 0;
-    }
-    .container {
-      width: 90%;
     }
 }
 
