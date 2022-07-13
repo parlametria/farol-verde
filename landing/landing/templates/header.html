@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags static %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags static %}
 
 <header>
     <div class="container">
@@ -8,12 +8,13 @@
                 <img src="{% static 'img/icons/bars.svg' %}">
             </button>
             <div class="header__links">
-                <a href="/enquete" class="header__item enquete">Enquete</a>
-                <a href="/candidatos" class="header__item candidatos">Candidatos</a>
-                <a class="header__item" disabled>Blog</a>
+								{% get_site_root as site_root %}
+								{% top_menu parent=site_root calling_page=self %}
             </div>
         </div>
     </div>
 </header>
 
-
+<div class="breadcrumbs">
+	{% breadcrumbs %}
+</div>
