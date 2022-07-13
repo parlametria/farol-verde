@@ -1,13 +1,13 @@
 from wagtail.core.models import Page
 
-
+from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
 from wagtailstreamforms.blocks import WagtailFormBlock
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
 from candidate.models import CandidateIndexPage
 
-class LandingPage(Page):
+class LandingPage(MetadataPageMixin, Page):
     is_creatable = False
 
     heading = RichTextField(
@@ -31,7 +31,7 @@ class LandingPage(Page):
         return context
 
 
-class SurveysPage(Page):
+class SurveysPage(MetadataPageMixin, Page):
     surveys = StreamField(
         [
             ("form", WagtailFormBlock()),
