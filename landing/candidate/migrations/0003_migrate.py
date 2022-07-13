@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 from candidate.models import form_submission_link_candidate
 from wagtailstreamforms.models import FormSubmission
