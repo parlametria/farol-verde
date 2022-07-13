@@ -55,7 +55,7 @@ class SurveyCandidateBuilder:
         return check_deputado(cpf)
 
     def _find_senador(self) -> Optional[Senador]:
-        nome = self.form["nome-completo"].strip()
+        nome = self.form["nome-de-campanha"].strip()
         nome_completo = self.form["nome-completo"].strip()
         uf = self.form["uf"].strip()
 
@@ -82,7 +82,7 @@ class SurveyCandidateBuilder:
     def _add_candidate_page_without_parlametria(self):
         nome = self.form["nome-de-campanha"]
 
-        slug = slugify(f"{nome} {self.self.form_id}")
+        slug = slugify(f"{nome} {self.form_id}")
         return self._make_candidate(slug, None, None)
 
     def _make_candidate(
@@ -114,7 +114,11 @@ class SurveyCandidateBuilder:
             manager_name=self.form["nome-completo-do-contato"],
             manager_email=self.form["e-mail-do-contato"],
             manager_phone=self.form["telefone-do-contato"],
-            manager_site=self.form["link-para-o-site-da-campanha"],
+            manager_site=(
+                self.form["link-para-o-site-da-campanha"]
+                if "link-para-o-site-da-campanha" in self.form
+                else None
+            ),
             election_state=self.form["uf"],
             election_city=self.form["municipio"],
             picture="",

@@ -69,7 +69,7 @@ def apidata_to_senador(data) -> Senador:
     return Senador(
         id_autor=int(identificacao["CodigoParlamentar"]),
         id_autor_parlametria=int("2" + identificacao["CodigoParlamentar"]),
-        nome=identificacao["NomeParlamentar"].strip(),
+        nome_autor=identificacao["NomeParlamentar"].strip(),
         nome_completo=identificacao["NomeCompletoParlamentar"].strip(),
         uf=uf.strip(),
     )
