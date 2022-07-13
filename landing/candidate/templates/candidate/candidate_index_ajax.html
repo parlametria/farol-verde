@@ -37,3 +37,13 @@
         </div>
     {% endfor %}
 </div>
+
+{% if posts.paginator.num_pages > 1 %}
+    <div class="container">
+        <div class="pagination">
+            {% for page_num in candidates_list.paginator.page_range %}
+                <button>{{ page_num }}</button>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

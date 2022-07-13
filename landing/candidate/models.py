@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 
@@ -191,12 +192,14 @@ class CandidateIndexPage(Page):
     def search_results(self, request):
         queryset = CandidatePage.objects.order_by('title')
 
+        print(request.GET.get('uf'))
+
         params_functions = {
             'name': lambda queryset, value: queryset.filter(title__icontains=value),
-            'uf': lambda queryset, value: queryset.filter(election_state=value),
+            # 'uf': lambda queryset, value: queryset.filter(election_state=value),
             'sortby': lambda queryset, value: list(reversed(queryset)) if value == 'descending' else queryset,
-            'senators': lambda queryset, value: queryset.exclude(charge='Senador(a)'),
-            'deputies': lambda queryset, value: queryset.exclude(charge='Deputado(a) Federal'),
+            'senators': lambda queryset, _: queryset.exclude(charge='Senador(a)'),
+            'deputies': lambda queryset, _: queryset.exclude(charge='Deputado(a) Federal'),
         }
 
         for param, value in list(request.GET.items()):
@@ -213,16 +216,26 @@ class CandidateIndexPage(Page):
 
         search_results = self.search_results(request)
         subject = request.GET.get('subject', None)
-        context['subjects'] = subjects_list
         candidates_opinions = [''] * len(search_results)
+
         if subject:
             candidates_opinions = [candidate.opinions[0].value.get(subject_dict[subject]) for candidate in search_results]
             context['subject_description'] = subject_descriptions[subject]
             context['subject'] = subject
         search_results = zip(search_results, candidates_opinions)
+        search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
 
-        context['candidates_list'] = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
+        paginator = Paginator(search_results, 20)
+        page = request.GET.get('page', 1)
+        try:
+            candidates_list = paginator.page(page)
+        except EmptyPage:
+            candidates_list = paginator.page(paginator.num_pages)
+        
+        context['candidates_list'] = candidates_list
+        context['subjects'] = subjects_list
         context['uf_list'] = uf_list
+
         return context
 
 @receiver(

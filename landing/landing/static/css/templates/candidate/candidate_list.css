@@ -92,3 +92,17 @@
   margin: 0;
   font-size: 1rem;
 }
+
+.pagination {
+  display: flex;
+  justify-self: flex-end;
+  justify-content: flex-end;
+  gap: .75rem;
+}
+
+.pagination button {
+  background: var(--blue);
+  border-radius: .25rem;
+  aspect-ratio: 1;
+  width: 2.5rem;
+}
