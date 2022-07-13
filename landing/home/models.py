@@ -1,5 +1,6 @@
 from wagtail.core.models import Page
 
+
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
 from wagtailstreamforms.blocks import WagtailFormBlock
