@@ -6,10 +6,47 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidates.css' %}">
 
 <main class="container candidates">
-    <div class="search">
-        <input type="text" class="search__input" placeholder="Busca">
-        <button class="search__order-by">ordenar por</button>
-    </div>
+    <form action='.' class="search">
+        <div class="search__select">
+            <select id='uf' name='uf'>
+                <option>Selecione uma UF</option>
+                {% for uf in ufs %}
+                    <option value="{{ uf.id }}">{{ uf.name }}</option>
+                {% endfor %}
+            </select>
+            <select id='party' name='party'>
+                <option>Selecione uma Partido</option>
+                {% for party in parties %}
+                    <option value="{{ party.id }}">{{ party.name }}</option>
+                {% endfor %}
+            </select>
+            <input type='text' placeholder='Busca pelo nome' id='search__input'>
+            <div class="search__sortby">
+                <button id="sortby_asc" type='button'></button>
+                <button id="sortby_desc" type='button'></button>
+            </div>
+        </div>
+        <div class="search__show">
+            <label for='show-senators'>
+                <input type='checkbox' id='show-senators' name='show-senators' checked>
+                Senadores
+            </label>
+            <label for='show-representatives'>
+                <input type='checkbox' id='show-representatives' name='show-representatives' checked>
+                Deputados
+            </label>
+            <div>Como cada candidato votos nos temas da enquete</div>
+        </div>
+        <div class="search__subjects">
+            {% for subject in subjects %}
+                <label for='subject-{{ subject.id }}'>
+                    <input type='checkbox' id='subject-{{ subject.id }}' name='subject-{{ subject.id }}' checked>
+                    {{ subject.name }}
+                </label>
+            {% endfor %}
+        </div>
+
+    </form>
 
     {% include 'candidate/components/list.html' %}
 </main>

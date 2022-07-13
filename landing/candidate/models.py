@@ -188,8 +188,12 @@ class CandidateIndexPage(Page):
 
     def get_context(self, request):
         context = super(CandidateIndexPage, self).get_context(request)
+        ufs = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
+        opinion_subjects = [{'name': 'Clima', 'id': 'clima'}, ]
         candidates_list = CandidatePage.objects.all()
+        context['subjects'] = opinion_subjects
         context['candidates_list'] = candidates_list
+        context['ufs'] = ufs
         return context
 
 
