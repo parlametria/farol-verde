@@ -5,8 +5,24 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>{{ page.seo_title }}</title>
-    <meta name="description" content="{{page.search_description}}" />
+		{% block meta_tag %}
+      <title>
+          {% block title %}
+              {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+          {% endblock %}
+          {% block title_suffix %}
+              {% with self.get_site.site_name as site_name %}
+                  {% if site_name %}- {{ site_name }}{% endif %}
+              {% endwith %}
+          {% endblock %}
+      </title>
+      <meta name="description" content="{{ page.search_description }}" />
+    {% endblock %}
+
+		{% if page.canonical_url %}
+      <link rel="canonical" href="{{ page.canonical_url }}"/>
+    {% endif %}
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
     {# Global stylesheets #}

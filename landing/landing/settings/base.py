@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "blog",
     "candidate",
     "wagtailfontawesome",
+    "wagtailmetadata",
     "wagtail_color_panel",
     "wagtail.contrib.modeladmin",
     "wagtail.contrib.forms",

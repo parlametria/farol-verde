@@ -4,6 +4,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 
+from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
 from wagtail.search import index
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
@@ -15,7 +16,7 @@ from django.db.models import CharField, ImageField, EmailField, URLField
 
 from candidate.util import check_deputado, Deputado, uf_list, subjects_list, subject_dict, subject_descriptions
 
-class CandidatePage(Page):
+class CandidatePage(MetadataPageMixin, Page):
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
     id_serenata = models.IntegerField(blank=True, null=True, unique=True)
@@ -169,7 +170,7 @@ class CandidatePage(Page):
         return f"{self.id_autor}: {self.title}"
 
 
-class CandidateIndexPage(Page):
+class CandidateIndexPage(MetadataPageMixin, Page):
     ajax_template = 'candidate/candidate_index_ajax.html'
 
     parent_page_types = [
