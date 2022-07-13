@@ -48,7 +48,10 @@ header {
     padding: 15px;
 }
 
-.header__links .header__item.active {border-bottom: 3px solid var(--primary-color);}
+.header__links .header__item.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color); 
+}
 
 .header__links .header__item a {
     color: black;
@@ -56,6 +59,9 @@ header {
     padding-block: 1rem;
 }
 
+.header__links .header__item.active a {
+    color: var(--primary-color);
+}
 .header__links .header__item.active a {
     color: var(--primary-color);
 }
