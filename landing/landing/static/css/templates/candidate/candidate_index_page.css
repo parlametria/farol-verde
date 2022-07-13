@@ -37,7 +37,42 @@ input::placeholder {color: var(--dark-blue);}
     gap: .75rem;
 }
 
-#uf {width: 5rem;}
+#uf {
+    width: 5rem;
+    position: relative;
+    flex: 0;
+}
+
+#uf > button {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    
+    height: 100%;
+
+    color: black;
+    background: white;
+    border: 1px solid var(--dark-gray);
+    border-radius: .25rem;
+    
+    font-weight: 500;
+    font-size: .75rem;
+}
+
+#uf > *:not(i) {font-size: .75rem;}
+
+#uf > button:hover {box-shadow: none;}
+
+.uf__selector {
+    width: min-content;
+}
+
+.uf__selector p {
+    width: 100%;
+    font-size: .875rem;
+    font-weight: 700;
+    margin: 0;
+}
 
 #query__input {flex: 1;}
 
@@ -48,6 +83,8 @@ input::placeholder {color: var(--dark-blue);}
     width: 7rem;
     overflow: hidden;
 }
+
+.query__sortby .btn-toggle span {height: 100%;}
 
 .query__show {
     display: flex;
@@ -79,13 +116,13 @@ input::placeholder {color: var(--dark-blue);}
 .query__subjects .btn-toggle {
     flex: unset;
     cursor: pointer;
-    padding: .5rem 1rem;
-    border: 1px solid var(--blue);
-    border-radius: 100vmax;
     overflow: hidden;
 }
 
 .query__subjects .btn-toggle span {
+    padding: .5rem 1rem;
+    border: 1px solid var(--blue);
+    border-radius: 100vmax;
     font-weight: 700;
     display: block;
 }

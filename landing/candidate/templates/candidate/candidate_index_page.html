@@ -5,19 +5,31 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_index_page.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_list.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/input-board.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/btn-toggle.css' %}">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://malsup.github.io/jquery.form.js"></script> 
 
 <main class="candidates">
     <div class="candidates__content container">
         <form action='.' id="form" class="query">
+            <input type="hidden" id='page' name='page' value="1">
             <div class="query__select">
-                <select id='uf' name='uf'>
-                    <option value=''>UF</option>
-                    {% for uf in uf_list %}
-                        <option value="{{ uf }}">{{ uf }}</option>
-                    {% endfor %}
-                </select>
+                <div id='uf'>
+                    <button>UF <i class="fas fa-caret-down"></i></button>
+                    <div class="uf__selector input-board">
+                        <p>Mostrar candidatos do(s) estado(s):</p>
+                        <div class="input-board__content">
+                            {% for uf in uf_list %}
+                                <label class="btn-toggle">
+                                    <input type="checkbox" value="{{ uf }}" name="uf[]">
+                                    <span>{{ uf }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
                 <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
                 <div class="query__sortby">
                     <label class="btn-toggle">

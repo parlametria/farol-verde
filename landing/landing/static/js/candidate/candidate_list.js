@@ -2,21 +2,26 @@ const candidatesList = document.getElementById('candidates__container');
 const inputs = document.querySelectorAll('input, select');
 const nameInput = document.getElementById('query__input');
 const subjects = document.querySelector('.query__subjects');
+const pagination = document.querySelector('#page');
+const ufBoard = document.querySelector('.uf__selector')
+const ufButton = document.querySelector('#uf button');
 
 $('#form').ajaxForm( result => {
     candidatesList.innerHTML = result;
 });
 
-function get_candidates_list() {
+function getCandidatesList(page) {
+    pagination.value = page ?? 1;
+
     $('#form').ajaxSubmit( result => {
         candidatesList.innerHTML = result;
     });
 }
 
-inputs.forEach(obj => obj.addEventListener('change', () => get_candidates_list()));
-nameInput.addEventListener('keypress', () => get_candidates_list());
+inputs.forEach(obj => obj.addEventListener('change', () => getCandidatesList()));
+nameInput.addEventListener('keypress', () => getCandidatesList());
 
-get_candidates_list();
+getCandidatesList();
 
 function toggleSubjects() {
     const toggleIcon = document.getElementById('toggle-icon');
@@ -30,7 +35,7 @@ function toggleSubjects() {
 
     if (status) {
         subjectsInputs.forEach(obj => obj.checked = false);
-        get_candidates_list();
+        getCandidatesList();
     }
 }
 
@@ -42,3 +47,11 @@ function toggleSubjectDescription() {
     const description = document.querySelector('.subject');
     description.classList.toggle('closed');
 }
+
+function toggleUfBoard() {
+    ufBoard.classList.toggle('open');
+    console.log("rodou")
+}
+
+ufButton.addEventListener('click', toggleUfBoard);
+ufButton.addEventListener('focusout', toggleUfBoard);

@@ -1,6 +1,6 @@
 {% load static i18n wagtailcore_tags %}
 
-{% if subject|length %}
+{% if subject|length and candidates_list|length%}
     <div class="subject">
         <div class="subject__content container">
             <div class="subject__header">

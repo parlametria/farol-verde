@@ -192,23 +192,25 @@ class CandidateIndexPage(Page):
     def search_results(self, request):
         queryset = CandidatePage.objects.order_by('title')
 
-        print(request.GET.get('uf'))
+        charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
+        charges = []
 
         params_functions = {
             'name': lambda queryset, value: queryset.filter(title__icontains=value),
-            # 'uf': lambda queryset, value: queryset.filter(election_state=value),
-            'sortby': lambda queryset, value: list(reversed(queryset)) if value == 'descending' else queryset,
-            'senators': lambda queryset, _: queryset.exclude(charge='Senador(a)'),
-            'deputies': lambda queryset, _: queryset.exclude(charge='Deputado(a) Federal'),
+            'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
+            'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
         }
 
-        for param, value in list(request.GET.items()):
+        request_items = dict(request.GET)
+        for param, value in list(request_items.items()):
             if param in ['senators', 'deputies']:
-                value = not value
+                charges.append(charges_dict[param])
+            if param != 'uf[]':
+                value = value[0]
             if value and param in params_functions:
                 queryset = params_functions[param](queryset, value)
 
-        return queryset
+        return queryset.filter(charge__in=charges)
 
 
     def get_context(self, request):
