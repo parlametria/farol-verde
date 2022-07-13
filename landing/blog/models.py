@@ -3,6 +3,7 @@ from django.db import models
 
 from django import forms
 
+from wagtailmetadata.models import MetadataPageMixin
 from wagtail.snippets.models import register_snippet
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField
@@ -25,7 +26,7 @@ class BlogPostCard(TaggedItemBase):
     )
 
 
-class BlogIndexPage(Page):
+class BlogIndexPage(MetadataPageMixin, Page):
     is_creatable = False
 
     parent_page_types = [
@@ -92,7 +93,7 @@ class BlogIndexPage(Page):
     ]
 
 
-class BlogPost(Page):
+class BlogPost(MetadataPageMixin, Page):
     date = models.DateField("Post date", blank=False)
     intro_text = models.CharField(max_length=250)
     body = RichTextField(blank=True)
