@@ -203,7 +203,7 @@ class CandidateIndexPage(Page):
 
         request_items = dict(request.GET)
         for param, value in list(request_items.items()):
-            if param in ['senators', 'deputies']:
+            if param in charges_dict.keys():
                 charges.append(charges_dict[param])
             if param != 'uf[]':
                 value = value[0]
