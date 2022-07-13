@@ -50,8 +50,7 @@ function toggleSubjectDescription() {
 
 function toggleUfBoard() {
     ufBoard.classList.toggle('open');
-    console.log("rodou")
 }
 
 ufButton.addEventListener('click', toggleUfBoard);
-ufButton.addEventListener('focusout', toggleUfBoard);
+ufBoard.addEventListener('focusout', toggleUfBoard);
