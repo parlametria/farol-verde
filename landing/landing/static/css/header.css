@@ -76,10 +76,11 @@ header {
   padding: 0;
   align-items: center;
   font-weight: 700;
+  margin-bottom: 40px;
 }
 .breadcrumb li:last-child,
 .breadcrumb li a {
-  padding: 0 10px;
+  padding: 0 10px 0 0;
   font-size: 14px;
   text-decoration: underline;
   color: black;
@@ -88,6 +89,7 @@ header {
 .breadcrumb li:last-child {
   color: var(--dark-blue);
   text-decoration: none;
+  padding: 0 10px;
 }
 
 @media (max-width: 830px) {
