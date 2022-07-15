@@ -18,7 +18,7 @@ from django.dispatch import receiver
 
 
 from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions
-from candidate.builders import SurveyCandidateBuilder
+from candidate.factories import SurveyCandidateFactory
 
 class CandidatePage(MetadataPageMixin, Page):
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
@@ -256,5 +256,5 @@ def form_submission_link_candidate(sender, instance: FormSubmission, **kwargs):
     if role_column not in form:
         return  # not a SurveysPage form
 
-    builder = SurveyCandidateBuilder(instance.id, form, role_column)
+    builder = SurveyCandidateFactory(instance.id, form, role_column)
     builder.create_candidate()

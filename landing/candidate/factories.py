@@ -24,7 +24,7 @@ def get_candidate_index_page_model() -> Page:
     return apps.get_model("candidate.CandidateIndexPage")
 
 
-class SurveyCandidateBuilder:
+class SurveyCandidateFactory:
     def __init__(self, form_id, form, role_column):
         self.form_id = form_id
         self.form = form
