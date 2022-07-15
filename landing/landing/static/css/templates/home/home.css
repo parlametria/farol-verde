@@ -78,4 +78,11 @@
     display: block;
     margin-bottom: 1rem;
   }
+
+  .partners p {
+    text-align: center;
+    font-weight: 500;
+    color: var(--shadow-color);
+    font-size: 1.25rem;
+  }
 }
