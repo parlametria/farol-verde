@@ -97,6 +97,7 @@ class SurveyCandidateBuilder:
         candidates_index = CandidateIndexPage.objects.all().first()
 
         candidate = CandidatePage(
+            live=False,
             title=self.form["nome-completo"],
             slug=slug,
             id_autor=id_autor,
