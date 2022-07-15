@@ -70,21 +70,20 @@ header {
 }
 
 .breadcrumb {
-  display: inline-flex;
-  list-style: none;
-  padding: 0;
-  align-items: center;
-  font-weight: 700;
-  margin-bottom: 40px;
-  max-width: 100%;
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    align-items: center;
+    font-weight: 700;
+    margin-bottom: 40px;
 }
 
 .breadcrumb li:last-child,
 .breadcrumb li a {
-  padding-right: 10px;
-  font-size: 14px;
-  text-decoration: underline;
-  color: black;
+    padding: 0 10px 0 0;
+    font-size: 14px;
+    text-decoration: underline;
+    color: black;
 }
 
 .breadcrumb li {
@@ -93,10 +92,9 @@ header {
 }
 
 .breadcrumb li:last-child {
-  color: var(--dark-blue);
-  text-decoration: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    color: var(--dark-blue);
+    text-decoration: none;
+    padding: 0 10px;
 }
 
 @media (max-width: 830px) {
