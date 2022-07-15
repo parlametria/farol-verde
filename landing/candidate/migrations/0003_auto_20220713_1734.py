@@ -21,7 +21,8 @@ def create_candidates_index_page(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0001_initial'),
+        ('candidate', '0002_auto_20220711_1444'),
+        ('home', '0003_auto_20220713_0519'),
     ]
 
     operations = [
