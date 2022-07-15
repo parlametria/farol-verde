@@ -9,11 +9,14 @@ function setQuestionsModal() {
   function makeQuestion(elm) {
     var elm = elm.cloneNode(true)
     elm.classList.remove('question')
-    let inputs = Array.from(elm.querySelectorAll('input'));
-    inputs = inputs.filter(input => input.type !== 'hidden' && (input.type !== 'radio' || input.checked));
-    const value = inputs.map(input => input.value)[0];
+    let inputs = Array.from(elm.querySelectorAll('input, select'));
+    inputs = inputs.filter(input => input.type !== 'hidden' && (input.type !== 'radio' || input.checked || input.tagName == 'select'));
+    var value = inputs.map(input => input.value)[0];
+    if (inputs.length == 1 && inputs[0].tagName == 'SELECT') {
+      value = inputs[0].options[inputs[0].selectedIndex].text;
+    }
     elm.innerHTML += value ? `<b>${value}</b><br>` : '<i>Sem resposta</i><br>';
-    elm.querySelectorAll('input, ul').forEach(item => item.remove())
+    elm.querySelectorAll('input, ul, select').forEach(item => item.remove())
     
     return elm
   }
