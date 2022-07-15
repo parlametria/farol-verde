@@ -29,7 +29,7 @@ header {
     letter-spacing: 0em;
     display: flex;
     gap: 3rem;
-    transition: .25s;
+    transition: .5s;
 }
 
 .header__btn {
@@ -106,6 +106,7 @@ header {
         visibility: hidden;
         flex-direction: column;
         position: absolute;
+        border-radius: 50%;
         text-align: left;
         gap: 1rem;
         left: 0;
@@ -126,8 +127,12 @@ header {
 
     .header__links.open {
         visibility: visible;
-        top: 0rem;
+        border-radius: 0;
+        right: unset;
+        top: 0;
     }
 
     .header__close {visibility: visible;}
+
+    .header__links .header__item.active {border-bottom: 0;}
 }
