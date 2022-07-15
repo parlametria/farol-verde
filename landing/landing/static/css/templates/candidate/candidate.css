@@ -6,11 +6,17 @@
     margin-block: 2rem;
 }
 
-.candidate__profile img {
-    border-radius: 100vmax;
-    object-fit: cover;
-    width: 100%;
-    aspect-ratio: 1;
+.candidate__picture {
+  position: relative;
+  border-radius: 100vmax;
+  object-fit: cover;
+  object-position: top;
+  width: 120px;
+  height: 120px;
+}
+
+.candidate__picture.empty {
+  background: var(--gray);
 }
 
 .candidate__name {

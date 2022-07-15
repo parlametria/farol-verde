@@ -62,8 +62,13 @@
   position: relative;
   border-radius: 100vmax;
   object-fit: cover;
+  object-position: top;
   width: 120px;
   height: 120px;
+}
+
+.candidate__picture.empty {
+  background: var(--gray);
 }
 
 .candidate__info {

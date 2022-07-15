@@ -77,20 +77,27 @@ header {
   align-items: center;
   font-weight: 700;
   margin-bottom: 40px;
+  max-width: 100%;
 }
 
 .breadcrumb li:last-child,
 .breadcrumb li a {
-  padding: 0 10px 0 0;
+  padding-right: 10px;
   font-size: 14px;
   text-decoration: underline;
   color: black;
 }
 
+.breadcrumb li {
+  padding-right: 10px;
+  white-space: nowrap;
+}
+
 .breadcrumb li:last-child {
   color: var(--dark-blue);
   text-decoration: none;
-  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 830px) {
