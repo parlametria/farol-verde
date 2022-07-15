@@ -11,11 +11,9 @@ header {
 .header__content {
     height: 100%;
     display: grid;
-    position: relative;
     grid-template-columns: 1fr 1fr;
     justify-content: space-between;
     align-items: center;
-    padding-right: 1rem;
     background: white;
 }
 
@@ -31,6 +29,7 @@ header {
     letter-spacing: 0em;
     display: flex;
     gap: 3rem;
+    transition: .25s;
 }
 
 .header__btn {
@@ -39,9 +38,7 @@ header {
     justify-self: flex-end;
 }
 
-.header__btn  img {
-    width: 24px;
-}
+.header__btn  img {width: 24px;}
 
 .header__links .header__item {
     list-style: none; 
@@ -53,7 +50,7 @@ header {
     border-bottom: 3px solid var(--primary-color); 
 }
 
-.header__links .header__item a {
+.header__item a {
     color: black;
     text-decoration: none;
     padding-block: 1rem;
@@ -66,8 +63,13 @@ header {
     color: var(--primary-color);
 }
 
-.header__links a[disabled] {
-    opacity: .5;
+.header__links a[disabled] {opacity: .5;}
+
+.header__close {
+    display: flex;
+    visibility: hidden;
+    justify-content: end;
+    width: calc(100% - 2rem);
 }
 
 .breadcrumb {
@@ -109,18 +111,24 @@ header {
         visibility: hidden;
         flex-direction: column;
         position: absolute;
-        text-align: right;
-        right: 1rem;
+        text-align: left;
         gap: 1rem;
+        left: 0;
+        top: -20rem;
+        width: 100%;
 
-        background: white;
+        background: var(--primary-color);
+
         padding: 1rem;
-        border-radius: .5rem;
         box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     }
 
+    .header__item a {color: white;}
+
     .header__links.open {
         visibility: visible;
-        top: 3.5rem;
+        top: 0rem;
     }
+
+    .header__close {visibility: visible;}
 }
