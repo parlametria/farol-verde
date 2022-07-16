@@ -165,6 +165,12 @@ input::placeholder {color: var(--dark-blue);}
     justify-content: space-between;
 }
 
+@media (max-width: 820px) {
+    .query__subjects {
+        justify-content: center;
+    }
+}
+
 @media (max-width: 520px) {
     .query__select {flex-direction: column}
 
