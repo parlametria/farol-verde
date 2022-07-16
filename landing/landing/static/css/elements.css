@@ -1,10 +1,6 @@
-html {
-    overflow-x: hidden;
-}
+html {overflow-x: hidden;}
 
-a[disabled] {
-    pointer-events:none
-}
+a[disabled] {pointer-events:none}
 
 body {
     font-family: 'Noto Sans', sans-serif;
@@ -17,6 +13,7 @@ body {
     background-position: 87vw 0vh;
     background-attachment: fixed;
 }
+
 section {
     scroll-snap-type: y mandatory;
     scroll-snap-align: start;
@@ -51,9 +48,7 @@ button:hover:not(:disabled) {
     font-size: .8rem;
 }
 
-.hide {
-    display: none !important;
-}
+.hide {display: none !important;}
 
 .flex {
     display: flex !important;
@@ -61,67 +56,54 @@ button:hover:not(:disabled) {
     align-items: center;
 }
 
-h1, h2, h3, h4, h5 {
-    margin: 0;
-}
+h1, h2, h3, h4, h5 {margin: 0;}
 
-h1,
-h2 {
-    font-weight: 500;
-}
+h1, h2 {font-weight: 500;}
 
-h3,
-h4,
-h5 {
-    font-weight: 400;
-}
+h3, h4, h5 {font-weight: 400;}
 
 h1 {font-size: 3rem;}
 h2 {font-size: 2.2rem;}
 h3 {font-size: 1.3rem;}
+
 h4 {
     font-size: 1.125rem;
     line-height: 1.5em;
 }
+
 p {
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 1.4;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-.hidden {
-    opacity: 0;
-}
+.hidden {visibility: hidden;}
 
-.hide {
-    display: none;
-}
 .card {
     padding: 15px;
     display: grid;
     grid-template-rows: 90px auto;
 }
+
 .card .card-title {
     color: var(--blue);
     display: flex;
     place-items: center;
 }
+
 .card .card-title h4 {
     font-weight: 600;
     text-align: left;
     margin-left: -30px;
 }
+
 .container {
     width: 80%;
     height: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
     margin-inline: auto;
     max-width: 750px;
     margin-left: 4.5rem;
 }
+
 main.container {
     flex-grow: 1;
     background: white;
@@ -142,23 +124,15 @@ aside.side-images img {
     transition: opacity ease 0.5s;
 }
 
-@keyframes loader-animate {
-    0% {
-        transform: scaleX(0);
-    }
-    100% {
-        transform: scaleX(1);
-    }
-}
 aside.side-images .loader {
-  height: 5px;
-  width: 200%;
-  background: white;
-  opacity: 0.4;
-  animation: loader-animate 20s linear infinite;
-  position: absolute;
-  bottom: 0;
-  left: -100%;
+    height: 5px;
+    width: 200%;
+    background: white;
+    opacity: 0.4;
+    animation: loader-animate 20s linear infinite;
+    position: absolute;
+    bottom: 0;
+    left: -100%;
 }
 
 aside + .main {
@@ -169,12 +143,10 @@ aside + .main {
     flex-direction: column;
 }
 
-.bg_red{
-    background-color: red;
-}
-.bg_white{
-    background-color: white;
-}
+.bg_red{background-color: red;}
+
+.bg_white{background-color: white;}
+
 .icon {
     width: 18px;
     height: 18px;
@@ -182,20 +154,20 @@ aside + .main {
     float: left;
     margin-top: 2px;
 }
-.messages li.success {
-    background-color: var(--primary-color);
-}
+.messages li.success {background-color: var(--primary-color);}
+
 .messages li.success .icon {
     -webkit-mask: url(/static/img/icons/check.svg) no-repeat center;
     mask: url(/static/img/icons/check.svg) no-repeat center;
 }
-.messages li.error {
-    background-color: red;
-}
+
+.messages li.error {background-color: red;}
+
 .messages li.error .icon {
     -webkit-mask: url(/static/img/icons/alert.svg) no-repeat center;
     mask: url(/static/img/icons/alert.svg) no-repeat center;
 }
+
 .messages li {
     list-style-type: none;
     margin-left: -40px;
@@ -204,9 +176,7 @@ aside + .main {
     color: white;
 }
 
-.field-row select {
-    height: 3rem;
-}
+.field-row select {height: 3rem;}
 
 @media (max-width: 768px) {
     h1 {font-size: 2.2rem;}
@@ -217,11 +187,7 @@ aside + .main {
     .container {padding: unset;}
 }
 
-@media (max-width: 1200px) {
-    img {
-        max-width: 100%;
-        height: auto;
-    }
+@media (max-width: 1380px) {
     aside.side-images {
         visibility: hidden;
         display: none;
@@ -234,10 +200,7 @@ aside + .main {
 }
 
 @media (max-width: 1600px) {
-    body {
-        background: unset;
-    }
-    .container {
-        margin-left: auto;
-    }
+    body {background: unset;}
+
+    .container {margin-left: auto;}
 }
