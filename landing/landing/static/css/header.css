@@ -103,6 +103,7 @@ header {
     }
 
     .header__links {
+        width: 100%;
         visibility: hidden;
         flex-direction: column;
         position: absolute;
@@ -111,7 +112,6 @@ header {
         gap: 1rem;
         left: 0;
         top: -20rem;
-        right: 0;
 
         background: var(--primary-color);
 
@@ -128,7 +128,6 @@ header {
     .header__links.open {
         visibility: visible;
         border-radius: 0;
-        right: unset;
         top: 0;
     }
 
