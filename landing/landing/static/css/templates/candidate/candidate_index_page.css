@@ -130,7 +130,6 @@ input::placeholder {color: var(--dark-blue);}
 #toggle-icon.closed {transform: rotate(90deg);}
 
 .subject {
-    width: 100vw;
     background: var(--blue);
     color: white;
     padding-block: 2rem;
