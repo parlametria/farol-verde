@@ -21,10 +21,10 @@ section {
 
 button {
     padding: 10px;
-    background-color: var(--primary-color);
+    background-color: var(--dark-blue);
     color: white;
     border: none;
-    border-radius: .25rem;
+    border-radius: 100vmax;
     font-size: 1.125rem;
     font-weight: bold;
     transition: 0.25s;
