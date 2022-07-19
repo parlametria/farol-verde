@@ -2,14 +2,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
 	gap: 2rem;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .candidate {
   position: relative;
   display: grid;
-  grid-template-rows: 7.5rem 4rem;
-  grid-gap: 1rem;
+  grid-gap: .75rem;
   max-width: 7.5rem;
   width: 100%;
   margin-inline: auto;
@@ -29,17 +28,17 @@
 }
 
 .candidate.Sim::after {
-  content: "é favorável";
+  content: "sim";
   background-color: var(--primary-color);
 }
 
 .candidate.Não::after {
-  content: "não é favorável";
+  content: "não";
   background-color: black;
 }
 
 .candidate.doubt::after {
-  content: "não declarou";
+  content: "não sei";
   background-color: #777;
 }
 
@@ -49,13 +48,18 @@
 
 .candidate__data {
   display: grid;
-  place-items: center;
+  justify-content: center;
   text-align: center;
 }
 
 .candidate__name {
 	font-size: .875rem;
   font-weight: bold;
+}
+
+.candidate__info {
+  font-size: .75rem;
+  align-self: flex-end;
 }
 
 .candidate__picture {
@@ -69,11 +73,7 @@
 
 .candidate__picture.empty {
   background: var(--gray);
-}
-
-.candidate__info {
-  font-size: 14px;
-	font-size: .75rem;
+  display: block;
 }
 
 .empty {
@@ -107,7 +107,6 @@
 
 .pagination button {
   background: var(--blue);
-  border-radius: .25rem;
   aspect-ratio: 1;
   width: 2.5rem;
 }

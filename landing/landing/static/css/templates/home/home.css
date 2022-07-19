@@ -10,31 +10,26 @@
 
 .home__ctas .label {padding: 1.125rem;}
 
-.home__ctas > * {
+.home__ctas {
     font-weight: 700;
     flex: 1;
-    width: 100%;
 }
 
-.home__ctas > * p:not(.label) {
+.home__ctas p:not(.label) {
   font-size: 24px;
   border: 1px solid var(--button-color);
   border-radius: 100vmax;
   padding: .75rem 1.75rem;
 }
 
-.home__ctas > * a {
+.home__ctas a {
   text-decoration: unset;
   color: var(--button-color);
 }
 
-.cta-candidato {
-  --button-color: var(--primary-color);
-}
+.cta-candidato {--button-color: var(--primary-color);}
 
-.cta-eleitor {
-  --button-color: var(--dark-blue);
-}
+.cta-eleitor {--button-color: var(--dark-blue);}
 
 .partners {
   display: grid;
@@ -55,12 +50,9 @@
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
 
-.partners img {
-  width: 100%;
-  max-width: 110px;
-}
+.partners img {width: 110px;}
 
-.partners.large img { max-width: 230px; }
+.partners.large img {width: 230px;}
 
 .partners p {
     font-family: Noto Sans;
