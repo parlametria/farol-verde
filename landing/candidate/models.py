@@ -12,7 +12,7 @@ from wagtail.core.fields import StreamField
 from wagtailstreamforms.models import FormSubmission
 
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
-from django.db.models import CharField, ImageField, EmailField, URLField
+from django.db.models import CharField, ImageField, EmailField, URLField, DateField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -36,6 +36,7 @@ class CandidatePage(MetadataPageMixin, Page):
 
     campaign_name = CharField(null=True, max_length=255)
     cpf = CharField(max_length=14, null=True)
+    birth_date = DateField(null=True)
     email = EmailField(null=True)
     picture = ImageField(null=True, blank=True, default=None)
     charge = CharField(null=True, max_length=255)
@@ -157,6 +158,7 @@ class CandidatePage(MetadataPageMixin, Page):
         FieldPanel("id_serenata", classname="full"),
         FieldPanel('campaign_name'),
         FieldPanel('cpf'),
+        FieldPanel('birth_date'),
         FieldPanel('email'),
         FieldPanel('picture'),
         FieldPanel('charge'),
