@@ -1,7 +1,9 @@
 document.querySelector('.modal').addEventListener('modal-open', () => {
   setQuestionsModal();
 });
+
 setFormValidations();
+setDateInputs();
 
 function setQuestionsModal() {
   const questions = Array.from(document.querySelectorAll('.question'));
@@ -89,25 +91,47 @@ function setEmailConfirmation() {
       })
     }
   });
-
-  function addError(element, text) {
-    if(element.classList.contains('error')) return;
-    label = `<label class="error">${text}</label>`;
-    errorDiv = document.createElement('div');
-    errorDiv.classList.add('requided_error');
-    errorDiv.innerHTML = label;
-    element.classList.add('error');
-    element.appendChild(errorDiv);
-  }
-  function removeError(element) {
-    if(!element.classList.contains('error')) return;
-    errorDiv = element.querySelector('.requided_error');
-    element.classList.remove('error');
-    element.removeChild(errorDiv);
-  }
 }
+
 function setFormValidations() {
   setCPFmask();
   setEmailConfirmation();
   setFormSubmit();
+  setDateValidations()
+}
+
+function setDateValidations() {
+  const birthdayInputs = document.querySelectorAll('.birthday-field input');
+  birthdayInputs.forEach(input => {
+    input.addEventListener('input',(e) => {
+      removeError(input.parentElement);
+      if(!input.checkValidity()) {
+        addError(input.parentElement,'Data inválida');
+      }
+    })
+  });
+}
+
+function setDateInputs() {
+  const birthdayInputs = document.querySelectorAll('.birthday-field input');
+  birthdayInputs.forEach(input => {
+    input.type = 'date'
+    input.max = new Date().toISOString().split('T')[0]; // set max date to today
+  });
+}
+
+function addError(element, text) {
+  if(element.classList.contains('error')) return;
+  label = `<label class="error">${text}</label>`;
+  errorDiv = document.createElement('div');
+  errorDiv.classList.add('requided_error');
+  errorDiv.innerHTML = label;
+  element.classList.add('error');
+  element.appendChild(errorDiv);
+}
+function removeError(element) {
+  if(!element.classList.contains('error')) return;
+  errorDiv = element.querySelector('.requided_error');
+  element.classList.remove('error');
+  element.removeChild(errorDiv);
 }

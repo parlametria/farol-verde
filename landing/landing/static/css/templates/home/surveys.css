@@ -106,15 +106,21 @@ input[type="submit"], .modal-toggle, .modal-close.submit {
     background: #fff;
     border-radius: .25rem;
 }
+
 .requided_error{
-    margin-top:-8px;
-    background:#FFEEEE;
-    padding: 10px 10px;
-    color:red
+    margin-top: -0.5rem;
+    background: #FFEEEE;
+    padding: 10px;
+    color: red;
+    border-radius: .25rem;
+    opacity: 1;
+    animation-name: fade-down;
+    animation-duration: .25s;
+    animation-timing-function: linear;
 }
-.field-row.error input{
-    border: 2px solid red;
-}
+
+.field-row.error input{border: 2px solid red;}
+
 .field-row.error ul {
     border: 2px solid red;
     margin-inline-start: 0;
@@ -195,9 +201,6 @@ form .actions {
     text-align: center;
     margin: 30px;
 }
-
-
-
 
 .lgpd_text{
     font-family: 'Noto Sans';
