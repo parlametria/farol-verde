@@ -153,3 +153,24 @@ class CheckboxesField(BaseField):
             icon=self.icon,
             label=self.label,
         )
+
+@register("birthday")
+class BirthdayField(BaseField):
+    field_class = forms.DateField
+    icon = "balloon"
+    label = _("Birthday")
+
+    def get_form_block(self):
+        return blocks.StructBlock(
+            [
+                ("label", blocks.CharBlock()),
+                ("required", blocks.BooleanBlock(required=False)),
+            ],
+            icon=self.icon,
+            label=self.label,
+        )
+
+    def get_options(self, block_value):
+        options = super().get_options(block_value)
+        options.update({"help_text": "birthday_birthday"})
+        return options

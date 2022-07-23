@@ -104,6 +104,7 @@ class SurveyCandidateFactory:
             id_parlametria=id_parlametria,
             campaign_name=self.form["nome-de-campanha"],
             cpf=self.form["cpf"],
+            birth_date=self.form["data-de-nascimento"],
             email=self.form["e-mail"],
             charge=self.form["e-candidatoa-a-qual-vaga-no-pleito-de-2022"],
             social_media=[
