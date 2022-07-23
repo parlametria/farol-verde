@@ -3,7 +3,6 @@ document.querySelector('.modal').addEventListener('modal-open', () => {
 });
 
 setFormValidations();
-setDateInputs();
 
 function setQuestionsModal() {
   const questions = Array.from(document.querySelectorAll('.question'));
@@ -95,6 +94,7 @@ function setEmailConfirmation() {
 
 function setFormValidations() {
   setCPFmask();
+  setBirthdateMask();
   setEmailConfirmation();
   setFormSubmit();
   setDateValidations()
@@ -112,12 +112,24 @@ function setDateValidations() {
   });
 }
 
-function setDateInputs() {
+function setBirthdateMask() {
   const birthdayInputs = document.querySelectorAll('.birthday-field input');
   birthdayInputs.forEach(input => {
-    input.type = 'date'
-    input.max = new Date().toISOString().split('T')[0]; // set max date to today
-  });
+    input.type = 'text';
+    input.oninput = function (e) {
+      if (!e.data) return;
+      if (isNaN(Number(e.data))) {
+        input.value = input.value.replace(e.data,'');
+      }
+      if (input.value.length > 10) {
+        input.value = input.value.slice(0,10);
+      }
+      if ([2,5].includes(input.value.length)) {
+        input.value = input.value+'/';
+      }
+    }
+  }
+  );
 }
 
 function addError(element, text) {
