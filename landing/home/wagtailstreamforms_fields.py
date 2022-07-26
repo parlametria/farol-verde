@@ -165,6 +165,7 @@ class BirthdayField(BaseField):
             [
                 ("label", blocks.CharBlock()),
                 ("required", blocks.BooleanBlock(required=False)),
+                ("help_text", blocks.CharBlock(required=False)),
             ],
             icon=self.icon,
             label=self.label,
@@ -172,5 +173,6 @@ class BirthdayField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        options.update({"help_text": "birthday_birthday"})
+        help_text = options.get("help_text")
+        options.update({"help_text": help_text + " birthday_field"})
         return options
