@@ -21,6 +21,7 @@ from candidate.util import uf_list, subjects_list, subject_dict, subject_descrip
 from candidate.factories import SurveyCandidateFactory
 
 class CandidatePage(MetadataPageMixin, Page):
+    DEPUTADO_CHARGE_TEXT = "Deputado(a) Federal"
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
     id_serenata = models.IntegerField(blank=True, null=True, unique=True)
@@ -150,6 +151,14 @@ class CandidatePage(MetadataPageMixin, Page):
         if self.picture:
             return self.picture.url
         return f"https://www.camara.leg.br/internet/deputado/bandep/{self.id_autor}.jpg"
+
+    @property
+    def is_deputado(self) -> bool:
+        return self.charge == self.DEPUTADO_CHARGE_TEXT
+
+    @property
+    def is_senador(self) -> bool:
+        return not self.is_deputado
 
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
