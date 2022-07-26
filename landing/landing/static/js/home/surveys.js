@@ -1,6 +1,7 @@
 document.querySelector('.modal').addEventListener('modal-open', () => {
   setQuestionsModal();
 });
+
 setFormValidations();
 
 function setQuestionsModal() {
@@ -89,25 +90,60 @@ function setEmailConfirmation() {
       })
     }
   });
-
-  function addError(element, text) {
-    if(element.classList.contains('error')) return;
-    label = `<label class="error">${text}</label>`;
-    errorDiv = document.createElement('div');
-    errorDiv.classList.add('requided_error');
-    errorDiv.innerHTML = label;
-    element.classList.add('error');
-    element.appendChild(errorDiv);
-  }
-  function removeError(element) {
-    if(!element.classList.contains('error')) return;
-    errorDiv = element.querySelector('.requided_error');
-    element.classList.remove('error');
-    element.removeChild(errorDiv);
-  }
 }
+
 function setFormValidations() {
   setCPFmask();
+  setBirthdateMask();
   setEmailConfirmation();
   setFormSubmit();
+  setDateValidations()
+}
+
+function setDateValidations() {
+  const birthdayInputs = document.querySelectorAll('.birthday-field input');
+  birthdayInputs.forEach(input => {
+    input.addEventListener('input',(e) => {
+      removeError(input.parentElement);
+      if(!input.checkValidity()) {
+        addError(input.parentElement,'Data inválida');
+      }
+    })
+  });
+}
+
+function setBirthdateMask() {
+  const birthdayInputs = document.querySelectorAll('.birthday-field input');
+  birthdayInputs.forEach(input => {
+    input.type = 'text';
+    input.oninput = function (e) {
+      if (!e.data) return;
+      if (isNaN(Number(e.data))) {
+        input.value = input.value.replace(e.data,'');
+      }
+      if (input.value.length > 10) {
+        input.value = input.value.slice(0,10);
+      }
+      if ([2,5].includes(input.value.length)) {
+        input.value = input.value+'/';
+      }
+    }
+  }
+  );
+}
+
+function addError(element, text) {
+  if(element.classList.contains('error')) return;
+  label = `<label class="error">${text}</label>`;
+  errorDiv = document.createElement('div');
+  errorDiv.classList.add('requided_error');
+  errorDiv.innerHTML = label;
+  element.classList.add('error');
+  element.appendChild(errorDiv);
+}
+function removeError(element) {
+  if(!element.classList.contains('error')) return;
+  errorDiv = element.querySelector('.requided_error');
+  element.classList.remove('error');
+  element.removeChild(errorDiv);
 }

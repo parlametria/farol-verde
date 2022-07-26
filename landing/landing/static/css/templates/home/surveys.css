@@ -106,15 +106,21 @@ input[type="submit"], .modal-toggle, .modal-close.submit {
     background: #fff;
     border-radius: .25rem;
 }
+
 .requided_error{
-    margin-top:-8px;
-    background:#FFEEEE;
-    padding: 10px 10px;
-    color:red
+    margin-top: -0.5rem;
+    background: #FFEEEE;
+    padding: 10px;
+    color: red;
+    border-radius: .25rem;
+    opacity: 1;
+    animation-name: fade-down;
+    animation-duration: .25s;
+    animation-timing-function: linear;
 }
-.field-row.error input{
-    border: 2px solid red;
-}
+
+.field-row.error input{border: 2px solid red;}
+
 .field-row.error ul {
     border: 2px solid red;
     margin-inline-start: 0;
@@ -132,26 +138,26 @@ input[type="submit"], .modal-toggle, .modal-close.submit {
     font-weight: bold;
 }
 
-div:nth-of-type(9).field-row.question,
 div:nth-of-type(10).field-row.question,
 div:nth-of-type(11).field-row.question,
-div:nth-of-type(12).field-row.question {
+div:nth-of-type(12).field-row.question,
+div:nth-of-type(13).field-row.question {
     display: inline-flex;
     width: calc(50% - 8px);
     margin: 0 10px 25px 0;
 }
 
-div:nth-of-type(9).field-row.question input,
 div:nth-of-type(10).field-row.question input,
 div:nth-of-type(11).field-row.question input,
-div:nth-of-type(12).field-row.question input {
+div:nth-of-type(12).field-row.question input,
+div:nth-of-type(13).field-row.question input {
     flex: 1;
 }
 
-div:nth-of-type(9).field-row.question label,
 div:nth-of-type(10).field-row.question label,
 div:nth-of-type(11).field-row.question label,
-div:nth-of-type(12).field-row.question label {
+div:nth-of-type(12).field-row.question label,
+div:nth-of-type(13).field-row.question label {
     display: inline-block;
     width: 0px;
     padding: 0;
@@ -159,10 +165,10 @@ div:nth-of-type(12).field-row.question label {
     margin-right: 45px;
 }
 
-div:nth-of-type(9).field-row.question label::before,
 div:nth-of-type(10).field-row.question label::before,
 div:nth-of-type(11).field-row.question label::before,
-div:nth-of-type(12).field-row.question label::before {
+div:nth-of-type(12).field-row.question label::before,
+div:nth-of-type(13).field-row.question label::before {
     display: block;
     content: "";
     height: 30px;
@@ -172,32 +178,29 @@ div:nth-of-type(12).field-row.question label::before {
     background-size: contain;
     background-repeat: no-repeat;
 }
-div:nth-of-type(9).field-row.question label::before {
-    background-image: url(/static/img/social_icons/twitter.svg);
-}
 div:nth-of-type(10).field-row.question label::before {
-    margin-top: 8px;
-    background-image: url(/static/img/social_icons/facebook.svg);
+    background-image: url(/static/img/social_icons/twitter.svg);
 }
 div:nth-of-type(11).field-row.question label::before {
     margin-top: 8px;
-    background-image: url(/static/img/social_icons/instagram.svg);
+    background-image: url(/static/img/social_icons/facebook.svg);
 }
 div:nth-of-type(12).field-row.question label::before {
+    margin-top: 8px;
+    background-image: url(/static/img/social_icons/instagram.svg);
+}
+div:nth-of-type(13).field-row.question label::before {
     margin-top: 13px;
     background-image: url(/static/img/social_icons/youtube.svg);
 }
-div:nth-of-type(10).field-row.question,
-div:nth-of-type(12).field-row.question {
+div:nth-of-type(11).field-row.question,
+div:nth-of-type(13).field-row.question {
     margin-right: 0;
 }
 form .actions {
     text-align: center;
     margin: 30px;
 }
-
-
-
 
 .lgpd_text{
     font-family: 'Noto Sans';
