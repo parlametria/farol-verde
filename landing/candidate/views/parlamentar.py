@@ -98,7 +98,13 @@ def votacoes_parlamentar_view(request: HttpRequest, id_candidate: int):
 
     if not candidate:
         return JsonResponse(
-            data={"status_code": 404, "error": "The resource was not found"},
+            data={"status_code": 404, "error": "Candidato não encontrado"},
+            status=404,
+        )
+
+    if candidate.id_parlametria is None:
+        return JsonResponse(
+            data={"status_code": 404, "error": "Candidato sem id do parlametria"},
             status=404,
         )
 
