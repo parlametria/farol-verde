@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
+from requests import delete
 
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
@@ -267,3 +268,50 @@ def form_submission_link_candidate(sender, instance: FormSubmission, **kwargs):
 
     builder = SurveyCandidateFactory(instance.id, form, role_column)
     builder.create_candidate()
+
+
+class Proposicao(models.Model):
+    id_camara = models.IntegerField(blank=False, null=False, primary_key=True)
+    sigla_tipo = models.CharField(blank=False, null=False, max_length=6)
+    numero = models.IntegerField(blank=False, null=False)
+    ano = models.IntegerField(blank=False, null=False)
+    ementa = models.TextField(blank=True, null=True)
+
+    def __str__(self) -> str:
+        # MPV 867/2018
+        return f"{self.sigla_tipo} {self.numero}/{self.ano}"
+
+
+class VotacaoProsicao(models.Model):
+    proposicao = models.ForeignKey(
+        Proposicao,
+        on_delete=models.CASCADE,
+        related_name="votacoes",
+    )
+    id_camara = models.CharField(
+        primary_key=True,
+        blank=False,
+        null=False,
+        max_length=30,
+    )
+    data = models.CharField(blank=False, null=False, max_length=12)
+    data_hora_registro = models.CharField(blank=False, null=False, max_length=30)
+
+
+class VotacaoParlamentar(models.Model):
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=['id_deputado', 'votacao_proposicao'],
+                name='votacao_prop_deputado_idx',
+            ),
+        ]
+
+    votacao_proposicao = models.ForeignKey(
+        VotacaoProsicao,
+        on_delete=models.CASCADE,
+        related_name="votacoes_parlamentares",
+    )
+    tipo_voto = models.CharField(blank=False, null=False, max_length=20)
+    data_registro_voto = models.CharField(blank=False, null=False, max_length=30)
+    id_deputado = models.IntegerField(blank=False, null=False)
