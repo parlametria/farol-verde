@@ -174,5 +174,5 @@ class BirthdayField(BaseField):
     def get_options(self, block_value):
         options = super().get_options(block_value)
         help_text = options.get("help_text")
-        options.update({"help_text": help_text + " birthday_field"})
+        options.update({"help_text": str(help_text) + " birthday_field"})
         return options
