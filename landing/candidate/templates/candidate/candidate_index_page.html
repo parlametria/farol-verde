@@ -13,15 +13,29 @@
         <form action='.' id="form" class="query">
             <input type="hidden" id='page' name='page' value="1">
             <div class="query__select">
-                <div id='uf'>
+                <div id='uf' class="input-board">
                     <button>UF <i class="fas fa-caret-down"></i></button>
-                    <div class="uf__selector input-board">
+                    <div class="input-board__selector">
                         <p>Mostrar candidatos do(s) estado(s):</p>
                         <div class="input-board__content">
                             {% for uf in uf_list %}
                                 <label class="btn-toggle">
                                     <input type="checkbox" value="{{ uf }}" name="uf[]">
                                     <span>{{ uf }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div id='party' class="input-board">
+                    <button>Partido <i class="fas fa-caret-down"></i></button>
+                    <div class="input-board__selector">
+                        <p>Mostrar candidatos do(s) partido(s):</p>
+                        <div class="input-board__content">
+                            {% for party in party_list %}
+                                <label class="btn-toggle">
+                                    <input type="checkbox" value="{{ party }}" name="party[]">
+                                    <span>{{ party }}</span>
                                 </label>
                             {% endfor %}
                         </div>

@@ -3,8 +3,10 @@ const inputs = document.querySelectorAll('input, select');
 const nameInput = document.getElementById('query__input');
 const subjects = document.querySelector('.query__subjects');
 const pagination = document.querySelector('#page');
-const ufBoard = document.querySelector('.uf__selector')
-const ufButton = document.querySelector('#uf button');
+const ufBoard = document.querySelector('#uf .input-board__selector')
+const ufButton = document.querySelector("#uf button")
+const partyBoard = document.querySelector('#party .input-board__selector')
+const partyButton = document.querySelector('#party button');
 
 $('#form').ajaxForm( result => {
     candidatesList.innerHTML = result;
@@ -52,5 +54,13 @@ function toggleUfBoard() {
     ufBoard.classList.toggle('open');
 }
 
+function togglePartyBoard() {
+    console.log("party")
+    partyBoard.classList.toggle('open');
+}
+
 ufButton.addEventListener('click', toggleUfBoard);
+partyButton.addEventListener('click', togglePartyBoard);
+
 ufBoard.addEventListener('focusout', toggleUfBoard);
+partyBoard.addEventListener('focusout', togglePartyBoard);

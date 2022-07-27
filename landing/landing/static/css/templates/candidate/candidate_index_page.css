@@ -37,37 +37,37 @@ input::placeholder {color: var(--dark-blue);}
     gap: .75rem;
 }
 
-#uf {
+.input-board {
     width: 5rem;
     position: relative;
     flex: 0;
 }
 
-#uf > button {
+.input-board > button {
     display: flex;
     gap: 1rem;
     align-items: center;
-    
-    height: 100%;
 
     color: black;
     background: white;
-    border: 1px solid var(--dark-gray);
+    outline: 1px solid var(--dark-gray);
     border-radius: .25rem;
+    flex-grow: 1;
+    height: 100%;
     
     font-weight: 500;
     font-size: .75rem;
 }
 
-#uf > *:not(i) {font-size: .75rem;}
+.input-board > *:not(i) {font-size: .75rem;}
 
-#uf > button:hover {box-shadow: none;}
+.input-board > button:hover {box-shadow: none;}
 
-.uf__selector {
+.input-board__selector {
     width: min-content;
 }
 
-.uf__selector p {
+.input-board__selector p {
     width: 100%;
     font-size: .875rem;
     font-weight: 700;

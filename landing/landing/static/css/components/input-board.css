@@ -1,8 +1,8 @@
-.input-board {
+.input-board__selector {
     visibility: hidden;
     background: white;
     border-radius: .25rem;
-    border: 1px solid var(--dark-gray);
+    outline: 1px solid var(--dark-gray);
     padding: 1.5rem;
     z-index: 500;
     top: 4rem;
@@ -10,8 +10,6 @@
 
     display: grid;
     gap: 1rem;
-
-    width: max-content;
 }
 
 .input-board__content {
@@ -21,23 +19,23 @@
     grid-row-gap: .5rem;
 }
 
-.input-board .btn-toggle {
+.input-board__selector .btn-toggle {
     border-radius: 100vmax;
     width: 2.25rem;
     aspect-ratio: 1;
 }
 
-.input-board .btn-toggle span {
+.input-board__selector .btn-toggle span {
     height: 100%;
     font-weight: 700;
     font-size: .875rem;
     color: var(--dark-gray);
 }
 
-.input-board.open {
+.input-board__selector.open {
     visibility: visible;
 }
 
-.input-board .btn-toggle input:checked + span {
+.input-board__selector .btn-toggle input:checked + span {
     background: var(--dark-gray);
 }
