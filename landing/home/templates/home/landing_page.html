@@ -17,16 +17,40 @@
 
     <section>
         <div class="home__ctas">
-          <div class="cta-candidato">
-              <p class="label">É candidato(a)?</p>
-              <p><a class="btn btn-round" href="{{ survey_url }}">Participe da enquete</a></p>
-          </div>
-          <div class="cta-eleitor">
-              <p class="label">É eleitor(a)?</p>
-              <p><a class="btn btn-round" href="{{ contact_url }}">Aguarde o lançamento!</a></p>
-          </div>
+            <div class="cta-candidato">
+                <p class="label">É candidato(a)?</p>
+                <p><a class="btn btn-round" href="{{ survey_url }}">Participe da enquete</a></p>
+            </div>
+            <div class="cta-eleitor">
+                <p class="label">É eleitor(a)?</p>
+                <p><a class="btn btn-round" href="{{ contact_url }}">Aguarde o lançamento!</a></p>
+            </div>
         </div>
     </section>
+
+    <section class="blog">
+        <div class="section-title">Blog</div>
+        <div class="carousel">
+            {% for post in page.blog_posts %}
+                <article class="carousel__slide fade-left">
+                    <div>
+                        <h2>{{ post.title }}</h2>
+                        <h4>{{ post.date|date:"d/m/Y" }}</h4>
+                    </div>
+                    <a href="{{ post.url }}">
+                        <img src="{{ post.image.url }}" alt="{{ post.image.title }}">
+                    </a>
+                </article>
+            {% endfor %}
+        </div>
+        <div class="blog__drawer">
+            {% for post in page.blog_posts %}
+                <div class="carousel__dot dot-{{forloop.counter0}}"></div>
+            {% endfor %}
+        </div>
+    </section>
+    <hr>
+    
 
     <section class="partners large">
         <p>Organização</p>
@@ -65,5 +89,7 @@
 </main>
 
 <script type="text/javascript" src="{% static 'js/animations/general.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/home/carousel.js' %}"></script>
 
 {% endblock %}
+
