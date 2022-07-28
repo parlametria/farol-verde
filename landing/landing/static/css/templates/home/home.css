@@ -37,6 +37,8 @@
   grid-gap: 3rem;
 }
 
+.partners.large {margin-top: 3rem;}
+
 .partners__items {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
@@ -64,6 +66,78 @@
     text-align: left;
 }
 
+.blog-section {
+  display: grid;
+  grid-gap: 1.625rem;
+  margin-bottom: 3rem;
+}
+
+.carousel__slide {
+  display: none;
+  grid-gap: 1.25rem;
+}
+
+.carousel__slide.active {display: grid;}
+
+.blog-section .section-title {
+  font-family: 'Noto Sans';
+  font-weight: 400;
+  font-size: .875rem;
+  line-height: .875rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.blog-section h2 {
+  font-family: 'Noto Sans';
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 2.0625rem;
+}
+
+.blog-section h4 {font-size: 1rem;}
+
+.blog-section img {
+  position: relative;
+  height: 21.5rem;
+  width: 100%;
+  object-fit: cover;
+  background-color: var(--gray);
+}
+
+.blog-section img::before {
+  display: block;
+  position: absolute;
+  background: var(--blue);
+  border-radius: 100vmax;
+  bottom: 2rem;
+  padding: .5rem 1.5rem;
+  right: 2rem;
+  color: white;
+  font-weight: 700;
+  font-size: .75rem;
+  content: 'Leia mais';
+}
+
+.blog-section__drawer {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.carousel__dot {
+  width: .875rem;
+  height: .875rem;
+  border-radius: 100vmax;
+  background: var(--light-blue);
+  cursor: pointer;
+  transition: .25s;
+}
+
+.carousel__dot.active {
+  background: var(--dark-blue);
+  width: 1.75rem;
+}
 
 @media screen and (max-width: 830px) {
   .partners {
@@ -78,3 +152,4 @@
     font-size: 1.25rem;
   }
 }
+

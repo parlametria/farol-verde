@@ -4,8 +4,8 @@ from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
 from wagtailstreamforms.blocks import WagtailFormBlock
-from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
 from candidate.models import CandidateIndexPage
+from blog.models import BlogPost
 
 class LandingPage(MetadataPageMixin, Page):
     is_creatable = False
@@ -20,11 +20,16 @@ class LandingPage(MetadataPageMixin, Page):
         FieldPanel("heading"),
     ]
 
+    @property
+    def blog_posts(self):
+        return BlogPost.objects.live().public().order_by("-date")[:4]
+
     def get_context(self, request):
         context = super(LandingPage, self).get_context(request)
         survey_url = SurveysPage.objects.get(title="Enquete").slug
         contact_url = SurveysPage.objects.get(title="Contato").slug
         candidates_url = CandidateIndexPage.objects.first().slug
+
         context["survey_url"] = survey_url
         context["contact_url"] = contact_url
         context["candidates_url"] = candidates_url
