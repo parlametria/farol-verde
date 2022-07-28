@@ -2,6 +2,20 @@ import requests
 
 CAMARA_API = "https://dadosabertos.camara.leg.br/api/v2"
 
+# (numero/ano)
+FETCH_LIST = [
+    ("MPV", 867, 2018),
+    ("MPV", 910, 2019),
+    ("PL", 3729, 2004),
+    ("PL", 6299, 2002),
+    ("PL", 2633, 2020),
+    ("PL", 5028, 2019),
+    ("PL", 191, 2020),
+    ("PL", 528, 2021),
+    ("PL", 2510, 2019),
+    ("PL", 5466, 2019),
+]
+
 
 def get_ids_membros_frente_parlamentar_ambientalista():
     url = f"{CAMARA_API}/frentes/54012/membros"
@@ -16,24 +30,18 @@ def get_proposicoes(
     numero=867,
     url=f"{CAMARA_API}/proposicoes?numero=%d&ano=%d&ordem=ASC&ordenarPor=id&itens=100",
 ):
-    # https://dadosabertos.camara.leg.br/api/v2/proposicoes?numero=867&ano=2020&ordem=ASC&ordenarPor=id&itens=100
+    # https://dadosabertos.camara.leg.br/api/v2/proposicoes?numero=867&ano=2018&ordem=ASC&ordenarPor=id&itens=100
     response = requests.get(url % (numero, ano))
     return response.json()
 
 
 def get_proposicoes_iterator():
-    year = 2018
-    MAX_YEAR = 2023
-
-    while year < MAX_YEAR:
-        proposicoes = get_proposicoes(ano=year)
-        year += 1
-
-        if len(proposicoes["dados"]) == 0:
-            continue
+    for prop in FETCH_LIST:
+        proposicoes = get_proposicoes(numero=prop[1], ano=prop[2])
 
         for row in proposicoes["dados"]:
-            yield row
+            if row["siglaTipo"] == prop[0]:
+                yield row
 
 
 def get_all_proposicoes_ids():

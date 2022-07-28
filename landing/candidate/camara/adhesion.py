@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from django.db.models.query import QuerySet
 
-from candidate.models import VotacaoParlamentar, VotacaoProsicao, Proposicao
+from candidate.models import Proposicao
 
 IDS_LIDERES = {
     "rodrigo_agostinho": 204530,  # Dep. Rodrigo Agostinho antes de 02-02-2022
@@ -45,7 +45,7 @@ def calcula_adesao_parlamentar_em_proposicao(id_deputado: int, proposicao: Propo
     adesao = {
         "id_camara": proposicao.id_camara,
         "proposition_number": str(proposicao),
-        "proposition_name": "",
+        "summary": proposicao.ementa,
         "same": 0,
         "different": 0,
         "total_votacoes": total_votacoes,
