@@ -6,7 +6,7 @@ const pagination = document.querySelector('#page');
 const partyBoard = document.querySelector('#party .input-board__selector')
 const partyButton = document.querySelector('#party button');
 
-const ufBoard = document.querySelector('.uf__selector')
+const ufBoard = document.querySelector('#uf .input-board__selector')
 const ufButton = document.querySelector('#uf button');
 const countriesModal = document.querySelector('.modal');
 const showModal = document.querySelector('#show-modal');
@@ -58,7 +58,6 @@ function toggleUfBoard() {
 }
 
 function togglePartyBoard() {
-    console.log("party")
     partyBoard.classList.toggle('open');
 }
 
