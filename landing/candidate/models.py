@@ -294,11 +294,17 @@ class VotacaoProsicao(models.Model):
         null=False,
         max_length=30,
     )
-    data = models.CharField(blank=False, null=False, max_length=12)
+    data = models.DateField()
     data_hora_registro = models.CharField(blank=False, null=False, max_length=30)
 
 
 class VotacaoParlamentar(models.Model):
+    VOTO_SIM = "Sim"
+    VOTO_NAO = "Não"
+    VOTO_OBSTRUCAO = "Obstrução"
+    VOTO_ABSTENCAO = "Abstenção"
+    VOTO_ARTIGO_17 = "Artigo 17"
+
     class Meta:
         indexes = [
             models.Index(
@@ -306,6 +312,7 @@ class VotacaoParlamentar(models.Model):
                 name='votacao_prop_deputado_idx',
             ),
         ]
+        unique_together = (('id_deputado', 'votacao_proposicao'),)
 
     votacao_proposicao = models.ForeignKey(
         VotacaoProsicao,
@@ -313,5 +320,6 @@ class VotacaoParlamentar(models.Model):
         related_name="votacoes_parlamentares",
     )
     tipo_voto = models.CharField(blank=False, null=False, max_length=20)
+    data = models.DateField()
     data_registro_voto = models.CharField(blank=False, null=False, max_length=30)
     id_deputado = models.IntegerField(blank=False, null=False)
