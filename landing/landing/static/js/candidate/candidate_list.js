@@ -3,7 +3,10 @@ const inputs = document.querySelectorAll('form :is(input, select)');
 const nameInput = document.getElementById('query__input');
 const subjects = document.querySelector('.query__subjects');
 const pagination = document.querySelector('#page');
-const ufBoard = document.querySelector('.uf__selector')
+const partyBoard = document.querySelector('#party .input-board__selector')
+const partyButton = document.querySelector('#party button');
+
+const ufBoard = document.querySelector('#uf .input-board__selector')
 const ufButton = document.querySelector('#uf button');
 const countriesModal = document.querySelector('.modal');
 const showModal = document.querySelector('#show-modal');
@@ -54,6 +57,10 @@ function toggleUfBoard() {
     ufBoard.classList.toggle('open');
 }
 
+function togglePartyBoard() {
+    partyBoard.classList.toggle('open');
+}
+
 if (localStorage.getItem('countriesModal') !== 'true') {
     toggleCountriesModal()
 } else {getCandidatesList();}
@@ -90,4 +97,7 @@ showModal.addEventListener('click', () => {
 });
 
 ufButton.addEventListener('click', toggleUfBoard);
+partyButton.addEventListener('click', togglePartyBoard);
+
 ufBoard.addEventListener('focusout', toggleUfBoard);
+partyBoard.addEventListener('focusout', togglePartyBoard);

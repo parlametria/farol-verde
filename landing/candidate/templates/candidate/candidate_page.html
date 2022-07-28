@@ -15,8 +15,8 @@
             {% endif %}
         {% endwith %}
         <div class="candidate__data">
-            <h2 class="candidate__name">{{ page.title }}</h2>
-            <div class="candidate__info"><span>{{ page.charge }}</span> <span>{{page.party}}</span></div>
+            <h2 class="candidate__name">{{ page.campaign_name }}</h2>
+            <div class="candidate__info"><span>{{ page.charge }}</span>/<span>{{page.party}}</span> - {{page.election_state}}</div>
         </div>
     </div>
 

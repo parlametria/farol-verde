@@ -36,6 +36,7 @@ class CandidatePage(MetadataPageMixin, Page):
     ]
 
     campaign_name = CharField(null=True, max_length=255)
+    party = CharField(null=True, max_length=255)
     cpf = CharField(max_length=14, null=True)
     birth_date = DateField(null=True)
     email = EmailField(null=True)
@@ -180,6 +181,7 @@ class CandidatePage(MetadataPageMixin, Page):
         FieldPanel("id_parlametria", classname="full"),
         FieldPanel("id_serenata", classname="full"),
         FieldPanel('campaign_name'),
+        FieldPanel('party'),
         FieldPanel('cpf'),
         FieldPanel('birth_date'),
         FieldPanel('email'),
@@ -228,6 +230,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         params_functions = {
             'name': lambda queryset, value: queryset.filter(title__icontains=value),
             'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
+            'party[]': lambda queryset, values: queryset.filter(party__in=values),
             'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
         }
 
@@ -235,7 +238,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         for param, value in list(request_items.items()):
             if param in charges_dict.keys():
                 charges.append(charges_dict[param])
-            if param != 'uf[]':
+            if param not in ['uf[]', 'party[]']:
                 value = value[0]
             if value and param in params_functions:
                 queryset = params_functions[param](queryset, value)
@@ -258,6 +261,10 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         search_results = zip(search_results, candidates_opinions)
         search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
 
+        party_list = [candidate.party for candidate in CandidatePage.objects.all()]
+        party_list = list(set(party_list))
+        party_list.remove(None)
+
         paginator = Paginator(search_results, 20)
         page = request.GET.get('page', 1)
         try:
@@ -268,6 +275,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         context['candidates_list'] = candidates_list
         context['subjects'] = subjects_list
         context['uf_list'] = uf_list
+        context['party_list'] = party_list
 
         return context
 
