@@ -144,13 +144,27 @@ class CandidatePage(MetadataPageMixin, Page):
         ]))
     ], null=True)
 
+
     @property
     def get_picture(self):
-        if self.id_autor is None:
-            return ''
         if self.picture:
             return self.picture.url
-        return f"https://www.camara.leg.br/internet/deputado/bandep/{self.id_autor}.jpg"
+
+        if self.id_autor:
+            return self._get_external_picture_link()
+
+        return ""
+
+
+    def _get_external_picture_link(self):
+        senador_picture_url = "https://www.senado.leg.br/senadores/img/fotos-oficiais/senador"
+        deputado_picture_url = "https://www.camara.leg.br/internet/deputado/bandep/"
+
+        if self.charge == "Senador(a)":
+            return f"{senador_picture_url}{self.id_autor}.jpg"
+        else:
+            return f"{deputado_picture_url}{self.id_autor}.jpg"
+
 
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
