@@ -10,6 +10,7 @@ from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
@@ -126,7 +127,7 @@ class BlogPost(MetadataPageMixin, Page):
     content_panels = Page.content_panels + [
         FieldPanel("body", classname="full"),
         StreamFieldPanel("category", widget=forms.Select),
-        FieldPanel("cover_image"),
+        ImageChooserPanel("cover_image"),
         FieldPanel("date"),
         FieldPanel("tags"),
         FieldPanel("intro_text"),
