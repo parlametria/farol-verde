@@ -24,5 +24,8 @@ makemigrations:
 parla-import:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py parlametria --import
 
+camara-import:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py camara --import
+
 shell:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py shell

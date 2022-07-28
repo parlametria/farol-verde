@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from candidate.camara.adhesion import calcula_adesao_parlamentar_todas_proposicoes
 
 
-def votacoes_parlamentar_view(request: HttpRequest, id_candidate: int):
+def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
     response = { "adhesion": 0.0, "propositions": [] }
 
     total = 0.0
