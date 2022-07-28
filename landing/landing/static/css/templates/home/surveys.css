@@ -32,10 +32,9 @@ h2 {
 }
 
 .field-row input, select {
-    padding: .5rem 1rem;
-    border: 1px solid #CED4DA;
+    padding: .7rem 1rem;
+    border: 1px solid var(--gray);
     border-radius: .25rem;
-    height: 1.75rem;
 }
 
 .field-row input::placeholder {
@@ -44,9 +43,7 @@ h2 {
     font-size: 1rem;
 }
 
-.field-row input[type="radio"] {
-    margin: 0;
-}
+.field-row input[type="radio"] {margin: 0;}
 
 select {background: white;}
 
@@ -61,9 +58,7 @@ select {background: white;}
     font-size: 24px;
 }
 
-main {
-    padding-top: 2rem;
-}
+main {padding-top: 2rem;}
 
 .page-title {
     font-size: 1.25rem;
@@ -138,26 +133,17 @@ input[type="submit"], .modal-toggle, .modal-close.submit {
     font-weight: bold;
 }
 
-div:nth-of-type(10).field-row.question,
-div:nth-of-type(11).field-row.question,
-div:nth-of-type(12).field-row.question,
-div:nth-of-type(13).field-row.question {
+.social {
     display: inline-flex;
     width: calc(50% - 8px);
     margin: 0 10px 25px 0;
 }
 
-div:nth-of-type(10).field-row.question input,
-div:nth-of-type(11).field-row.question input,
-div:nth-of-type(12).field-row.question input,
-div:nth-of-type(13).field-row.question input {
+.social input {
     flex: 1;
 }
 
-div:nth-of-type(10).field-row.question label,
-div:nth-of-type(11).field-row.question label,
-div:nth-of-type(12).field-row.question label,
-div:nth-of-type(13).field-row.question label {
+.social label {
     display: inline-block;
     width: 0px;
     padding: 0;
@@ -165,38 +151,38 @@ div:nth-of-type(13).field-row.question label {
     margin-right: 45px;
 }
 
-div:nth-of-type(10).field-row.question label::before,
-div:nth-of-type(11).field-row.question label::before,
-div:nth-of-type(12).field-row.question label::before,
-div:nth-of-type(13).field-row.question label::before {
+.social label::before {
     display: block;
     content: "";
     height: 30px;
     width: 30px;
     position: absolute;
-    margin: 10px;
+    margin: 0.625rem;
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
 }
-div:nth-of-type(10).field-row.question label::before {
+
+.twitter label::before {
     background-image: url(/static/img/social_icons/twitter.svg);
 }
-div:nth-of-type(11).field-row.question label::before {
-    margin-top: 8px;
+
+.facebook label::before {
     background-image: url(/static/img/social_icons/facebook.svg);
 }
-div:nth-of-type(12).field-row.question label::before {
-    margin-top: 8px;
+
+.instagram label::before {
     background-image: url(/static/img/social_icons/instagram.svg);
 }
-div:nth-of-type(13).field-row.question label::before {
-    margin-top: 13px;
+
+.youtube label::before {
     background-image: url(/static/img/social_icons/youtube.svg);
 }
-div:nth-of-type(11).field-row.question,
-div:nth-of-type(13).field-row.question {
+
+.facebook, .youtube {
     margin-right: 0;
 }
+
 form .actions {
     text-align: center;
     margin: 30px;

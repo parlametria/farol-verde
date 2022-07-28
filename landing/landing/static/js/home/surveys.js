@@ -3,6 +3,7 @@ document.querySelector('.modal').addEventListener('modal-open', () => {
 });
 
 setFormValidations();
+setDateInputs();
 
 function setQuestionsModal() {
   const questions = Array.from(document.querySelectorAll('.question'));
@@ -12,7 +13,7 @@ function setQuestionsModal() {
     elm.classList.remove('question')
     let inputs = Array.from(elm.querySelectorAll('input, select'));
     inputs = inputs.filter(input => input.type !== 'hidden' && (input.type !== 'radio' || input.checked || input.tagName == 'select'));
-    var value = inputs.map(input => input.value)[0];
+    var {value} = inputs[0];
     if (inputs.length == 1 && inputs[0].tagName == 'SELECT') {
       value = inputs[0].options[inputs[0].selectedIndex].text;
     }
@@ -94,7 +95,6 @@ function setEmailConfirmation() {
 
 function setFormValidations() {
   setCPFmask();
-  setBirthdateMask();
   setEmailConfirmation();
   setFormSubmit();
   setDateValidations()
@@ -103,6 +103,7 @@ function setFormValidations() {
 function setDateValidations() {
   const birthdayInputs = document.querySelectorAll('.birthday-field input');
   birthdayInputs.forEach(input => {
+    input.max = new Date().toISOString().split('T')[0]; // set max date to today
     input.addEventListener('input',(e) => {
       removeError(input.parentElement);
       if(!input.checkValidity()) {
@@ -112,24 +113,9 @@ function setDateValidations() {
   });
 }
 
-function setBirthdateMask() {
-  const birthdayInputs = document.querySelectorAll('.birthday-field input');
-  birthdayInputs.forEach(input => {
-    input.type = 'text';
-    input.oninput = function (e) {
-      if (!e.data) return;
-      if (isNaN(Number(e.data))) {
-        input.value = input.value.replace(e.data,'');
-      }
-      if (input.value.length > 10) {
-        input.value = input.value.slice(0,10);
-      }
-      if ([2,5].includes(input.value.length)) {
-        input.value = input.value+'/';
-      }
-    }
-  }
-  );
+function setDateInputs() {
+  const dateInputs = document.querySelectorAll('.date_field input');
+  dateInputs.forEach(input => input.type = 'date');
 }
 
 function addError(element, text) {
