@@ -2,7 +2,7 @@
 
 {% if subject|length and candidates_list|length%}
     <div class="subject">
-        <div class="subject__content container">
+        <div class="subject__content">
             <div class="subject__header">
                 <div class="subject__heading">
                     pergunta da enquete no tema <span class="subject__name">{{subject}}</span>:
@@ -16,7 +16,7 @@
     </div>
 {% endif %}
 
-<div class="container candidate__list">
+<div class="candidate__list">
     {% for item in candidates_list %}
         <a href="{{item.candidate.url}}" class="candidate {% if item.opinion == 'Prefiro não responder / Não sei' %} doubt
         {% else %} {{item.opinion}} {% endif %}">
@@ -29,9 +29,7 @@
             {% endwith %}
             <div class="candidate__data">
                 <div class="candidate__name">{{ item.candidate.title }}</div>
-                <div class="candidate__info">
-                    {{ item.candidate.charge }}
-                </div>
+                <div class="candidate__info">{{ item.candidate.charge }}</div>
             </div>
         </a>
     {% empty %}
@@ -44,11 +42,9 @@
 </div>
 
 {% if posts.paginator.num_pages > 1 %}
-    <div class="container">
-        <div class="pagination">
-            {% for page_num in candidates_list.paginator.page_range %}
-                <button>{{ page_num }}</button>
-            {% endfor %}
-        </div>
+    <div class="pagination">
+        {% for page_num in candidates_list.paginator.page_range %}
+            <button>{{ page_num }}</button>
+        {% endfor %}
     </div>
 {% endif %}

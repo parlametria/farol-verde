@@ -7,16 +7,17 @@
 }
 
 .candidate__picture {
-  position: relative;
-  border-radius: 100vmax;
-  object-fit: cover;
-  object-position: top;
-  width: 120px;
-  height: 120px;
+    position: relative;
+    border-radius: 100vmax;
+    object-fit: cover;
+    object-position: top;
+    width: 120px;
+    aspect-ratio: 1;
 }
 
 .candidate__picture.empty {
-  background: var(--gray);
+    background: var(--gray);
+    display: block;
 }
 
 .candidate__name {
@@ -50,9 +51,7 @@
     border-bottom: .25rem solid white;
 }
 
-.tab:hover {
-    box-shadow: unset !important;
-}
+.tab:hover {box-shadow: unset !important;}
 
 .tab.open {
     color: black;
