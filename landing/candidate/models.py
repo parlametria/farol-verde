@@ -21,6 +21,7 @@ from candidate.util import uf_list, subjects_list, subject_dict, subject_descrip
 from candidate.factories import SurveyCandidateFactory
 
 class CandidatePage(MetadataPageMixin, Page):
+    DEPUTADO_CHARGE_TEXT = "Deputado(a) Federal"
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
     id_serenata = models.IntegerField(blank=True, null=True, unique=True)
@@ -166,6 +167,14 @@ class CandidatePage(MetadataPageMixin, Page):
             return f"{deputado_picture_url}{self.id_autor}.jpg"
 
 
+    @property
+    def is_deputado(self) -> bool:
+        return self.charge == self.DEPUTADO_CHARGE_TEXT
+
+    @property
+    def is_senador(self) -> bool:
+        return not self.is_deputado
+
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
         FieldPanel("id_parlametria", classname="full"),
@@ -274,3 +283,58 @@ def form_submission_link_candidate(sender, instance: FormSubmission, **kwargs):
 
     builder = SurveyCandidateFactory(instance.id, form, role_column)
     builder.create_candidate()
+
+
+class Proposicao(models.Model):
+    id_camara = models.IntegerField(blank=False, null=False, primary_key=True)
+    sigla_tipo = models.CharField(blank=False, null=False, max_length=6)
+    numero = models.IntegerField(blank=False, null=False)
+    ano = models.IntegerField(blank=False, null=False)
+    ementa = models.TextField(blank=True, null=True)
+
+    def __str__(self) -> str:
+        # MPV 867/2018
+        return f"{self.sigla_tipo} {self.numero}/{self.ano}"
+
+
+class VotacaoProsicao(models.Model):
+    proposicao = models.ForeignKey(
+        Proposicao,
+        on_delete=models.CASCADE,
+        related_name="votacoes",
+    )
+    id_camara = models.CharField(
+        primary_key=True,
+        blank=False,
+        null=False,
+        max_length=30,
+    )
+    data = models.DateField()
+    data_hora_registro = models.CharField(blank=False, null=False, max_length=30)
+
+
+class VotacaoParlamentar(models.Model):
+    VOTO_SIM = "Sim"
+    VOTO_NAO = "Não"
+    VOTO_OBSTRUCAO = "Obstrução"
+    VOTO_ABSTENCAO = "Abstenção"
+    VOTO_ARTIGO_17 = "Artigo 17"
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=['id_deputado', 'votacao_proposicao'],
+                name='votacao_prop_deputado_idx',
+            ),
+        ]
+        unique_together = (('id_deputado', 'votacao_proposicao'),)
+
+    votacao_proposicao = models.ForeignKey(
+        VotacaoProsicao,
+        on_delete=models.CASCADE,
+        related_name="votacoes_parlamentares",
+    )
+    tipo_voto = models.CharField(blank=False, null=False, max_length=20)
+    data = models.DateField()
+    data_registro_voto = models.CharField(blank=False, null=False, max_length=30)
+    id_deputado = models.IntegerField(blank=False, null=False)
