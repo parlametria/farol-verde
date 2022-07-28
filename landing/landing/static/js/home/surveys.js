@@ -103,6 +103,7 @@ function setFormValidations() {
 function setDateValidations() {
   const birthdayInputs = document.querySelectorAll('.birthday-field input');
   birthdayInputs.forEach(input => {
+    input.max = new Date().toISOString().split('T')[0]; // set max date to today
     input.addEventListener('input',(e) => {
       removeError(input.parentElement);
       if(!input.checkValidity()) {
@@ -113,11 +114,8 @@ function setDateValidations() {
 }
 
 function setDateInputs() {
-  const birthdayInputs = document.querySelectorAll('.birthday_field input');
-  birthdayInputs.forEach(input => {
-    input.type = 'date'
-    input.max = new Date().toISOString().split('T')[0]; // set max date to today
-  });
+  const dateInputs = document.querySelectorAll('.date_field input');
+  dateInputs.forEach(input => input.type = 'date');
 }
 
 function addError(element, text) {
