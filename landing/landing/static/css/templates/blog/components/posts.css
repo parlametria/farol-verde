@@ -58,13 +58,9 @@
             }
 
         #posts-container .posts .post .post-img {
-            height: 26rem;
+            display: block;
             width: 100%;
-            transition: .5s;
-
-            background-size: cover;
-            
-            border-bottom: .625rem solid var(--highlight-color);
+            height: auto;
         }
 
         #posts-container .posts .post .post-content {
@@ -123,9 +119,6 @@
 }
 
 @media (max-width: 1200px) {
-    #posts-container .posts .post .post-img {
-        height: 7.25rem;
-    }
 
     .post-content {
         display: none !important;
