@@ -5,11 +5,27 @@ import time
 
 from functools import lru_cache, partial, update_wrapper
 from os.path import abspath
+from dataclasses import dataclass
 from typing import Optional, List
 
 from django.utils.functional import lazy
 
-from candidate.schemes import Deputado, Senador
+
+@dataclass
+class Deputado:
+    id_autor: int
+    id_autor_parlametria: int
+    nome_autor: str
+    cpf: int
+
+
+@dataclass
+class Senador:
+    id_autor: int
+    id_autor_parlametria: int
+    nome_autor: str
+    nome_completo: str
+    uf: str
 
 
 # https://stackoverflow.com/questions/31771286/python-in-memory-cache-with-time-to-live

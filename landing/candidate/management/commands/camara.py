@@ -1,8 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError, OutputWrapper
 from django.core.management.color import Style
 
-import json
-
 
 from candidate.models import Proposicao, VotacaoProsicao, VotacaoParlamentar
 from candidate.camara.fetcher import (
@@ -154,9 +152,6 @@ class CamaraVotacoesFetcher:
          "tipoVoto" : "Sim"
         },
         """
-        #print("+"*80)
-        #print(json.dumps(dados_votacao))
-        #print("+"*80)
         found = (
             VotacaoParlamentar.objects
             .filter(id_deputado=dados_votacao["deputado_"]["id"])

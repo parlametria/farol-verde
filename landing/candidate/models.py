@@ -3,7 +3,6 @@ from django.db.models.signals import post_save
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
-from requests import delete
 
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
