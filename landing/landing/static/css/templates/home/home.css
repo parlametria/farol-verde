@@ -74,7 +74,7 @@
     text-align: left;
 }
 
-.blog {
+.blog-section {
   display: grid;
   grid-gap: 1.625rem;
   margin-bottom: 3rem;
@@ -87,7 +87,7 @@
 
 .carousel__slide.active {display: grid;}
 
-.blog .section-title {
+.blog-section .section-title {
   font-family: 'Noto Sans';
   font-weight: 400;
   font-size: .875rem;
@@ -96,16 +96,16 @@
   text-transform: uppercase;
 }
 
-.blog h2 {
+.blog-section h2 {
   font-family: 'Noto Sans';
   font-weight: 700;
   font-size: 1.5rem;
   line-height: 2.0625rem;
 }
 
-.blog h4 {font-size: 1rem;}
+.blog-section h4 {font-size: 1rem;}
 
-.blog img {
+.blog-section img {
   position: relative;
   height: 21.5rem;
   width: 100%;
@@ -113,7 +113,7 @@
   background-color: var(--gray);
 }
 
-.blog img::before {
+.blog-section img::before {
   display: block;
   position: absolute;
   background: var(--blue);
@@ -127,7 +127,7 @@
   content: 'Leia mais';
 }
 
-.blog__drawer {
+.blog-section__drawer {
   display: flex;
   gap: 1.5rem;
   justify-content: center;

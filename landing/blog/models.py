@@ -14,6 +14,7 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 from wagtail.search import index
+from wagtail.images.models import Image
 
 from wagtail_color_panel.fields import ColorField
 from wagtail_color_panel.edit_handlers import NativeColorPanel
@@ -101,7 +102,7 @@ class BlogPost(MetadataPageMixin, Page):
     category = models.ForeignKey(
         "blog.BlogCategory", on_delete=models.SET_NULL, null=True
     )
-    cover_image = models.ImageField(null=False, blank=False)
+    cover_image = models.ForeignKey(Image, on_delete=models.CASCADE)
 
     def get_context(self, request):
         panels = BlogIndexPage.objects.first().specific.sidebar_panels
