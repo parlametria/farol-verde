@@ -5,22 +5,22 @@
 
 <head>
     <meta charset="utf-8" />
-		{% block meta_tag %}
-      <title>
-          {% block title %}
-              {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-          {% endblock %}
-          {% block title_suffix %}
-              {% with self.get_site.site_name as site_name %}
-                  {% if site_name %}- {{ site_name }}{% endif %}
-              {% endwith %}
-          {% endblock %}
-      </title>
-      <meta name="description" content="{{ page.search_description }}" />
+    {% block meta_tag %}
+        <title>
+            {% block title %}
+                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+            {% endblock %}
+            {% block title_suffix %}
+                {% with self.get_site.site_name as site_name %}
+                    {% if site_name %}- {{ site_name }}{% endif %}
+                {% endwith %}
+            {% endblock %}
+        </title>
+        <meta name="description" content="{{ page.search_description }}" />
     {% endblock %}
 
 		{% if page.canonical_url %}
-      <link rel="canonical" href="{{ page.canonical_url }}"/>
+        <link rel="canonical" href="{{ page.canonical_url }}"/>
     {% endif %}
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -58,20 +58,22 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
 
-    <aside class="side-images">
-      <img src="{% static 'img/side_images/placeholder_1.png' %}">
-      <img src="{% static 'img/side_images/placeholder_2.png' %}">
-      <img src="{% static 'img/side_images/placeholder_3.png' %}">
-      <img src="{% static 'img/side_images/placeholder_4.png' %}">
-      <img src="{% static 'img/side_images/placeholder_5.png' %}">
-      <img src="{% static 'img/side_images/placeholder_6.png' %}">
-      <img src="{% static 'img/side_images/placeholder_7.png' %}">
-      <img src="{% static 'img/side_images/placeholder_8.png' %}">
-      <img src="{% static 'img/side_images/placeholder_9.png' %}">
-      <img src="{% static 'img/side_images/placeholder_10.png' %}">
-      <img src="{% static 'img/side_images/placeholder_11.png' %}">
-      <img src="{% static 'img/side_images/placeholder_12.png' %}">
-      <div class="loader"></div>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/side-images.css' %}">
+
+    <aside class="side-images fade-right">
+        <img src="{% static 'img/side_images/placeholder_1.png' %}">
+        <img src="{% static 'img/side_images/placeholder_2.png' %}">
+        <img src="{% static 'img/side_images/placeholder_3.png' %}">
+        <img src="{% static 'img/side_images/placeholder_4.png' %}">
+        <img src="{% static 'img/side_images/placeholder_5.png' %}">
+        <img src="{% static 'img/side_images/placeholder_6.png' %}">
+        <img src="{% static 'img/side_images/placeholder_7.png' %}">
+        <img src="{% static 'img/side_images/placeholder_8.png' %}">
+        <img src="{% static 'img/side_images/placeholder_9.png' %}">
+        <img src="{% static 'img/side_images/placeholder_10.png' %}">
+        <img src="{% static 'img/side_images/placeholder_11.png' %}">
+        <img src="{% static 'img/side_images/placeholder_12.png' %}">
+        <div class="loader"></div>
     </aside>
     <div class="main">
         {% include 'header.html' %}

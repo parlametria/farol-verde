@@ -56,45 +56,81 @@ button:hover:not(:disabled) {
     align-items: center;
 }
 
-h1, h2, h3, h4, h5 {margin: 0;}
+/* ###################################### */
+/* Fonts */
+h1 {
+    font-size: 36px;
+    line-height: 49px;
+    color: var(--dark-blue);
+}
 
-h1, h2 {font-weight: 500;}
+h2 {
+    font-size: 24px;
+    line-height: 33px;
+    color: var(--dark-blue);
+}
 
-h3, h4, h5 {font-weight: 400;}
-
-h1 {font-size: 3rem;}
-h2 {font-size: 2.2rem;}
-h3 {font-size: 1.3rem;}
+h3 {
+    font-size: 20px;
+    line-height: 27px;
+}
 
 h4 {
-    font-size: 1.125rem;
-    line-height: 1.5em;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+h5 {
+    font-size: 20px;
+    line-height: 27px;
 }
 
 p {
-    font-size: 1.25rem;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 22px;
 }
+
+button, .button-text {
+    font-size: 14px;
+    line-height: 16px;
+}
+
+caption {
+    font-size: 10px;
+    line-height: 12px;
+}
+
+p.overline {
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+h1, h2 {color: var(--dark-blue);}
+
+h5, p {
+    font-family: 'Noto Sans';
+    font-style: normal;
+    font-weight: 400;
+    
+}
+
+h1, h2, h3, h4, button, .button-text, caption {
+    margin: 0;
+    font-family: 'Noto Sans';
+    font-style: normal;
+    font-weight: 700;
+    color: black;
+}
+
+a:hover {text-decoration: underline;}
+
+/* ################################ */
 
 .hidden {visibility: hidden;}
 
-.card {
-    padding: 15px;
-    display: grid;
-    grid-template-rows: 90px auto;
-}
-
-.card .card-title {
-    color: var(--blue);
-    display: flex;
-    place-items: center;
-}
-
-.card .card-title h4 {
-    font-weight: 600;
-    text-align: left;
-    margin-left: -30px;
-}
+.hide {display: none;}
 
 .container {
     width: 80%;
@@ -107,40 +143,6 @@ p {
 main.container {
     flex-grow: 1;
     background: white;
-}
-
-aside.side-images {
-    width: 33%;
-    position: fixed;
-    height: 100vh;
-    overflow: hidden;
-    opacity: 0;
-}
-aside.side-images img {
-    min-width: 100%;
-    position: absolute;
-    bottom: 0;
-    min-height: 100vh;
-    transition: opacity ease 0.5s;
-}
-
-aside.side-images .loader {
-    height: 5px;
-    width: 200%;
-    background: white;
-    opacity: 0.4;
-    animation: loader-animate 20s linear infinite;
-    position: absolute;
-    bottom: 0;
-    left: -100%;
-}
-
-aside + .main {
-    width: 67%;
-    margin-left: 33%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 .bg_red{background-color: red;}
@@ -178,24 +180,10 @@ aside + .main {
 
 .field-row select {height: 3rem;}
 
-@media (max-width: 768px) {
-    h1 {font-size: 2.2rem;}
-    h2 {font-size: 1.5rem;}
-    h3 {font-size: .94rem;}
-    h4 {font-size: .875rem;}
-
-    .container {padding: unset;}
-}
-
-@media (max-width: 1380px) {
-    aside.side-images {
-        visibility: hidden;
-        display: none;
-    }
-    
-    aside + .main {
-        width: 100%;
-        margin-left: 0;
+@media (max-width: 1200px) {
+    img {
+        max-width: 100%;
+        height: auto;
     }
 }
 

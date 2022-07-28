@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/modal.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/spinner.css' %}">
-<form class="survey-form" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %} action="{{ value.form_action }}" method="post" novalidate>
+<form class="survey-form fade-up" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %} action="{{ value.form_action }}" method="post" novalidate>
     {% csrf_token %}
     {{ form.media }}
     {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}

@@ -2,7 +2,7 @@
     --highlight-color: var(--dark-blue) !important;
 }
 .institucional {
-    --highlight-color: var(--purple-color) !important;
+    --highlight-color: var(--light-purple) !important;
 }
 
 .tutoriais {
@@ -14,7 +14,7 @@
 }
 
 .color--institucional {
-    color: var(--purple-color) !important;
+    color: var(--light-purple) !important;
 }
 
 .color--tutoriais {
