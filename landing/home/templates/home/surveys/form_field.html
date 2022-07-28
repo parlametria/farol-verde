@@ -5,7 +5,7 @@
     <div class="title">{{ field.label_tag }}</div>
     {{ field.errors }}
 {% else %}
-    <div class="field-row question {% if field.help_text == 'birthday_birthday' %} birthday-field {% endif %} {% if field.errors %}error{% endif %}">
+    <div class="field-row question {{ field.help_text }} {% if field.errors %}error{% endif %}">
         {{ field.label_tag }}
         {{ field }}
         {% if field.errors  %}

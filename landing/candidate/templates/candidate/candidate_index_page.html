@@ -5,27 +5,49 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_index_page.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate_list.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/modal.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/input-board.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/btn-toggle.css' %}">
 
-<main class="candidates">
-    <div class="candidates__content container">
-        <form action='.' id="form" class="query">
-            <input type="hidden" id='page' name='page' value="1">
-            <div class="query__select">
-                <div id='uf' class="input-board">
-                    <button>UF <i class="fas fa-caret-down"></i></button>
-                    <div class="input-board__selector">
-                        <p>Mostrar candidatos do(s) estado(s):</p>
-                        <div class="input-board__content">
-                            {% for uf in uf_list %}
-                                <label class="btn-toggle">
-                                    <input type="checkbox" value="{{ uf }}" name="uf[]">
-                                    <span>{{ uf }}</span>
-                                </label>
-                            {% endfor %}
-                        </div>
+<main class="candidates container">
+    <div class="country-selector modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                Em qual estado você deseja encontrar um candidato?
+            </div>
+            <div class="modal-body">
+                {% include 'candidate/components/country-selector.html' %}
+            </div>
+            <div class="modal-footer">
+                <label id="show-modal">
+                    <input type="checkbox">
+                    Não exibir novamente essa janela
+                </label>
+                <div class="right">
+                    <a href="#" onclick="toggleCountriesModal()">Pular esta etapa</a>
+                    <button onclick="getSelectedStates()">Próximo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action='.' id="form" class="query">
+        <input type="hidden" id='page' name='page' value="1">
+        <div class="query__select">
+            <div id='uf' class="input-board">
+              <button>UF <i class="fas fa-caret-down"></i></button>
+                <div class="input-board__selector">
+                    <p>Mostrar candidatos do(s) estado(s):</p>
+                    <div class="input-board__content">
+                        {% for uf in uf_list %}
+                            <label class="btn-toggle">
+                                <input type="checkbox" value="{{ uf }}" name="uf[]">
+                                <span>{{ uf }}</span>
+                            </label>
+                        {% endfor %}
                     </div>
+                </div>
                 </div>
                 <div id='party' class="input-board">
                     <button>Partido <i class="fas fa-caret-down"></i></button>
@@ -41,44 +63,43 @@
                         </div>
                     </div>
                 </div>
-                <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
-                <div class="query__sortby">
-                    <label class="btn-toggle">
-                        <input type="radio" name="sortby" value="descending" id="sortby_desc" checked>
-                        <span><i class="fas fa-sort-alpha-down fa-lg"></i></span>
-                    </label>
-                    <label class="btn-toggle">
-                        <input type="radio" name="sortby" value="ascending" id="sortby_asc">
-                        <span><i class="fas fa-sort-alpha-up fa-lg"></i></span>
-                    </label>
-                </div>
-            </div>
-            <div class="query__heading">Mostrar</div>
-            <div class="query__show">
-                <label for='senators'>
-                    <input type='checkbox' id='senators' name='senators' checked>
-                    Senadores
+            <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
+            <div class="query__sortby">
+                <label class="btn-toggle">
+                    <input type="radio" name="sortby" value="descending" id="sortby_desc" checked>
+                    <span><i class="fas fa-sort-alpha-down fa-lg"></i></span>
                 </label>
-                <label for='deputies'>
-                    <input type='checkbox' id='deputies' name='deputies' checked>
-                    Deputados
+                <label class="btn-toggle">
+                    <input type="radio" name="sortby" value="ascending" id="sortby_asc">
+                    <span><i class="fas fa-sort-alpha-up fa-lg"></i></span>
                 </label>
-                <div class="query__heading" onclick="toggleSubjects()">
-                    <img src="{% static 'img/icons/voting.svg' %}">
-                    Como cada candidato votos nos temas da enquete:
-                    <i id="toggle-icon" class="fas fa-chevron-down"></i>
-                </div>
             </div>
-            <div class="query__subjects">
-                {% for subject in subjects %}
-                    <label class="btn-toggle">
-                        <input type='radio' value="{{subject}}" id='subject-{{subject}}' name='subject'>
-                        <span>{{subject|lower}}</span>
-                    </label>
-                {% endfor %}
+        </div>
+        <div class="query__heading">Mostrar</div>
+        <div class="query__show">
+            <label for='senators'>
+                <input type='checkbox' id='senators' name='senators' checked>
+                Senadores
+            </label>
+            <label for='deputies'>
+                <input type='checkbox' id='deputies' name='deputies' checked>
+                Deputados
+            </label>
+            <div class="query__heading" onclick="toggleSubjects()">
+                <img src="{% static 'img/icons/voting.svg' %}">
+                Como cada candidato votos nos temas da enquete:
+                <i id="toggle-icon" class="fas fa-chevron-down"></i>
             </div>
-        </form>
-    </div>
+        </div>
+        <div class="query__subjects">
+            {% for subject in subjects %}
+                <label class="btn-toggle">
+                    <input type='radio' value="{{subject}}" id='subject-{{subject}}' name='subject'>
+                    <span>{{subject|lower}}</span>
+                </label>
+            {% endfor %}
+        </div>
+    </form>
 
     <div id="candidates__container"></div>
 </main>
