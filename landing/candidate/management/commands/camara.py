@@ -174,10 +174,13 @@ class CamaraVotacoesFetcher:
             )
             return
 
+        data = dados_votacao["dataRegistroVoto"].split("T")[0]
+
         created = VotacaoParlamentar.objects.create(
             votacao_proposicao=votacao_proposicao,
             id_deputado=dados_votacao["deputado_"]["id"],
             tipo_voto=dados_votacao["tipoVoto"],
+            data=data,
             data_registro_voto=dados_votacao["dataRegistroVoto"],
         )
         self.stdout.write(f"\tVotacaoParlamentar {created.id_deputado} created")
