@@ -28,8 +28,10 @@
                 {% endif %}
             {% endwith %}
             <div class="candidate__data">
-                <div class="candidate__name">{{ item.candidate.title }}</div>
-                <div class="candidate__info">{{ item.candidate.charge }}</div>
+                <div class="candidate__name">{{ item.candidate.campaign_name }}</div>
+                <div class="candidate__info">
+                    {{ item.candidate.charge }}/{{item.candidate.party}} - {{item.candidate.election_state}}
+                </div>
             </div>
         </a>
     {% empty %}

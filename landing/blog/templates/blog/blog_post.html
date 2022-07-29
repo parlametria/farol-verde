@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags static %}
+{% load wagtailcore_tags static wagtailimages_tags %}
 
 {% block body_class %}template-blogpost{% endblock %}
 
@@ -11,7 +11,7 @@
 
     <img class="cover-image--mobile fade-down" src="{{ page.cover_image.url }}" alt="{{ page.title }}" hidden>
     <div class="container">
-        <img class="cover-image fade-down" src="{{ page.cover_image.url }}" alt="{{ page.title }}">
+        {% image page.cover_image original class="cover-image" %}
 
         <main>
             <div class="sidebar__link--mobile" hidden>

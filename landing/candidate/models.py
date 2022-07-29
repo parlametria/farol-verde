@@ -21,6 +21,7 @@ from candidate.util import uf_list, subjects_list, subject_dict, subject_descrip
 from candidate.factories import SurveyCandidateFactory
 
 class CandidatePage(MetadataPageMixin, Page):
+    DEPUTADO_CHARGE_TEXT = "Deputado(a) Federal"
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
     id_serenata = models.IntegerField(blank=True, null=True, unique=True)
@@ -35,6 +36,7 @@ class CandidatePage(MetadataPageMixin, Page):
     ]
 
     campaign_name = CharField(null=True, max_length=255)
+    party = CharField(null=True, max_length=255)
     cpf = CharField(max_length=14, null=True)
     birth_date = DateField(null=True)
     email = EmailField(null=True)
@@ -144,19 +146,42 @@ class CandidatePage(MetadataPageMixin, Page):
         ]))
     ], null=True)
 
+
     @property
     def get_picture(self):
-        if self.id_autor is None:
-            return ''
         if self.picture:
             return self.picture.url
-        return f"https://www.camara.leg.br/internet/deputado/bandep/{self.id_autor}.jpg"
+
+        if self.id_autor:
+            return self._get_external_picture_link()
+
+        return ""
+
+
+    def _get_external_picture_link(self):
+        senador_picture_url = "https://www.senado.leg.br/senadores/img/fotos-oficiais/senador"
+        deputado_picture_url = "https://www.camara.leg.br/internet/deputado/bandep/"
+
+        if self.charge == "Senador(a)":
+            return f"{senador_picture_url}{self.id_autor}.jpg"
+        else:
+            return f"{deputado_picture_url}{self.id_autor}.jpg"
+
+
+    @property
+    def is_deputado(self) -> bool:
+        return self.charge == self.DEPUTADO_CHARGE_TEXT
+
+    @property
+    def is_senador(self) -> bool:
+        return not self.is_deputado
 
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
         FieldPanel("id_parlametria", classname="full"),
         FieldPanel("id_serenata", classname="full"),
         FieldPanel('campaign_name'),
+        FieldPanel('party'),
         FieldPanel('cpf'),
         FieldPanel('birth_date'),
         FieldPanel('email'),
@@ -205,6 +230,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         params_functions = {
             'name': lambda queryset, value: queryset.filter(title__icontains=value),
             'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
+            'party[]': lambda queryset, values: queryset.filter(party__in=values),
             'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
         }
 
@@ -212,7 +238,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         for param, value in list(request_items.items()):
             if param in charges_dict.keys():
                 charges.append(charges_dict[param])
-            if param != 'uf[]':
+            if param not in ['uf[]', 'party[]']:
                 value = value[0]
             if value and param in params_functions:
                 queryset = params_functions[param](queryset, value)
@@ -235,6 +261,10 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         search_results = zip(search_results, candidates_opinions)
         search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
 
+        party_list = [candidate.party for candidate in CandidatePage.objects.all()]
+        party_list = list(set(party_list))
+        party_list.remove(None)
+
         paginator = Paginator(search_results, 20)
         page = request.GET.get('page', 1)
         try:
@@ -245,6 +275,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         context['candidates_list'] = candidates_list
         context['subjects'] = subjects_list
         context['uf_list'] = uf_list
+        context['party_list'] = party_list
 
         return context
 
@@ -260,3 +291,58 @@ def form_submission_link_candidate(sender, instance: FormSubmission, **kwargs):
 
     builder = SurveyCandidateFactory(instance.id, form, role_column)
     builder.create_candidate()
+
+
+class Proposicao(models.Model):
+    id_camara = models.IntegerField(blank=False, null=False, primary_key=True)
+    sigla_tipo = models.CharField(blank=False, null=False, max_length=6)
+    numero = models.IntegerField(blank=False, null=False)
+    ano = models.IntegerField(blank=False, null=False)
+    ementa = models.TextField(blank=True, null=True)
+
+    def __str__(self) -> str:
+        # MPV 867/2018
+        return f"{self.sigla_tipo} {self.numero}/{self.ano}"
+
+
+class VotacaoProsicao(models.Model):
+    proposicao = models.ForeignKey(
+        Proposicao,
+        on_delete=models.CASCADE,
+        related_name="votacoes",
+    )
+    id_camara = models.CharField(
+        primary_key=True,
+        blank=False,
+        null=False,
+        max_length=30,
+    )
+    data = models.DateField()
+    data_hora_registro = models.CharField(blank=False, null=False, max_length=30)
+
+
+class VotacaoParlamentar(models.Model):
+    VOTO_SIM = "Sim"
+    VOTO_NAO = "Não"
+    VOTO_OBSTRUCAO = "Obstrução"
+    VOTO_ABSTENCAO = "Abstenção"
+    VOTO_ARTIGO_17 = "Artigo 17"
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=['id_deputado', 'votacao_proposicao'],
+                name='votacao_prop_deputado_idx',
+            ),
+        ]
+        unique_together = (('id_deputado', 'votacao_proposicao'),)
+
+    votacao_proposicao = models.ForeignKey(
+        VotacaoProsicao,
+        on_delete=models.CASCADE,
+        related_name="votacoes_parlamentares",
+    )
+    tipo_voto = models.CharField(blank=False, null=False, max_length=20)
+    data = models.DateField()
+    data_registro_voto = models.CharField(blank=False, null=False, max_length=30)
+    id_deputado = models.IntegerField(blank=False, null=False)

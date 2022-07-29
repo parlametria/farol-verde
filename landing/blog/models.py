@@ -10,10 +10,12 @@ from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 from wagtail.search import index
+from wagtail.images.models import Image
 
 from wagtail_color_panel.fields import ColorField
 from wagtail_color_panel.edit_handlers import NativeColorPanel
@@ -101,7 +103,7 @@ class BlogPost(MetadataPageMixin, Page):
     category = models.ForeignKey(
         "blog.BlogCategory", on_delete=models.SET_NULL, null=True
     )
-    cover_image = models.ImageField(null=False, blank=False)
+    cover_image = models.ForeignKey(Image, on_delete=models.CASCADE)
 
     def get_context(self, request):
         panels = BlogIndexPage.objects.first().specific.sidebar_panels
@@ -125,7 +127,7 @@ class BlogPost(MetadataPageMixin, Page):
     content_panels = Page.content_panels + [
         FieldPanel("body", classname="full"),
         StreamFieldPanel("category", widget=forms.Select),
-        FieldPanel("cover_image"),
+        ImageChooserPanel("cover_image"),
         FieldPanel("date"),
         FieldPanel("tags"),
         FieldPanel("intro_text"),

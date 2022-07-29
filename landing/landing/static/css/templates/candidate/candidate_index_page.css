@@ -33,36 +33,41 @@ input::placeholder {color: var(--dark-blue);}
     gap: .75rem;
 }
 
-.query__select > * {min-height: 3.125rem;}
 
-#uf {position: relative;}
+.input-board {
+    width: 5rem;
+    position: relative;
+    flex: 0;
+}
 
-#uf > button {
+.input-board > button {
     display: flex;
     flex: 1;
     gap: 1rem;
     justify-content: space-between;
     align-items: center;
-    
-    width: 100%;
-    height: 100%;
 
     color: black;
     background: white;
     outline: 1px solid var(--dark-gray);
     border-radius: .25rem;
+    flex-grow: 1;
+    height: 100%;
     
     font-weight: 500;
     font-size: .75rem;
 }
 
-#uf > *:not(i) {font-size: .75rem;}
+.input-board > *:not(i) {font-size: .75rem;}
 
-#uf > button:hover {box-shadow: none;}
+.input-board > button:hover {box-shadow: none;}
 
-.uf__selector {width: min-content;}
+.input-board__selector {
+    width: min-content;
+}
 
-.uf__selector p {
+
+.input-board__selector p {
     width: 100%;
     font-size: .875rem;
     font-weight: 700;
