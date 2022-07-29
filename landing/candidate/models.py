@@ -15,6 +15,7 @@ from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
 from django.db.models import CharField, ImageField, EmailField, URLField, DateField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import requests
 
 
 from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions
@@ -175,6 +176,38 @@ class CandidatePage(MetadataPageMixin, Page):
     @property
     def is_senador(self) -> bool:
         return not self.is_deputado
+
+    @property
+    def adhesion(self):
+        response = requests.get('https://demo3265586.mockable.io/farol-verde/votacoes/parlamentar/33223')
+        return response.json()
+
+    @property
+    def discipline(self):
+        try:
+            response = requests.get(f'https://api.parlametria.org.br/disciplina/{self.id_parlametria}')
+            response = response.json()
+            response = response[0]['disciplina']
+            if response is None:
+                response = 0
+            response *= 100
+            return f'{response:,.2f}%'
+        except:
+            return None
+
+    @property
+    def governism(self):
+        try:
+            response = requests.get(f'https://api.parlametria.org.br/governismo/{self.id_parlametria}')
+            response = response.json()
+            response = response[0]['governismo']
+            if response is None:
+                response = 0
+            response = (response + 10) * 5
+
+            return f'{response:,.2f}%'
+        except:
+            return None
 
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),

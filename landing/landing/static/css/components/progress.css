@@ -1,0 +1,23 @@
+.proposition__number {
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.progress {
+    display: flex;
+    gap: 2rem;
+}
+
+.progress__bar {
+    background-color: var(--gray);
+    border-radius: .5rem;
+    height: 2rem;
+    width: 100%;
+}
+
+.progress__inner {
+    background: var(--primary-color);
+    height: 100%;
+    animation: grow 2s ease-in-out 1;
+    border-radius: .5rem;
+}

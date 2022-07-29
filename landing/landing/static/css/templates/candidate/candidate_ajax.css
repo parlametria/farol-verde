@@ -1,0 +1,43 @@
+.activity__content {
+    padding-block: 2rem;
+    display: grid;
+    grid-gap: 3rem;
+}
+
+.activity__content .spinner {
+    margin-inline: auto;
+    margin-top: 2rem;
+    color: var(--dark-blue);
+}
+
+.adhesion {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--gray);
+}
+
+.adhesion__data {
+    display: grid;
+    padding-right: 2rem;
+    border-right: 1px solid var(--gray);
+}
+
+.adhesion__definition {padding-left: 2rem;}
+
+.voting {
+    display: grid;
+    grid-gap: 3rem
+}
+
+.voting__propositions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5rem;
+}
+
+.voting__proposition {
+    display: grid;
+    grid-gap: .5rem;
+}
