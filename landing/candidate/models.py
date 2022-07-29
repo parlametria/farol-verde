@@ -36,9 +36,9 @@ class CandidatePage(MetadataPageMixin, Page):
     ]
 
     campaign_name = CharField(null=True, max_length=255)
-    party = CharField(null=True, max_length=255)
+    party = CharField(null=True, blank=True, max_length=255)
     cpf = CharField(max_length=14, null=True)
-    birth_date = DateField(null=True)
+    birth_date = DateField(blank=True, null=True)
     email = EmailField(null=True)
     picture = ImageField(null=True, blank=True, default=None)
     charge = CharField(null=True, max_length=255)
