@@ -133,17 +133,17 @@ input[type="submit"], .modal-toggle, .modal-close.submit {
     font-weight: bold;
 }
 
-.social {
+.question.social {
     display: inline-flex;
     width: calc(50% - 8px);
     margin: 0 10px 25px 0;
 }
 
-.social input {
+.question.social input {
     flex: 1;
 }
 
-.social label {
+.question.social label {
     display: inline-block;
     width: 0px;
     padding: 0;
@@ -151,7 +151,7 @@ input[type="submit"], .modal-toggle, .modal-close.submit {
     margin-right: 45px;
 }
 
-.social label::before {
+.question.social label::before {
     display: block;
     content: "";
     height: 30px;
@@ -179,9 +179,7 @@ input[type="submit"], .modal-toggle, .modal-close.submit {
     background-image: url(/static/img/social_icons/youtube.svg);
 }
 
-.facebook, .youtube {
-    margin-right: 0;
-}
+.question.social:is(.facebook, .youtube) {margin-right: 0;}
 
 form .actions {
     text-align: center;
