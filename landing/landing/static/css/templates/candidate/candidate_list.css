@@ -38,7 +38,7 @@
 }
 
 .candidate.doubt::after {
-  content: "não opinou";
+  content: "não sabe";
   background-color: #777;
 }
 
