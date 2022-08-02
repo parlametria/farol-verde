@@ -18,6 +18,6 @@
 .progress__inner {
     background: var(--primary-color);
     height: 100%;
-    animation: grow 2s ease-in-out 1;
+    animation: grow 2s ease-out 1;
     border-radius: .5rem;
 }
