@@ -97,17 +97,10 @@ class CandidatePage(MetadataPageMixin, Page):
             "Não": "nao",
             "Prefiro não responder / Não sei": "nao_sei",
         }
-        phrase_dict = {
-            "Sim": "É",
-            "Não": "Não é",
-            "Prefiro não responder / Não sei": "Não declarei minha opinião sobre ser",
-        }
         opinions = self.opinions[0].value
         for key, answer in enumerate(answers):
             answer_key = opinions[answer["key"]]
-            answers[key]["phrase"] = answers[key]["phrase"].replace(
-                "Sou", phrase_dict[answer_key]
-            )
+            answers[key]["phrase"] = answers[key]["phrase"]
             answers[key]["answer"] = answer_dict[answer_key]
         return answers
 
@@ -279,7 +272,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 for candidate in search_results
             ]
             context["subject_description"] = (
-                subject_descriptions[subject].replace("Sou", "É") + "?"
+                subject_descriptions[subject] + "?"
             )
             context["subject"] = subject
         search_results = zip(search_results, candidates_opinions)
