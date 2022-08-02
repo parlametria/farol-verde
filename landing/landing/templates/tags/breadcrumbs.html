@@ -4,12 +4,16 @@
   <div class="container">
     <ul class="breadcrumb">
       {% for ancestor in ancestors %}
-      {% if forloop.last %}
-      <li aria-current="page">{{ ancestor }}</li>
-      {% else %}
-      <li><a href="{% pageurl ancestor %}">{% if forloop.first %}Home{% else %}{{ ancestor }}{% endif %}</a>
-        /
-      {% endif %}
+        {% if forloop.last %}
+          {% if ancestor.specific.campaign_name %}
+            <li aria-current="page">{{ ancestor.specific.campaign_name  }}</li>
+          {% else %}
+            <li aria-current="page">{{ ancestor }}</li>
+          {% endif %}
+        {% else %}
+          <li><a href="{% pageurl ancestor %}">{% if forloop.first %}Home{% else %}{{ ancestor }}{% endif %}</a>
+            /
+        {% endif %}
       {% endfor %}
     </ul>
   </div>
