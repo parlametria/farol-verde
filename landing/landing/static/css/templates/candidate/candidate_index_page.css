@@ -102,7 +102,7 @@ input::placeholder {color: var(--dark-blue);}
     font-weight: 500;
 }
 
-.query__heading {font-weight: 700;}
+.query__heading p {margin: 0;}
 
 .query__show .query__heading:hover {text-decoration: underline;}
 

@@ -11,19 +11,19 @@
 
 <main class="container">
 
-    <div class="heading">
+    <div class="heading fade-up">
         {{page.heading|richtext}}
     </div>
 
     <section>
-        <div class="home__ctas">
+        <div class="home__ctas fade-up">
             <div class="cta-candidato">
-                <p class="label">É candidato(a)?</p>
-                <p><a class="btn btn-round" href="{{ survey_url }}">Participe da enquete</a></p>
+                <h3 class="label">É candidato(a)?</h3>
+                <h2><a class="btn btn-round" href="{{ survey_url }}">Participe da enquete</a></h2>
             </div>
             <div class="cta-eleitor">
-                <p class="label">É eleitor(a)?</p>
-                <p><a class="btn btn-round" href="{{ contact_url }}">Aguarde o lançamento!</a></p>
+                <h3 class="label">É eleitor(a)?</h3>
+                <h2><a class="btn btn-round" href="{{ contact_url }}">Aguarde o lançamento!</a></h1>
             </div>
         </div>
     </section>
@@ -59,7 +59,7 @@
             <a class="large" href="https://raconhecimento.net/" target="blank"><img src="{% static 'img/partners/RAC.png' %}"></a>
         </div>
     </section>
-    <section class="partners">
+    <section class="fade-right partners">
         <p>Parceiros</p>
         <div class="partners__items">
             <a href="https://dadocapital.org.br/" target="blank"><img src="{% static 'img/partners/logo_dadocapital.jpg' %}"></a>

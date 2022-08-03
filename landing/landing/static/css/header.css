@@ -69,6 +69,11 @@ header {
     justify-content: end;
 }
 
+.header__close button {
+    background: none;
+    color: white;
+}
+
 /* Breadcrumb */
 
 .breadcrumb {

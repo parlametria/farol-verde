@@ -8,15 +8,14 @@
     grid-column-gap: 2rem;
 }
 
+.home__ctas > * {flex: 1;}
+
 .home__ctas .label {padding: 1.125rem;}
 
-.home__ctas {
-    font-weight: 700;
-    flex: 1;
-}
+.cta-candidato {--button-color: var(--primary-color);}
+.cta-eleitor {--button-color: var(--dark-blue);}
 
-.home__ctas p:not(.label) {
-  font-size: 24px;
+.home__ctas h2 {
   border: 1px solid var(--button-color);
   border-radius: 100vmax;
   padding: .75rem 1.75rem;
@@ -26,10 +25,6 @@
   text-decoration: unset;
   color: var(--button-color);
 }
-
-.cta-candidato {--button-color: var(--primary-color);}
-
-.cta-eleitor {--button-color: var(--dark-blue);}
 
 .partners {
   display: grid;
@@ -57,13 +52,11 @@
 .partners.large img {width: 230px;}
 
 .partners p {
-    font-family: Noto Sans;
-    font-size: 16px;
-    font-style: italic;
-    font-weight: 500;
-    line-height: 22px;
-    letter-spacing: 0em;
-    text-align: left;
+  font-style: italic;
+  font-weight: 500;
+  color: #A0A0A0;
+  letter-spacing: 0em;
+  text-align: left;
 }
 
 .blog-section {
@@ -147,8 +140,6 @@
 
   .partners p {
     text-align: center;
-    font-weight: 500;
-    color: var(--shadow-color);
     font-size: 1.25rem;
   }
 }
