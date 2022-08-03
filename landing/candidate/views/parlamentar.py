@@ -10,9 +10,16 @@ def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
     total = 0.0
     response["propositions"] = calcula_adesao_parlamentar_todas_proposicoes(id_candidate)
 
+    calculated = 0
     for prop in response["propositions"]:
-        total += prop["adhesion"]
+        if prop["total_com_votos"] > 0:
+            total += prop["adhesion"]
+            calculated += 1
 
-    response["adhesion"] = total/len(response["propositions"])
+    # prevent division by zero
+    if calculated > 0:
+        response["adhesion"] = total/calculated
+    else:
+        response["adhesion"] = 0
 
     return JsonResponse(response)
