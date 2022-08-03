@@ -7,25 +7,31 @@ setDateInputs();
 
 function setQuestionsModal() {
   const questions = Array.from(document.querySelectorAll('.question'));
-  
-  function makeQuestion(elm) {
-    var elm = elm.cloneNode(true)
-    elm.classList.remove('question')
-    let inputs = Array.from(elm.querySelectorAll('input, select'));
-    inputs = inputs.filter(input => input.type !== 'hidden' && (input.type !== 'radio' || input.checked || input.tagName == 'select'));
-    var {value} = inputs[0];
-    if (inputs.length == 1 && inputs[0].tagName == 'SELECT') {
-      value = inputs[0].options[inputs[0].selectedIndex].text;
-    }
-    elm.innerHTML += value ? `<b>${value}</b><br>` : '<i>Sem resposta</i><br>';
-    elm.querySelectorAll('input, ul, select').forEach(item => item.remove())
-    
-    return elm
+
+  var questionsData = questions.map(question => {
+    let classes = question.classList.toString().replace('question','');
+    let label = question.querySelector('label').innerText;
+    let input = question.querySelector('label + *');
+    var value = null;
+    if (input.tagName == 'UL') {
+      let inputChecked = input.querySelector('input:checked');
+      value = inputChecked?.value
+    } 
+    value ??= input.value
+    return {label, value, classes};
+  })
+
+  function makeQuestion({label, value, classes}) {
+    value = value ? `<b>${value}</b><br>` : '<i>Sem resposta</i><br>';
+    return `<div class="${classes}">
+      <label>${label}</label>
+      ${value}
+    </div>`;
   }
   
   document.querySelector('.modal-body').textContent = ''
-  questions.map(makeQuestion).forEach(elm => {
-    document.querySelector('.modal-body').appendChild(elm);
+  questionsData.map(makeQuestion).forEach(elm => {
+    document.querySelector('.modal-body').innerHTML += elm;
   })
 }
 
@@ -36,10 +42,10 @@ function setCPFmask() {
   cpf.oninput = function (e) {
     if (!e.data) return;
     if (isNaN(Number(e.data))) {
-       cpf.value = cpf.value.replace(e.data,'');
+      cpf.value = cpf.value.replace(e.data,'');
     }
     if (cpf.value.length > 14) {
-       cpf.value = cpf.value.slice(0,14);
+      cpf.value = cpf.value.slice(0, 14);
     }
     if ([3,7].includes(cpf.value.length)) {
       cpf.value = cpf.value+'.';
