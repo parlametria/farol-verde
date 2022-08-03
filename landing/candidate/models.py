@@ -299,6 +299,7 @@ class Proposicao(models.Model):
     numero = models.IntegerField(blank=False, null=False)
     ano = models.IntegerField(blank=False, null=False)
     ementa = models.TextField(blank=True, null=True)
+    sobre = models.CharField(blank=True, null=True, max_length=90)
 
     def __str__(self) -> str:
         # MPV 867/2018

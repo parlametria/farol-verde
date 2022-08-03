@@ -40,6 +40,7 @@ def calcula_adesao_parlamentar_em_proposicao(id_deputado: int, proposicao: Propo
         "id_camara": proposicao.id_camara,
         "proposition_number": str(proposicao),
         "summary": proposicao.ementa,
+        "about": proposicao.sobre,
         "same": 0,
         "different": 0,
         "total_votacoes": total_votacoes,

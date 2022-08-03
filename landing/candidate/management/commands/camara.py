@@ -38,8 +38,8 @@ class CamaraVotacoesFetcher:
     def _fetch_proposicoes(self):
         self.stdout.write(f"\nFetching proposicoes from: {CAMARA_API}")
 
-        for prop in get_proposicoes_iterator():
-            found = Proposicao.objects.filter(id_camara=prop["id"]).first()
+        for prop_json, prop_data in get_proposicoes_iterator():
+            found = Proposicao.objects.filter(id_camara=prop_json["id"]).first()
 
             if found is not None:
                 self.stdout.write(
@@ -50,11 +50,12 @@ class CamaraVotacoesFetcher:
                 continue
 
             created = Proposicao.objects.create(
-                id_camara=prop["id"],
-                sigla_tipo=prop["siglaTipo"],
-                numero=prop["numero"],
-                ano=prop["ano"],
-                ementa=prop["ementa"],
+                id_camara=prop_json["id"],
+                sigla_tipo=prop_json["siglaTipo"],
+                numero=prop_json["numero"],
+                ano=prop_json["ano"],
+                ementa=prop_json["ementa"],
+                sobre=prop_data[3],
             )
             self.stdout.write(f"\tProposicao {created} created")
 
