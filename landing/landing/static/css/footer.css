@@ -21,6 +21,11 @@ footer .footer__brandings {
     gap: 2.5rem;
 }
 
+footer .footer__links {
+    display: flex;
+    gap: 2.5rem;
+}
+
 footer .footer__brandings span {
     color: white;
     font-style: italic;
