@@ -15,11 +15,11 @@ def _get_votacoes_lider(votacao_queryset: QuerySet, votacao_date: date) -> Query
     # Dep. Rodrigo Agostinho antes de 02-02-2022
     if votacao_date < date_check:
         return votacao_queryset.filter(data__lt="2022-02-02").filter(
-            id_deputado=IDS_LIDERES["rodrigo_agostinho"]
+            id_parlamentar=IDS_LIDERES["rodrigo_agostinho"]
         )
     else:  # Dep. Alessandro Molon apos 02-02-2022
         return votacao_queryset.filter(data__gte="2022-02-02").filter(
-            id_deputado=IDS_LIDERES["alessandro_molon"]
+            id_parlamentar=IDS_LIDERES["alessandro_molon"]
         )
 
 
@@ -33,11 +33,11 @@ def _compare_votes(parlamentar: VotacaoParlamentar, lider: VotacaoParlamentar):
     return "same" if parlamentar.tipo_voto == lider.tipo_voto else "different"
 
 
-def calcula_adesao_parlamentar_em_proposicao(id_deputado: int, proposicao: Proposicao):
+def calcula_adesao_parlamentar_em_proposicao(id_parlamentar: int, proposicao: Proposicao):
     total_votacoes = proposicao.votacoes.count()
 
     adesao = {
-        "id_camara": proposicao.id_camara,
+        "id_camara": proposicao.id_externo,
         "proposition_number": str(proposicao),
         "summary": proposicao.ementa,
         "about": proposicao.sobre,
@@ -60,7 +60,7 @@ def calcula_adesao_parlamentar_em_proposicao(id_deputado: int, proposicao: Propo
         ).first()
 
         votos_parlamentar = votacao.votacoes_parlamentares.filter(
-            id_deputado=id_deputado
+            id_parlamentar=id_parlamentar
         ).first()
 
         if votos_lider == None and votos_parlamentar == None:
@@ -83,10 +83,10 @@ def calcula_adesao_parlamentar_em_proposicao(id_deputado: int, proposicao: Propo
     return adesao
 
 
-def calcula_adesao_parlamentar_todas_proposicoes(id_deputado: int):
+def calcula_adesao_parlamentar_todas_proposicoes(id_parlamentar: int):
     voted = []
 
     for prop in Proposicao.objects.all():
-        voted.append(calcula_adesao_parlamentar_em_proposicao(id_deputado, prop))
+        voted.append(calcula_adesao_parlamentar_em_proposicao(id_parlamentar, prop))
 
     return voted
