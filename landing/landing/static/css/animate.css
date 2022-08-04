@@ -103,9 +103,7 @@
 }
 
 @keyframes expand {
-    from {
-        transform: scale(0);
-    }
+    from {transform: scale(0);}
 }
 
 @keyframes fade-expand {
@@ -116,9 +114,7 @@
 }
 
 @keyframes shrink {
-    from {
-        transform: scale(2);
-    }
+    from {transform: scale(2);}
 }
 
 @keyframes fade-shrink {
@@ -133,13 +129,9 @@
 }
 
 @keyframes loader-animate {
-    from {
-        transform: scaleX(0);
-    }
+    from {transform: scaleX(0);}
 }
 
-@keyframes grow {
-    from {
-        width: 100%;
-    }
+@keyframes shrink {
+    from {width: 100%;}
 }

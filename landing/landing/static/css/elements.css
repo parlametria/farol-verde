@@ -85,30 +85,6 @@ h5 {
     line-height: 27px;
 }
 
-h2 {
-    font-size: 24px;
-    line-height: 33px;
-    color: var(--dark-blue);
-}
-
-h3 {
-    font-size: 20px;
-    line-height: 27px;
-}
-
-/* subtitle */
-h4 { 
-    font-size: 16px;
-    line-height: 24px;
-}
-
-/* Body1 */
-h5 {
-    font-size: 20px;
-    line-height: 27px;
-}
-
-/* Body2 */
 p {
     font-size: 16px;
     line-height: 22px;

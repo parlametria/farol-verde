@@ -93,8 +93,8 @@ def process_candidate_votes(candidate_json):
     return proposicoes_com_votos_do_candidato
 
 
-def votacoes_perfil_parlamentar_view(request: HttpRequest, id_candidate: int):
-    candidate = CandidatePage.objects.filter(id_autor=id_candidate).first()
+def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
+    candidate = CandidatePage.objects.filter(slug=slug).first()
 
     if not candidate:
         return JsonResponse(
