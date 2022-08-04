@@ -1,27 +1,18 @@
-const resultTab = document.querySelector('.tab.result');
-const activityTab = document.querySelector('.tab.activity');
-const votingPropositionTpl = document.querySelector('#voting__proposition--tpl');
+const tabs = document.querySelectorAll('.tab');
+const frames = document.querySelectorAll('.tab__frame');
 
-const activityContent = document.querySelector('.activity__content');
-const resultContent = document.querySelector('.result__content');
-
-const adhesionProgressValue = document.querySelector('.adhesion .progress h4');
-const adhesionProgressBar = document.querySelector('.adhesion .progress__inner');
-
-const votingPropositions = document.querySelector('.voting__propositions');
-const votingEmpty = document.querySelector('.voting__empty');
+const socialBtns = document.querySelectorAll('.social__btn');
+const socialContents = document.querySelectorAll('.social__frame');
 
 function openTab(tabName) {
-    const tab = tabName === 'result' ? resultTab : activityTab;
-    const content = tabName === 'result' ? resultContent : activityContent;
-    const otherTab = tabName === 'result' ? activityTab : resultTab;
-    const otherContent = tabName === 'result' ? activityContent : resultContent;
+    const tabBtn = document.querySelector(`.tab.${tabName}`);
+    const tabContent = document.querySelector(`.tab__frame.${tabName}`);
 
-    tab.classList.add('open');
-    otherTab.classList.remove('open');
-
-    content.classList.remove('hide');
-    otherContent.classList.add('hide');
+    tabs.forEach(tab => tab.classList.remove('open'));
+    frames.forEach(content => content.classList.add('hide'));
+    
+    tabBtn.classList.add('open');
+    tabContent.classList.remove('hide');
 }
 
 $.ajax({url: './api/adesao',})
@@ -43,3 +34,13 @@ $.ajax({url: './api/adesao',})
             votingPropositions.appendChild(propositionEl);
         })
     });
+function openSocial(socialName) {
+    const socialBtn = document.querySelector(`.social__btn.${socialName}`);
+    const socialContent = document.querySelector(`.social__frame.${socialName}`);
+
+    socialBtns.forEach(social => social.classList.remove('open'));
+    socialContents.forEach(content => content.classList.add('hide'));
+    
+    socialBtn.classList.add('open');
+    socialContent.classList.remove('hide');
+}

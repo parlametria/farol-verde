@@ -1,0 +1,93 @@
+.social__header {
+    display: grid;
+    margin-top: 1rem;
+}
+
+.social__filters,
+.social__btns {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 1.25rem;
+    justify-content: flex-start;
+    align-items: center;
+    color: var(--blue);
+}
+
+.social__filters {
+    border-bottom: 1px solid var(--blue);
+    padding-block: 1.25rem;
+    grid-gap: 2.25rem;
+    grid-auto-flow: row;
+    grid-template-columns: auto auto;
+}
+
+.keyword__btn {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.keyword__board {
+    grid-column: span 2;
+}
+
+.keyword__options {
+    display: flex;
+    gap: 1.375rem;
+    align-items: center;
+}
+
+.keyword__options .btn-toggle {
+    flex: unset !important;
+    --marked-color: var(--dark-gray);
+}
+
+.keyword__options .btn-toggle span {
+    border-radius: 100vmax;
+    padding: .75rem 1rem;
+    font-weight: 700;
+    border: 1px solid var(--marked-color);
+}
+
+.keyword__search input {
+    border: 1px solid var(--dark-gray);
+    border-radius: .25rem;
+    font-size: 1rem;
+    padding: .5rem .875rem;
+}
+
+.social__btn {
+    display: grid;
+    place-items: center;
+    background: white;
+    fill: var(--blue);
+    color: var(--blue);
+    outline: 1px solid var(--blue);
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.social__btn path {fill: var(--blue);}
+.social__btn.open path {fill: white;}
+
+.social__btn,
+.profile__img {
+    width: 3rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+.social__btn.open {
+    background: var(--blue);
+    fill: white;
+    color: white;
+}
+
+
+.social__profile {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+    padding-block: 1.25rem;
+}

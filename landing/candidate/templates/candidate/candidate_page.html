@@ -6,6 +6,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/activity.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/progress.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/components/social.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/btn-toggle.css' %}">
 
 <main class="container candidate">
     <div class="candidate__profile">
@@ -25,14 +27,19 @@
     <div class="tabs">
         <button onclick="openTab('result')" class="tab open result">resultados enquetes</button>
         <button onclick="openTab('activity')" class="tab activity">atividade parlamentar</button>
+        <button onclick="openTab('social')" class="tab social">redes sociais</button>
     </div>
 
-    <div class="result__content">
+    <div class="result tab__frame">
         {% include 'candidate/components/result.html' %}
     </div>
 
-    <div class="activity__content hide">
+    <div class="activity tab__frame hide">
         {% include 'candidate/components/activity.html' %}
+    </div>
+
+    <div class="social tab__frame hide">
+        {% include 'candidate/components/social.html' %}
     </div>
 </main>
 
