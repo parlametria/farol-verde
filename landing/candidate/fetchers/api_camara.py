@@ -14,6 +14,8 @@ FETCH_LIST = [
     ("PL", 528, 2021, "Regulamenta o Mercado Brasileiro de Redução de Emissões (MBRE)"),
     ("PL", 2510, 2019, "APP urbana"),
     ("PL", 5466, 2019, "Dia dos Povos Indígenas"),
+    ("PL", 4162, 2019, "Marco legal do saneamento básico"),
+    ("PL", 4476, 2020, "Gás natural"),
 ]
 
 
