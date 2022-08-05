@@ -70,6 +70,7 @@ class CandidateAdhesion(ABC):
 
         if total_votacoes == 0:
             adesao["adhesion"] = 0
+            adesao["total_com_votos"] = 0
             return adesao
 
         total_calculadas = 0
