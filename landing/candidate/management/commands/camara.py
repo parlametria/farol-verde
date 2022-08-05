@@ -118,7 +118,9 @@ class CamaraVotacoesFetcher:
     def _fetch_votacoes_parlamentares(self):
         self.stdout.write(f"\nFetching votos from parlamentares from all VotacaoProsicao")
 
-        votacoes_proposicoes = VotacaoProsicao.objects.all()
+        proposicoes_camara = [p.id_externo for p in Proposicao.proposicoes_camara()]
+        votacoes_proposicoes = VotacaoProsicao.objects.filter(proposicao_id__in=proposicoes_camara)
+
         for votacao_prop in votacoes_proposicoes:
             dados_votacoes = get_dados_votacao(votacao_prop.id_votacao)["dados"]
 
