@@ -293,16 +293,36 @@ def form_submission_link_candidate(sender, instance: FormSubmission, **kwargs):
     builder.create_candidate()
 
 
+class CasaChoices(models.TextChoices):
+    SENADO = "senado", "senado"
+    CAMARA = "camara", "camara"
+
+
 class Proposicao(models.Model):
-    id_camara = models.IntegerField(blank=False, null=False, primary_key=True)
+    id_externo = models.IntegerField(blank=False, null=False, primary_key=True)
     sigla_tipo = models.CharField(blank=False, null=False, max_length=6)
     numero = models.IntegerField(blank=False, null=False)
     ano = models.IntegerField(blank=False, null=False)
     ementa = models.TextField(blank=True, null=True)
+    sobre = models.CharField(blank=False, null=False, max_length=90)
+    casa = models.CharField(
+        blank=False,
+        null=False,
+        max_length=6,
+        choices=CasaChoices.choices,
+    )
 
     def __str__(self) -> str:
         # MPV 867/2018
         return f"{self.sigla_tipo} {self.numero}/{self.ano}"
+
+    @staticmethod
+    def proposicoes_senado():
+        return Proposicao.objects.filter(casa=str(CasaChoices.SENADO))
+
+    @staticmethod
+    def proposicoes_camara():
+        return Proposicao.objects.filter(casa=str(CasaChoices.CAMARA))
 
 
 class VotacaoProsicao(models.Model):
@@ -311,7 +331,7 @@ class VotacaoProsicao(models.Model):
         on_delete=models.CASCADE,
         related_name="votacoes",
     )
-    id_camara = models.CharField(
+    id_votacao = models.CharField(
         primary_key=True,
         blank=False,
         null=False,
@@ -322,27 +342,47 @@ class VotacaoProsicao(models.Model):
 
 
 class VotacaoParlamentar(models.Model):
-    VOTO_SIM = "Sim"
-    VOTO_NAO = "Não"
-    VOTO_OBSTRUCAO = "Obstrução"
-    VOTO_ABSTENCAO = "Abstenção"
-    VOTO_ARTIGO_17 = "Artigo 17"
+    TIPOS_VOTO = {
+        "camara": {
+            "sim": "Sim",
+            "nao": "Não",
+            "obstrucao": "Obstrução",
+            "abstencao": "Abstenção",
+            "artigo_17": "Artigo 17",
+        },
+        "senado": {
+            "sim": "Sim",
+            "nao": "Não",
+            "p_nrv": "P-NRV",
+            "ap": "AP",
+            "lp": "LP",
+            "mis": "MIS",
+            "abstencao": "Abstenção",
+            "presidente_art_51": "Presidente (art. 51 RISF)",
+        },
+    }
 
     class Meta:
         indexes = [
             models.Index(
-                fields=['id_deputado', 'votacao_proposicao'],
-                name='votacao_prop_deputado_idx',
+                fields=["id_parlamentar", "votacao_proposicao"],
+                name="votacao_prop_deputado_idx",
             ),
         ]
-        unique_together = (('id_deputado', 'votacao_proposicao'),)
+        unique_together = (("id_parlamentar", "votacao_proposicao"),)
 
     votacao_proposicao = models.ForeignKey(
         VotacaoProsicao,
         on_delete=models.CASCADE,
         related_name="votacoes_parlamentares",
     )
-    tipo_voto = models.CharField(blank=False, null=False, max_length=20)
+    tipo_voto = models.CharField(blank=False, null=False, max_length=26)
     data = models.DateField()
     data_registro_voto = models.CharField(blank=False, null=False, max_length=30)
-    id_deputado = models.IntegerField(blank=False, null=False)
+    id_parlamentar = models.IntegerField(blank=False, null=False)
+    casa = models.CharField(
+        blank=False,
+        null=False,
+        max_length=7,
+        choices=CasaChoices.choices,
+    )

@@ -2,8 +2,8 @@ from django.core.management.base import BaseCommand, CommandError, OutputWrapper
 from django.core.management.color import Style
 
 
-from candidate.models import Proposicao, VotacaoProsicao, VotacaoParlamentar
-from candidate.camara.fetcher import (
+from candidate.models import Proposicao, VotacaoProsicao, VotacaoParlamentar, CasaChoices
+from candidate.fetchers.api_camara import (
     CAMARA_API,
     get_proposicoes_iterator,
     get_votacoes_proposicao,
@@ -38,37 +38,39 @@ class CamaraVotacoesFetcher:
     def _fetch_proposicoes(self):
         self.stdout.write(f"\nFetching proposicoes from: {CAMARA_API}")
 
-        for prop in get_proposicoes_iterator():
-            found = Proposicao.objects.filter(id_camara=prop["id"]).first()
+        for prop_json, prop_data in get_proposicoes_iterator():
+            found = Proposicao.objects.filter(id_externo=prop_json["id"]).first()
 
             if found is not None:
                 self.stdout.write(
                     self.style.WARNING(
-                        f"\t{found}: {found.id_camara} already saved, skipping"
+                        f"\t{found}: {found.id_externo} already saved, skipping"
                     )
                 )
                 continue
 
             created = Proposicao.objects.create(
-                id_camara=prop["id"],
-                sigla_tipo=prop["siglaTipo"],
-                numero=prop["numero"],
-                ano=prop["ano"],
-                ementa=prop["ementa"],
+                id_externo=prop_json["id"],
+                sigla_tipo=prop_json["siglaTipo"],
+                numero=prop_json["numero"],
+                ano=prop_json["ano"],
+                ementa=prop_json["ementa"],
+                sobre=prop_data[3],
+                casa=str(CasaChoices.CAMARA),
             )
             self.stdout.write(f"\tProposicao {created} created")
 
     def _fetch_votacoes_proposicoes(self):
         self.stdout.write(f"\nFetching votacoes from all Proposicao")
 
-        proposicoes = Proposicao.objects.all()
-        for prop in proposicoes:
-            votacoes = get_votacoes_proposicao(prop.id_camara)["dados"]
+        proposicoes_camara = Proposicao.objects.filter(casa=str(CasaChoices.CAMARA))
+        for prop in proposicoes_camara:
+            votacoes = get_votacoes_proposicao(prop.id_externo)["dados"]
 
             if len(votacoes) == 0:
                 self.stdout.write(
                     self.style.WARNING(
-                        f"\tProposicao {prop}: {prop.id_camara} has no votacoes in {CAMARA_API}, skipping"
+                        f"\tProposicao {prop}: {prop.id_externo} has no votacoes in {CAMARA_API}, skipping"
                     )
                 )
                 continue
@@ -95,7 +97,7 @@ class CamaraVotacoesFetcher:
             'aprovacao': 1
         },
         """
-        found = VotacaoProsicao.objects.filter(id_camara=votacao_json["id"]).first()
+        found = VotacaoProsicao.objects.filter(id_votacao=votacao_json["id"]).first()
 
         if found is not None:
             self.stdout.write(
@@ -106,24 +108,26 @@ class CamaraVotacoesFetcher:
             return
 
         created = VotacaoProsicao.objects.create(
-            id_camara=votacao_json["id"],
+            id_votacao=votacao_json["id"],
             proposicao=proposicao,
             data=votacao_json["data"],
             data_hora_registro=votacao_json["dataHoraRegistro"],
         )
-        self.stdout.write(f"\tVotacaoProsicao {created.id_camara} created")
+        self.stdout.write(f"\tVotacaoProsicao {created.id_votacao} created")
 
     def _fetch_votacoes_parlamentares(self):
         self.stdout.write(f"\nFetching votos from parlamentares from all VotacaoProsicao")
 
-        votacoes_proposicoes = VotacaoProsicao.objects.all()
+        proposicoes_camara = [p.id_externo for p in Proposicao.proposicoes_camara()]
+        votacoes_proposicoes = VotacaoProsicao.objects.filter(proposicao_id__in=proposicoes_camara)
+
         for votacao_prop in votacoes_proposicoes:
-            dados_votacoes = get_dados_votacao(votacao_prop.id_camara)["dados"]
+            dados_votacoes = get_dados_votacao(votacao_prop.id_votacao)["dados"]
 
             if len(dados_votacoes) == 0:
                 self.stdout.write(
                     self.style.WARNING(
-                        f"\tVotacaoProsicao {votacao_prop.id_camara} has no votacoes VotacaoParlamentar, skipping"
+                        f"\tVotacaoProsicao {votacao_prop.id_votacao} has no votacoes VotacaoParlamentar, skipping"
                     )
                 )
                 continue
@@ -154,7 +158,7 @@ class CamaraVotacoesFetcher:
         """
         found = (
             VotacaoParlamentar.objects
-            .filter(id_deputado=dados_votacao["deputado_"]["id"])
+            .filter(id_parlamentar=dados_votacao["deputado_"]["id"])
             .filter(votacao_proposicao=votacao_proposicao)
             .first()
         )
@@ -162,8 +166,8 @@ class CamaraVotacoesFetcher:
         if found is not None:
             self.stdout.write(
                 self.style.WARNING(
-                    f"\VotacaoParlamentar with id_deputado={found.id_deputado}"
-                    f" and votacao_proposicao={votacao_proposicao.id_camara}"
+                    f"\VotacaoParlamentar with id_deputado={found.id_parlamentar}"
+                    f" and votacao_proposicao={votacao_proposicao.id_votacao}"
                     " already saved, skipping"
                 )
             )
@@ -173,9 +177,10 @@ class CamaraVotacoesFetcher:
 
         created = VotacaoParlamentar.objects.create(
             votacao_proposicao=votacao_proposicao,
-            id_deputado=dados_votacao["deputado_"]["id"],
+            id_parlamentar=dados_votacao["deputado_"]["id"],
             tipo_voto=dados_votacao["tipoVoto"],
             data=data,
             data_registro_voto=dados_votacao["dataRegistroVoto"],
+            casa=str(CasaChoices.CAMARA),
         )
-        self.stdout.write(f"\tVotacaoParlamentar {created.id_deputado} created")
+        self.stdout.write(f"\tVotacaoParlamentar {created.id_parlamentar} created")
