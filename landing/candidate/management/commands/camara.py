@@ -3,7 +3,7 @@ from django.core.management.color import Style
 
 
 from candidate.models import Proposicao, VotacaoProsicao, VotacaoParlamentar, CasaChoices
-from candidate.camara.fetcher import (
+from candidate.fetchers.api_camara import (
     CAMARA_API,
     get_proposicoes_iterator,
     get_votacoes_proposicao,

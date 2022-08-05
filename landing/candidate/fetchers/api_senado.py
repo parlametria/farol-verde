@@ -1,5 +1,4 @@
 import requests
-import json
 
 SENADO_API = "https://legis.senado.leg.br/dadosabertos"
 
@@ -12,12 +11,6 @@ FETCH_LIST = [
     ("PL", 4162, 2019, "Marco legal do saneamento básico"),
 ]
 
-# https://legis.senado.leg.br/dadosabertos/materia/135060
-# {
-#    "CodigoClasse": "33809634",
-#    "DescricaoClasse": "Meio Ambiente",
-#    "DescricaoClasseHierarquica": "Meio Ambiente"
-# },
 
 # proposições na api do senado são matérias
 def fetch_materias(
@@ -154,18 +147,5 @@ def get_votacoes_materia_iterator(codigo_materia: int):
             "id_votacao": id_votacao,
             "data": data,
             "hora": hora,
-            "votacao_parmanentares": votacoes["Votos"]["VotoParlamentar"]
+            "votacao_parmanentares": votacoes["Votos"]["VotoParlamentar"],
         }
-
-
-def get_all_votacoes():
-    a = get_all_materia_iterator()
-    mat, _ = next(get_all_materia_iterator())
-
-    for votacao in get_votacoes_materia_iterator(mat["id_externo"]):
-        print(json.dumps(votacao["votacao_parmanentares"][0], indent=2))
-        print("+"*80)
-
-
-if __name__ == "__main__":
-    get_all_votacoes()

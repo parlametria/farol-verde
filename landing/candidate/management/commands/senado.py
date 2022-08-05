@@ -3,7 +3,7 @@ from django.core.management.color import Style
 
 from typing import List
 
-from candidate.senado.fetcher import (
+from candidate.fetchers.api_senado import (
     SENADO_API,
     get_all_materia_iterator,
     get_votacoes_materia_iterator,

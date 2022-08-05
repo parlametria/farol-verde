@@ -316,6 +316,14 @@ class Proposicao(models.Model):
         # MPV 867/2018
         return f"{self.sigla_tipo} {self.numero}/{self.ano}"
 
+    @staticmethod
+    def proposicoes_senado():
+        return Proposicao.objects.filter(casa=str(CasaChoices.SENADO))
+
+    @staticmethod
+    def proposicoes_camara():
+        return Proposicao.objects.filter(casa=str(CasaChoices.CAMARA))
+
 
 class VotacaoProsicao(models.Model):
     proposicao = models.ForeignKey(
