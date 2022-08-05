@@ -1,114 +1,160 @@
+from abc import ABC, abstractmethod
 from datetime import datetime, date
+from typing import Dict, List, Union
+
 from django.db.models.query import QuerySet
 
-from candidate.models import Proposicao, VotacaoParlamentar, CasaChoices
-
-IDS_LIDERES_CAMARA = {
-    "antes-02-02-2022": 204530,  # Dep. Rodrigo Agostinho
-    "apos-02-02-2022": 160511,  # Dep. Alessandro Molon
-}
-
-IDS_LIDERES_SENADO = {
-    "antes-02-02-2022": 5953,  # Sen. Fabiano Contarato
-    "apos-02-02-2022": 5718,  # Sen. Eliziane Gama
-}
+from candidate.models import Proposicao, VotacaoParlamentar, CandidatePage
 
 
-def _get_ids_lideres_casa(casa: str):
-    if casa == str(CasaChoices.CAMARA):
-        return IDS_LIDERES_CAMARA
-    else:
-        return IDS_LIDERES_SENADO
+class CandidateAdhesion(ABC):
+    VOTE_SAME = "same"
+    VOTE_DIFFERENT = "different"
 
+    @abstractmethod
+    def _get_ids_lideres(self) -> Dict[str, int]:
+        pass
 
-def _get_votacoes_lider(
-    votacao_queryset: QuerySet, votacao_date: date, casa: str
-) -> QuerySet:
-    date_check = datetime.strptime("2022-02-02", "%Y-%m-%d").date()
-    ids_lideres = _get_ids_lideres_casa(casa)
+    @abstractmethod
+    def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
+        pass
 
-    if votacao_date < date_check:
-        return votacao_queryset.filter(data__lt="2022-02-02").filter(
-            id_parlamentar=ids_lideres["antes-02-02-2022"]
+    def _get_leader_votes(
+        self, votacao_queryset: QuerySet, votacao_date: date, casa: str
+    ):
+        date_check = datetime.strptime("2022-02-02", "%Y-%m-%d").date()
+        ids_lideres = self._get_ids_lideres()
+
+        if votacao_date < date_check:
+            return (
+                votacao_queryset
+                .filter(data__lt="2022-02-02")
+                .filter(id_parlamentar=ids_lideres["antes-02-02-2022"])
+            )
+        else:
+            return (
+                votacao_queryset
+                .filter(data__gte="2022-02-02")
+                .filter(id_parlamentar=ids_lideres["apos-02-02-2022"])
+            )
+
+    def _compare_votes(
+        self, parlamentar: VotacaoParlamentar, lider: VotacaoParlamentar
+    ):
+        if parlamentar == None and lider != None:
+            return self.VOTE_DIFFERENT
+
+        if lider == None and parlamentar != None:
+            return self.VOTE_DIFFERENT
+
+        return (
+            self.VOTE_SAME
+            if parlamentar.tipo_voto == lider.tipo_voto
+            else self.VOTE_DIFFERENT
         )
-    else:
-        return votacao_queryset.filter(data__gte="2022-02-02").filter(
-            id_parlamentar=ids_lideres["apos-02-02-2022"]
+
+    def _adhesion_calculation_on_proposition(
+        self, id_parlamentar: int, proposicao: Proposicao
+    ):
+        total_votacoes = proposicao.votacoes.count()
+
+        adesao = {
+            "casa": proposicao.casa,
+            "id_externo": proposicao.id_externo,
+            "summary": proposicao.ementa,
+            "about": proposicao.sobre,
+            "same": 0,
+            "different": 0,
+            "total_votacoes": total_votacoes,
+        }
+
+        if total_votacoes == 0:
+            adesao["adhesion"] = 0
+            return adesao
+
+        total_calculadas = 0
+        for votacao in proposicao.votacoes.all():
+            if votacao.votacoes_parlamentares.count() == 0:
+                continue
+
+            votos_lider = self._get_leader_votes(
+                votacao.votacoes_parlamentares, votacao.data, proposicao.casa
+            ).first()
+
+            votos_parlamentar = votacao.votacoes_parlamentares.filter(
+                id_parlamentar=id_parlamentar
+            ).first()
+
+            if votos_lider == None and votos_parlamentar == None:
+                continue
+
+            voto = self._compare_votes(votos_parlamentar, votos_lider)
+
+            adesao[voto] += 1
+            total_calculadas += 1
+
+        adesao["total_com_votos"] = total_calculadas
+
+        # quanto menos o parlamentar divergir do lider, maior é a sua adesão
+        adesao["adhesion"] = (
+            (total_calculadas - adesao["different"]) / total_calculadas
+            if total_calculadas > 0
+            else 0
         )
 
-
-def _compare_votes(parlamentar: VotacaoParlamentar, lider: VotacaoParlamentar):
-    if parlamentar == None and lider != None:
-        return "different"
-
-    if lider == None and parlamentar != None:
-        return "different"
-
-    return "same" if parlamentar.tipo_voto == lider.tipo_voto else "different"
-
-
-def calcula_adesao_parlamentar_em_proposicao(
-    id_parlamentar: int, proposicao: Proposicao
-):
-    total_votacoes = proposicao.votacoes.count()
-
-    adesao = {
-        "casa": proposicao.casa,
-        "id_externo": proposicao.id_externo,
-        "summary": proposicao.ementa,
-        "about": proposicao.sobre,
-        "same": 0,
-        "different": 0,
-        "total_votacoes": total_votacoes,
-    }
-
-    if total_votacoes == 0:
-        adesao["adhesion"] = 0
         return adesao
 
-    total_calculadas = 0
-    for votacao in proposicao.votacoes.all():
-        if votacao.votacoes_parlamentares.count() == 0:
-            continue
 
-        votos_lider = _get_votacoes_lider(
-            votacao.votacoes_parlamentares, votacao.data, proposicao.casa
-        ).first()
+class CandidateAdhesionCamara(CandidateAdhesion):
 
-        votos_parlamentar = votacao.votacoes_parlamentares.filter(
-            id_parlamentar=id_parlamentar
-        ).first()
+    IDS_LIDERES_CAMARA = {
+        "antes-02-02-2022": 204530,  # Dep. Rodrigo Agostinho
+        "apos-02-02-2022": 160511,  # Dep. Alessandro Molon
+    }
 
-        if votos_lider == None and votos_parlamentar == None:
-            continue
+    def _get_ids_lideres(self):
+        return self.IDS_LIDERES_CAMARA
 
-        voto = _compare_votes(votos_parlamentar, votos_lider)
+    def __init__(self, candidate: CandidatePage):
+        self.id_parlamentar = candidate.id_autor
 
-        adesao[voto] += 1
-        total_calculadas += 1
+    def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
+        voted = []
 
-    adesao["total_com_votos"] = total_calculadas
+        for prop in Proposicao.proposicoes_camara():
+            voted.append(
+                self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
+            )
 
-    # quanto menos o parlamentar divergir do lider, maior é a sua adesão
-    adesao["adhesion"] = (
-        (total_calculadas - adesao["different"]) / total_calculadas
-        if total_calculadas > 0
-        else 0
-    )
-
-    return adesao
+        return voted
 
 
-def calcula_adesao_parlamentar_todas_proposicoes(id_parlamentar: int, casa: str):
-    voted = []
+class CandidateAdhesionSenado(CandidateAdhesion):
 
-    proposicoes = (
-        Proposicao.proposicoes_camara()
-        if casa == str(CasaChoices.CAMARA)
-        else Proposicao.proposicoes_senado()
-    )
+    IDS_LIDERES_SENADO = {
+        "antes-02-02-2022": 5953,  # Sen. Fabiano Contarato
+        "apos-02-02-2022": 5718,  # Sen. Eliziane Gama
+    }
 
-    for prop in proposicoes:
-        voted.append(calcula_adesao_parlamentar_em_proposicao(id_parlamentar, prop))
+    def _get_ids_lideres(self):
+        return self.IDS_LIDERES_SENADO
 
-    return voted
+    def __init__(self, candidate: CandidatePage):
+        self.id_parlamentar = candidate.id_autor
+
+    def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
+        voted = []
+
+        for prop in Proposicao.proposicoes_senado():
+            voted.append(
+                self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
+            )
+
+        return voted
+
+
+def get_adhesion_strategy(candidate: CandidatePage):
+    if candidate.is_deputado:
+        return CandidateAdhesionCamara(candidate)
+    else:
+        return CandidateAdhesionSenado(candidate)

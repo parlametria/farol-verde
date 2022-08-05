@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.http import JsonResponse
 
-from candidate.adhesion import calcula_adesao_parlamentar_todas_proposicoes
+from candidate.adhesion import get_adhesion_strategy
 
 from candidate.models import CandidatePage, CasaChoices
 
@@ -19,11 +19,9 @@ def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
             },
         )
 
-    casa = str(CasaChoices.CAMARA) if candidate.is_deputado else str(CasaChoices.SENADO)
-    response["propositions"] = calcula_adesao_parlamentar_todas_proposicoes(
-        id_candidate,
-        casa,
-    )
+    strategy = get_adhesion_strategy(candidate)
+    strategy.adhesion_calculation()
+    response["propositions"] = strategy.adhesion_calculation()
 
     total = 0.0
     calculated = 0
