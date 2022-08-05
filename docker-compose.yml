@@ -27,7 +27,6 @@ services:
       interval: 10s
       timeout: 45s
       retries: 10
-    restart: always
     expose:
       - "5656"
     volumes:
