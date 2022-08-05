@@ -63,8 +63,8 @@ class CamaraVotacoesFetcher:
     def _fetch_votacoes_proposicoes(self):
         self.stdout.write(f"\nFetching votacoes from all Proposicao")
 
-        proposicoes = Proposicao.objects.all()
-        for prop in proposicoes:
+        proposicoes_camara = Proposicao.objects.filter(casa=str(CasaChoices.CAMARA))
+        for prop in proposicoes_camara:
             votacoes = get_votacoes_proposicao(prop.id_externo)["dados"]
 
             if len(votacoes) == 0:

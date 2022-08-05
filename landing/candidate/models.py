@@ -368,7 +368,7 @@ class VotacaoParlamentar(models.Model):
         on_delete=models.CASCADE,
         related_name="votacoes_parlamentares",
     )
-    tipo_voto = models.CharField(blank=False, null=False, max_length=20)
+    tipo_voto = models.CharField(blank=False, null=False, max_length=26)
     data = models.DateField()
     data_registro_voto = models.CharField(blank=False, null=False, max_length=30)
     id_parlamentar = models.IntegerField(blank=False, null=False)
