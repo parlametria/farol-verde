@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 from candidate.adhesion import get_adhesion_strategy
 
-from candidate.models import CandidatePage, CasaChoices
+from candidate.models import CandidatePage
 
 
 def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
@@ -20,7 +20,6 @@ def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
         )
 
     strategy = get_adhesion_strategy(candidate)
-    strategy.adhesion_calculation()
     response["propositions"] = strategy.adhesion_calculation()
 
     total = 0.0
