@@ -21,40 +21,51 @@
     grid-template-columns: auto auto;
 }
 
-.keyword__btn {
+.keywords__btn {
     display: flex;
     align-items: center;
     gap: .75rem;
 }
 
-.keyword__board {
+.keywords__board {
     grid-column: span 2;
 }
 
-.keyword__options {
+.keywords__options {
     display: flex;
     gap: 1.375rem;
     align-items: center;
 }
 
-.keyword__options .btn-toggle {
+.keywords__options .btn-toggle {
     flex: unset !important;
     --marked-color: var(--dark-gray);
 }
 
-.keyword__options .btn-toggle span {
+.keywords__options .btn-toggle span {
     border-radius: 100vmax;
     padding: .75rem 1rem;
     font-weight: 700;
     border: 1px solid var(--marked-color);
 }
 
-.keyword__search input {
+.keywords__search input {
     border: 1px solid var(--dark-gray);
     border-radius: .25rem;
     font-size: 1rem;
     padding: .5rem .875rem;
 }
+
+.keywords__list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(12, 1.5rem);
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 2rem;
+}
+
+.keyword__item {text-decoration: underline;}
 
 .social__btn {
     display: grid;

@@ -44,3 +44,18 @@ function openSocial(socialName) {
     socialBtn.classList.add('open');
     socialContent.classList.remove('hide');
 }
+
+function get_keywords(page=1) {
+    page ??= 1;
+    $.ajax({url: './api/keywords',})
+        .done((data) => {
+            console.log(data)
+        });
+}
+
+$.ajax({url: './api/social-media',})
+    .done((data) => {
+        console.log(data)
+    });
+
+get_keywords();

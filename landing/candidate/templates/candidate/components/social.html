@@ -19,15 +19,15 @@
                 </svg>
             </div>
         </div>
-        <div class="keyword__filter show">
-            <div class="keyword__btn">
+        <div class="keywords__filter show">
+            <div class="keywords__btn">
                 <i class="fas fa-list"></i>
                 Filtrar por palavra-chave
-                <i class="fas fa-chevron-left fa-lg keyword__toggle"></i>
+                <i class="fas fa-chevron-left fa-lg keywords__toggle"></i>
             </div>
         </div>
-        <div class="keyword__board">
-            <div class="keyword__options">
+        <div class="keywords__board">
+            <div class="keywords__options">
                 <label class="btn-toggle">
                     <input type="checkbox">
                     <span>A - C</span>
@@ -40,12 +40,17 @@
                     <input type="checkbox">
                     <span>F - P</span>
                 </label>
-                <div class="keyword__search">
+                <div class="keywords__search">
                     <input type="text" placeholder="Busca por palavra-chave">
                 </div>
             </div>
-            <div class="keyword__list">
-
+            <div class="keywords__list">
+                {% for category, words in page.keywords %}
+                    <div class="keyword__category overline">{{category}}</div>
+                    {% for word in words %}
+                        <div class="keyword__item button-text">{{ word }}</div>
+                    {% endfor %}
+                {% endfor %}
             </div>
         </div>
     </div>

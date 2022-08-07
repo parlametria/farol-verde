@@ -16,7 +16,7 @@ from django.db.models import CharField, ImageField, EmailField, URLField, DateFi
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from candidate.util import uf_list, subject_dict, subject_descriptions, subjects_list
+from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords
 from candidate.factories import SurveyCandidateFactory
 
 class CandidatePage(MetadataPageMixin, Page):
@@ -131,6 +131,10 @@ class CandidatePage(MetadataPageMixin, Page):
     @property
     def is_senador(self) -> bool:
         return not self.is_deputado
+    
+    @property
+    def keywords(self):
+        return keywords
 
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
