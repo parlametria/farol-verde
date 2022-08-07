@@ -1,10 +1,12 @@
-import requests
+import requests, os
+from requests.auth import HTTPBasicAuth
 
 from django.http import HttpRequest
 from django.http import JsonResponse
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from candidate.models import CandidatePage
-from candidate.util import lru_cache_time
+from candidate.util import lru_cache_time, keywords
 
 API_PERFIIL = "https://perfil.parlametria.org.br/api"
 
@@ -124,3 +126,16 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
     }
 
     return JsonResponse(candidate_votes)
+
+def social_media_view(request: HttpRequest, slug: str):
+    url = os.environ.get("ELASTIC_URL")
+    login = os.environ.get("ELASTIC_USER")
+    password = os.environ.get("ELASTIC_PASSWORD")
+    response = requests.get(url, auth=HTTPBasicAuth(login, password))
+    return JsonResponse(response.json())
+
+def keywords_view(request: HttpRequest, slug:str):
+    page = request.GET.get("page", 1)
+    paginator = Paginator(keywords, 36)
+    response = paginator.get_page(page)
+    return response, safe=False)
