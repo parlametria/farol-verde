@@ -22,6 +22,8 @@ from candidate.factories import SurveyCandidateFactory
 
 class CandidatePage(MetadataPageMixin, Page):
     DEPUTADO_CHARGE_TEXT = "Deputado(a) Federal"
+    SENADOR_CHARGE_TEXT = "Senador(a)"
+
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
     id_serenata = models.IntegerField(blank=True, null=True, unique=True)

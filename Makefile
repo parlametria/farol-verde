@@ -21,8 +21,8 @@ migrate:
 makemigrations:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py makemigrations
 
-parla-import:
-	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py parlametria --import
+candidatos-import:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py candidatos --import
 
 camara-import:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py camara --import
