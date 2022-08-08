@@ -30,18 +30,3 @@ def fetch_autores():
 def fetch_actor_data(id_autor_parlametria: int):
     response = requests.get(f"{PERFIL_API}/parlamentares/{id_autor_parlametria}/info")
     return response.json()
-
-
-def main():
-    data = fetch_autores()
-    print(json.dumps(data[:3], indent=2))
-
-    print("*"*80)
-
-    for autor in data[:3]:
-        extra = fetch_actor_data(autor["id_autor_parlametria"])
-        print(json.dumps(extra, indent=2))
-
-
-if __name__ == "__main__":
-    main()
