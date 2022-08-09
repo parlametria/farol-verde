@@ -86,7 +86,7 @@ class CandidatePage(MetadataPageMixin, Page):
                 ),
             )
         ],
-        null=True,
+        null=True, blank=True,
     )
 
     @property
