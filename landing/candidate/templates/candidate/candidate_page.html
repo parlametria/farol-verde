@@ -23,13 +23,17 @@
     </div>
 
     <div class="tabs">
-        <button onclick="openTab('result')" class="tab open result">resultados enquetes</button>
+        {% if page.opinions_answers %}
+            <button onclick="openTab('result')" class="tab result">resultados enquetes</button>
+        {% endif %}
         <button onclick="openTab('activity')" class="tab activity">atividade parlamentar</button>
     </div>
 
-    <div class="result__content">
-        {% include 'candidate/components/result.html' %}
-    </div>
+    {% if page.opinions_answers %}
+        <div class="result__content hide">
+            {% include 'candidate/components/result.html' %}
+        </div>
+    {% endif %}
 
     <div class="activity__content hide">
         {% include 'candidate/components/activity.html' %}

@@ -11,6 +11,13 @@ const adhesionProgressBar = document.querySelector('.adhesion .progress__inner')
 const votingPropositions = document.querySelector('.voting__propositions');
 const votingEmpty = document.querySelector('.voting__empty');
 
+const tabs = document.querySelector('.tabs');
+tabs.querySelector('.tab').classList.add('open');
+
+firstTabContent = document.querySelector('.tabs + div');
+
+urlParams = new URLSearchParams(window.location.search);
+
 function openTab(tabName) {
     const tab = tabName === 'result' ? resultTab : activityTab;
     const content = tabName === 'result' ? resultContent : activityContent;
@@ -24,6 +31,13 @@ function openTab(tabName) {
     otherContent.classList.add('hide');
 }
 
+if (urlParams.has('tab')) {
+    const tab = urlParams.get('tab');
+    openTab(tab);
+} else {
+    document.querySelector(`.tab`).click();
+}
+
 $.ajax({url: './api/adesao',})
     .done((data) => {
         var {adhesion, propositions} = data;
@@ -34,13 +48,11 @@ $.ajax({url: './api/adesao',})
 
         if(propositions.length == 0) return;
 
-        votingEmpty.classList.add('hide');
         votingPropositions.classList.remove('hide');
         propositions.forEach((proposition) => {
             var {adhesion, about} = proposition;
             adhesion *= 100
             adhesion = adhesion.toFixed(2);
-            console.log(proposition);
             const propositionEl = votingPropositionTpl.content.cloneNode(true);
             propositionEl.querySelector('.voting__proposition h4').innerHTML = about;
             // propositionEl.querySelector('.proposition__number').innerHTML = proposition.proposition_number;
@@ -48,4 +60,7 @@ $.ajax({url: './api/adesao',})
             propositionEl.querySelector('.progress__inner').style.width = `${adhesion}%`;
             votingPropositions.appendChild(propositionEl);
         })
+    })
+    .fail((err) => {
+        votingEmpty.classList.remove('hide');
     });
