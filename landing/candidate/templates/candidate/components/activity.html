@@ -1,1 +1,40 @@
-<h1> Atividade Parlamentar </h1>
+{% load static %}
+
+<div class="adhesion">
+    <div class="adhesion__data">
+        <h3>Índice de Convergência Ambiental</h3>
+        <div class="progress">
+            <h4></h4>
+            <div class="progress__bar">
+                <div class="progress__inner"></div>
+            </div>
+        </div>
+    </div>
+    <div class="adhesion__definition">
+        <h4> O que significa esse número?</h4>
+        <p> Índice que afere o percentual de convergência do voto do candidato na legislatura atual, em relação ao voto do então Líder da Frente Parlamentar Ambientalista. </p>
+    </div>
+</div>
+
+<template id="voting__proposition--tpl">
+    <div class="voting__proposition fade-up">
+        <h4>{{ proposition.proposition_name }}</h4>
+        <h4 class="proposition__number">{{ proposition.proposition_number }}</h4>
+        <div class="progress">
+            <h4></h4>
+            <div class="progress__bar">
+                <div class="progress__inner"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<div class="voting">
+    <h3>Votação</h3>
+    <div class="voting__propositions hide"></div>
+    <div class="voting__empty">
+        <img src="{% static 'img/sad-progress.svg' %}">
+        <h2>Dados indisponíveis</h2>
+        <p>Ops! Que tal <a href="/candidatos">pesquisar outro candidato</a>?</p>
+    </div>
+</div>

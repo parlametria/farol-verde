@@ -8,7 +8,11 @@
     {% block meta_tag %}
         <title>
             {% block title %}
-                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+                {% if self.campaign_name %}
+                    {{ self.campaign_name }}
+                {% else %}
+                    {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+                {% endif %}
             {% endblock %}
             {% block title_suffix %}
                 {% with self.get_site.site_name as site_name %}

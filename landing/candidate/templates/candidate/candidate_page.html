@@ -4,6 +4,8 @@
 {% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/activity.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/progress.css' %}">
 
 <main class="container candidate">
     <div class="candidate__profile">
@@ -16,7 +18,7 @@
         {% endwith %}
         <div class="candidate__data">
             <h2 class="candidate__name">{{ page.campaign_name }}</h2>
-            <div class="candidate__info"><span>{{ page.charge }}</span>/<span>{{page.party}}</span> - {{page.election_state}}</div>
+            <div class="candidate__info">{{ page.charge }} / {{page.party}} - {{page.election_state}}</div>
         </div>
     </div>
 
@@ -37,5 +39,7 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script> 
     <script src="{% static 'js/candidate/candidate.js' %}"></script>
 {% endblock %}
