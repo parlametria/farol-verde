@@ -8,8 +8,20 @@ from candidate.models import CandidatePage
 
 
 def adesao_parlamentar_view(request: HttpRequest, slug: str):
-    id_candidate = CandidatePage.objects.filter(slug=slug).first().id_parlametria
-    response = { "adhesion": 0.0, "propositions": [] }
+    candidate = CandidatePage.objects.filter(slug=slug).first()
+
+    response = {"adhesion": 0.0, "propositions": []}
+    
+    if candidate is None:
+        return JsonResponse(
+            status=404,
+            data={
+                "message": "Candidate not found",
+            },
+        )
+
+    strategy = get_adhesion_strategy(candidate)
+    response["propositions"] = strategy.adhesion_calculation()
 
     total = 0.0
     calculated = 0

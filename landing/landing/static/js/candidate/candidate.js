@@ -36,7 +36,9 @@ function openTab(tabName) {
 
 $.ajax({url: './api/adesao',})
     .done((data) => {
-        const {adhesion, propositions} = data;
+        var {adhesion, propositions} = data;
+        adhesion *= 100
+        adhesion = adhesion.toFixed(2);
         adhesionProgressValue.innerHTML = `${adhesion}%`;
         adhesionProgressBar.style.width = `${adhesion}%`;
 
@@ -45,11 +47,15 @@ $.ajax({url: './api/adesao',})
         votingEmpty.classList.add('hide');
         votingPropositions.classList.remove('hide');
         propositions.forEach((proposition) => {
+            var {adhesion, about} = proposition;
+            adhesion *= 100
+            adhesion = adhesion.toFixed(2);
+            console.log(proposition);
             const propositionEl = votingPropositionTpl.content.cloneNode(true);
-            propositionEl.querySelector('.voting__proposition h4').innerHTML = proposition.proposition_name;
-            propositionEl.querySelector('.proposition__number').innerHTML = proposition.proposition_number;
-            propositionEl.querySelector('.progress h4').innerHTML = `${proposition.adhesion}%`;
-            propositionEl.querySelector('.progress__inner').style.width = `${proposition.adhesion}%`;
+            propositionEl.querySelector('.voting__proposition h4').innerHTML = about;
+            // propositionEl.querySelector('.proposition__number').innerHTML = proposition.proposition_number;
+            propositionEl.querySelector('.progress h4').innerHTML = `${adhesion}%`;
+            propositionEl.querySelector('.progress__inner').style.width = `${adhesion}%`;
             votingPropositions.appendChild(propositionEl);
         })
     });
