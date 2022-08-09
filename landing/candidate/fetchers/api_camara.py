@@ -70,3 +70,57 @@ def get_dados_votacao(idvota: str):
     url = f"{CAMARA_API}/votacoes/{idvota}/votos"
     response = requests.get(url)
     return response.json()
+
+
+def fetch_deputado_data(id_depudado: int):
+    """
+    {
+    "dados": {
+        "id": 204431,
+        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204431",
+        "nomeCivil": "MARCOS AURÉLIO  PÁDUA RIBEIRO GONÇALVES DE SAMPAIO",
+        "ultimoStatus": {
+            "id": 204431,
+            "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204431",
+            "nome": "Marcos Aurélio Sampaio",
+            "siglaPartido": "PSD",
+            "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/36834",
+            "siglaUf": "PI",
+            "idLegislatura": 56,
+            "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/204431.jpg",
+            "email": "dep.marcosaureliosampaio@camara.leg.br",
+            "data": "2019-02-01T11:45",
+            "nomeEleitoral": "Marcos Aurélio Sampaio",
+            "gabinete": {
+                "nome": "771",
+                "predio": "3",
+                "sala": "771",
+                "andar": null,
+                "telefone": "3215-5771",
+                "email": "dep.marcosaureliosampaio@camara.leg.br"
+            },
+        "situacao": "Exercício",
+        "condicaoEleitoral": "Titular",
+        "descricaoStatus": null
+        },
+        "cpf": "01742564348",
+        "sexo": "M",
+        "urlWebsite": null,
+        "redeSocial": [],
+        "dataNascimento": "1991-09-19",
+        "dataFalecimento": null,
+        "ufNascimento": "PI",
+        "municipioNascimento": "Teresina",
+        "escolaridade": "Superior"
+    },
+    "links": [
+        {
+        "rel": "self",
+        "href": "https://dadosabertos.camara.leg.br/api/v2/deputados/204431"
+        }
+    ]
+    }
+    """
+    url = f"{CAMARA_API}/deputados/{id_depudado}"
+    response = requests.get(url)
+    return response.json()

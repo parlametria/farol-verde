@@ -21,6 +21,8 @@ from candidate.factories import SurveyCandidateFactory
 
 class CandidatePage(MetadataPageMixin, Page):
     DEPUTADO_CHARGE_TEXT = "Deputado(a) Federal"
+    SENADOR_CHARGE_TEXT = "Senador(a)"
+
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
     id_serenata = models.IntegerField(blank=True, null=True, unique=True)
@@ -55,7 +57,7 @@ class CandidatePage(MetadataPageMixin, Page):
 
     election_state = CharField(null=True, max_length=255)
     election_city = CharField(null=True, max_length=255)
-
+    
     global make_block
 
     def make_block(subject):

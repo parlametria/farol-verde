@@ -149,3 +149,43 @@ def get_votacoes_materia_iterator(codigo_materia: int):
             "hora": hora,
             "votacao_parmanentares": votacoes["Votos"]["VotoParlamentar"],
         }
+
+def fetch_senador_data(id_senador: int):
+    """
+    {
+        "DetalheParlamentar": {
+            "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            "@xsi:noNamespaceSchemaLocation": "https://legis.senado.leg.br/dadosabertos/dados/DetalheParlamentarv6.xsd",
+            "Metadados": {
+                "Versao": "08/08/2022 15:30:51",
+                "VersaoServico": "6",
+                "DataVersaoServico": "2021-09-09",
+                "DescricaoDataSet": "Informações sobre o parlamentar."
+            },
+            "Parlamentar": {
+                "IdentificacaoParlamentar": {
+                    "CodigoParlamentar": "5905",
+                    "NomeParlamentar": "Rodrigo Cunha",
+                    "NomeCompletoParlamentar": "Rodrigo Santos Cunha",
+                    "SexoParlamentar": "Masculino",
+                    "UrlFotoParlamentar": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador5905.jpg",
+                    "UrlPaginaParlamentar": "http://www25.senado.leg.br/web/senadores/senador/-/perfil/5905",
+                    "EmailParlamentar": "sen.rodrigocunha@senado.leg.br",
+                    "SiglaPartidoParlamentar": "UNIÃO"
+                },
+                "DadosBasicosParlamentar": {
+                    "DataNascimento": "1981-05-11",
+                    "Naturalidade": "Arapiraca",
+                    "UfNaturalidade": "AL",
+                    "EnderecoParlamentar": "Senado Federal Anexo 2   Ala Afonso Arinos Gabinete 07"
+                },
+                "OutrasInformacoes": {
+                    "Servico": [...]
+                }
+            }
+        }
+    }
+    """
+    url = f"{SENADO_API}/senador/{id_senador}.json"
+    response = requests.get(url)
+    return response.json()
