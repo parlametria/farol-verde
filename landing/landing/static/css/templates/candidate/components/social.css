@@ -8,27 +8,47 @@
     display: grid;
     grid-auto-flow: column;
     grid-gap: 1.25rem;
-    justify-content: flex-start;
     align-items: center;
     color: var(--blue);
 }
+
+.social__btns {justify-content: start;}
 
 .social__filters {
     border-bottom: 1px solid var(--blue);
     padding-block: 1.25rem;
     grid-gap: 2.25rem;
     grid-auto-flow: row;
-    grid-template-columns: auto auto;
+    grid-template-columns: 11.5rem auto;
 }
 
 .keywords__btn {
     display: flex;
     align-items: center;
     gap: .75rem;
+    transition: .35s;
+    cursor: pointer;
 }
 
 .keywords__board {
     grid-column: span 2;
+    height: 0;
+    visibility: hidden;
+    transition: height .35s;
+}
+
+.keywords__board.open {
+    height: unset;
+    visibility: visible;
+}
+
+.keywords__btn.open .keywords__toggle {transform: rotate(-90deg);}
+
+.keywords__continue-btn {
+    display: flex;
+    justify-content: flex-end;
+    padding-block: 1rem;
+    cursor: pointer;
 }
 
 .keywords__options {
@@ -58,11 +78,18 @@
 
 .keywords__list {
     display: grid;
-    grid-auto-flow: column;
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(12, 1.5rem);
-    align-items: center;
+    grid-auto-flow: column;
+    grid-column-gap: 1rem;
     justify-content: flex-start;
     margin-top: 2rem;
+}
+
+.keyword__category {
+    display: grid;
+    align-items: center;
+    grid-row: span 2;
 }
 
 .keyword__item {text-decoration: underline;}
@@ -94,11 +121,43 @@
     color: white;
 }
 
-
 .social__profile {
     display: flex;
     gap: 1rem;
     justify-content: flex-start;
     align-items: center;
     padding-block: 1.25rem;
+    border-bottom: 1px solid var(--gray);
+}
+
+.social__post {
+    display: grid;
+    grid-gap: 1rem;
+    border-bottom: 1px solid var(--gray);
+    padding-block: 2rem;
+}
+
+.post__content {
+    font-size: 20px;
+    line-height: 27.24px;
+}
+
+.post__footer {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.post__keywords {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.post__date {
+    color: var(--blue);
+}
+
+.post__link {
+    color: var(--blue);
+    font-weight: 700;
 }

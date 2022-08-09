@@ -1,4 +1,4 @@
-import requests, os
+import requests, os, json
 from requests.auth import HTTPBasicAuth
 
 from django.http import HttpRequest
@@ -128,14 +128,39 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
     return JsonResponse(candidate_votes)
 
 def social_media_view(request: HttpRequest, slug: str):
+    candidate = CandidatePage.objects.filter(slug=slug).first()
     url = os.environ.get("ELASTIC_URL")
     login = os.environ.get("ELASTIC_USER")
     password = os.environ.get("ELASTIC_PASSWORD")
-    response = requests.get(url, auth=HTTPBasicAuth(login, password))
+    query = json.dumps({ 
+        "query": { 
+            "wildcard": { 
+                "social-data.tipo": { "value": f"{candidate.campaign_name}", "case_insensitive": True }
+            }
+        },
+        "fields": [ "_source.social-data.*" ]
+    })
+    response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=query)
     return JsonResponse(response.json())
 
-def keywords_view(request: HttpRequest, slug:str):
-    page = request.GET.get("page", 1)
-    paginator = Paginator(keywords, 36)
-    response = paginator.get_page(page)
-    return response, safe=False)
+def keywords_view(request: HttpRequest, slug:str, letter:str, search=''):
+    new_keywords = dict(keywords)
+    keys = list(new_keywords.keys())
+    words_limit = 34
+    while(keys[0] != letter):
+        del(new_keywords[keys[0]])
+        del(keys[0])
+    for key in keys:
+        if len(search) > 0:
+            new_keywords[key] = [keyword for keyword in new_keywords[key] if search in keyword]
+        if words_limit <= 0 or len(new_keywords[key]) == 0:
+            del(new_keywords[key])
+            continue
+        new_keywords[key] = new_keywords[key][:words_limit]
+        words_limit -= len(new_keywords[key]) + 2
+        large_words = [keyword for keyword in new_keywords[key] if len(keyword) > 30]
+        words_limit -= len(large_words)
+        next_letter = key
+    new_keywords['next'] = next_letter
+    
+    return JsonResponse(new_keywords)

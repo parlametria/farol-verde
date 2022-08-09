@@ -1,5 +1,22 @@
 {% load static %}
 
+<template id="keyword__item--tpl">
+    <div class="keyword__category overline"></div>
+</template>
+
+<template id="social__post--tpl">
+    <div class="social__post">
+        <p class="post__content"></p>
+        <div class="post__date overline"></div>
+        <div class="post__footer">
+            <a class="post__link text-button">abrir no rede <i class="fas fa-external-link-alt"></i></a>
+            <div class="post__keywords">
+                <div class="text-button">palavras-chave:</div>
+            </div>
+        </div>
+    </div>
+</template>
+
 <div class="social__header">
     <div class="social__filters">
         <div class="social__btns">
@@ -44,18 +61,14 @@
                     <input type="text" placeholder="Busca por palavra-chave">
                 </div>
             </div>
-            <div class="keywords__list">
-                {% for category, words in page.keywords %}
-                    <div class="keyword__category overline">{{category}}</div>
-                    {% for word in words %}
-                        <div class="keyword__item button-text">{{ word }}</div>
-                    {% endfor %}
-                {% endfor %}
-            </div>
+            <div class="keywords__list"></div>
+            <div class="keywords__continue-btn overline"></div>
         </div>
     </div>
     <div class="social__profile">
-        <img class="profile__img" alt="{{ page.campaign_name }} profile photo">
+        <!-- <img class="profile__img" alt="{{ page.campaign_name }} profile photo"> -->
+        <img class="profile__img">
+
         <h3 class="profile__username">@SomeData</h3>
     </div>
 </div>

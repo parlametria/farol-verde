@@ -7,5 +7,6 @@ urlpatterns = [
     path("<slug:slug>/api/votacoes", votacoes_perfil_parlamentar_view),
     path("<slug:slug>/api/adesao", adesao_parlamentar_view),
     path("<slug:slug>/api/social-media", social_media_view),
-    path("<slug:slug>/api/keywords", keywords_view),
+    path("<slug:slug>/api/keywords/<slug:letter>", keywords_view),
+    path("<slug:slug>/api/keywords/<slug:letter>/<slug:search>", keywords_view),
 ]
