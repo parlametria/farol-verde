@@ -36,6 +36,7 @@ class CandidateFetcher:
         "cpf": "00000000000",
         "manager_site": "https://farolverde.org.br",
         "election_city": "Não informado",
+        "election_state": "Não informado",  # API senado não informa e no parlametria está "nan"
     }
 
     def __init__(self, stdout: OutputWrapper, style: Style):
@@ -67,11 +68,12 @@ class CandidateFetcher:
                 "id_serenata": None,
                 "name": autor["nome_autor"],
                 "title": autor["nome_autor"],
+                "party": autor["partido"],
                 "slug": slug,
                 "charge": self._get_charge(autor["casa_autor"]),
                 "social_media": None,
-                "opinions": [("opinions", self._get_default_options())],
-                "election_state": autor["uf"],
+                # "opinions": [("opinions", self._get_default_options())],
+                "opinions": [],
                 "picture": None,
             }
 
@@ -117,7 +119,7 @@ class CandidateFetcher:
             ):
                 manager_phone = ultimo_status["gabinete"]["telefone"]
 
-        return {
+        data = {
             "campaign_name": ultimo_status["nomeEleitoral"],
             "cpf": data["dados"]["cpf"],
             "birth_date": data["dados"]["dataNascimento"],
@@ -129,6 +131,15 @@ class CandidateFetcher:
             "election_state": ultimo_status["siglaUf"],
             "election_city": self.DEFAULT_EMPTY["election_city"],
         }
+
+        if (
+            "siglaPartido" in ultimo_status
+            and ultimo_status["siglaPartido"] is not None
+            and len(ultimo_status["siglaPartido"]) > 0
+        ):
+            data["party"] = ultimo_status["siglaPartido"]
+
+        return data
 
     def _get_candidate_data_senado(self, id_senador: int):
         self.stdout.write(
@@ -146,7 +157,7 @@ class CandidateFetcher:
         ):
             email = parlamentar["IdentificacaoParlamentar"]["EmailParlamentar"]
 
-        return {
+        data = {
             "campaign_name": parlamentar["IdentificacaoParlamentar"]["NomeParlamentar"],
             "cpf": self.DEFAULT_EMPTY["cpf"],
             "birth_date": parlamentar["DadosBasicosParlamentar"]["DataNascimento"],
@@ -156,7 +167,21 @@ class CandidateFetcher:
             "manager_phone": self.DEFAULT_EMPTY["manager_phone"],
             "manager_site": self.DEFAULT_EMPTY["manager_site"],
             "election_city": self.DEFAULT_EMPTY["election_city"],
+            "election_state": self.DEFAULT_EMPTY["election_state"],
         }
+
+        if (
+            "SiglaPartidoParlamentar" in parlamentar["IdentificacaoParlamentar"]
+            and parlamentar["IdentificacaoParlamentar"]["SiglaPartidoParlamentar"]
+            is not None
+            and len(parlamentar["IdentificacaoParlamentar"]["SiglaPartidoParlamentar"])
+            > 0
+        ):
+            data["party"] = parlamentar["IdentificacaoParlamentar"][
+                "SiglaPartidoParlamentar"
+            ]
+
+        return data
 
     def _get_charge(self, casa: str):
         return (
@@ -197,6 +222,7 @@ class CandidateFetcher:
             birth_date=data["birth_date"],
             email=data["email"],
             charge=data["charge"],
+            party=data["party"],
             social_media=data["social_media"],
             manager_name=data["manager_name"],
             manager_email=data["manager_email"],

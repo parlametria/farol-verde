@@ -173,7 +173,7 @@ def fetch_senador_data(id_senador: int):
                     "EmailParlamentar": "sen.rodrigocunha@senado.leg.br",
                     "SiglaPartidoParlamentar": "UNIÃO"
                 },
-                    "DadosBasicosParlamentar": {
+                "DadosBasicosParlamentar": {
                     "DataNascimento": "1981-05-11",
                     "Naturalidade": "Arapiraca",
                     "UfNaturalidade": "AL",
