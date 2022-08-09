@@ -1,20 +1,26 @@
 {% load static %}
 
-<template id="keyword__item--tpl">
-    <div class="keyword__category overline"></div>
-</template>
-
 <template id="social__post--tpl">
     <div class="social__post">
         <p class="post__content"></p>
         <div class="post__date overline"></div>
         <div class="post__footer">
-            <a class="post__link text-button">abrir no rede <i class="fas fa-external-link-alt"></i></a>
+            <div class="post__link text-button">
+                <a>abrir no rede</a>
+                <i class="fas fa-external-link-alt"></i>
+            </div>
             <div class="post__keywords">
                 <div class="text-button">palavras-chave:</div>
             </div>
         </div>
     </div>
+</template>
+
+<template id="keyword__option--tpl">
+    <label class="btn-toggle">
+        <input type="radio" name="sortby" value="keyword__section">
+        <span></span>
+    </label>
 </template>
 
 <div class="social__header">
@@ -45,24 +51,16 @@
         </div>
         <div class="keywords__board">
             <div class="keywords__options">
-                <label class="btn-toggle">
-                    <input type="checkbox">
-                    <span>A - C</span>
-                </label>
-                <label class="btn-toggle">
-                    <input type="checkbox">
-                    <span>C - F</span>
-                </label>
-                <label class="btn-toggle">
-                    <input type="checkbox">
-                    <span>F - P</span>
-                </label>
+                <div class="keywords__options-list"></div>
                 <div class="keywords__search">
                     <input type="text" placeholder="Busca por palavra-chave">
                 </div>
             </div>
             <div class="keywords__list"></div>
-            <div class="keywords__continue-btn overline"></div>
+            <div class="keywords__btns">
+                <div class="keywords__prev hidden overline"><i class="fas fa-long-arrow-alt-left"></i> Voltar</div>
+                <div class="keywords__next overline">Continuar <i class="fas fa-long-arrow-alt-right"></i></div>
+            </div>
         </div>
     </div>
     <div class="social__profile">

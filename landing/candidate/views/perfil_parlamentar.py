@@ -127,40 +127,45 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
 
     return JsonResponse(candidate_votes)
 
-def social_media_view(request: HttpRequest, slug: str):
+def social_media_view(request: HttpRequest, slug: str, keyword: str = None):
     candidate = CandidatePage.objects.filter(slug=slug).first()
     url = os.environ.get("ELASTIC_URL")
     login = os.environ.get("ELASTIC_USER")
     password = os.environ.get("ELASTIC_PASSWORD")
-    query = json.dumps({ 
-        "query": { 
-            "wildcard": { 
-                "social-data.tipo": { "value": f"{candidate.campaign_name}", "case_insensitive": True }
+    query = { 
+        "query": {
+            "bool":{
+                "must": [
+                {
+                    "wildcard": { 
+                        "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                    }
+                }
+            ]
             }
         },
         "fields": [ "_source.social-data.*" ]
-    })
-    response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=query)
+    }
+    if keyword:
+        value = {"wildcard": { "social-data.tags": { "value": f"*{keyword}*", "case_insensitive": True },}}
+        query["query"]["bool"]["must"].append(value)
+    response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
     return JsonResponse(response.json())
 
-def keywords_view(request: HttpRequest, slug:str, letter:str, search=''):
-    new_keywords = dict(keywords)
-    keys = list(new_keywords.keys())
-    words_limit = 34
-    while(keys[0] != letter):
-        del(new_keywords[keys[0]])
-        del(keys[0])
-    for key in keys:
-        if len(search) > 0:
-            new_keywords[key] = [keyword for keyword in new_keywords[key] if search in keyword]
-        if words_limit <= 0 or len(new_keywords[key]) == 0:
-            del(new_keywords[key])
-            continue
-        new_keywords[key] = new_keywords[key][:words_limit]
-        words_limit -= len(new_keywords[key]) + 2
-        large_words = [keyword for keyword in new_keywords[key] if len(keyword) > 30]
-        words_limit -= len(large_words)
-        next_letter = key
-    new_keywords['next'] = next_letter
-    
-    return JsonResponse(new_keywords)
+def keywords_sections_view(request: HttpRequest, slug: str, search: str=''):
+    keywords_list = list(keywords)
+    sections = []
+    if len(search) > 0:
+        keywords_list = [keyword for keyword in keywords_list if search in keyword]
+    for i in range(0, len(keywords_list), 36):
+        sections.append(keywords_list[i:i+36])
+    sections = [f"{section[0][0]} - {section[-1][0]}".upper() for section in sections]
+    response = {"sections": sections, "total": len(keywords_list) - 1}
+    return JsonResponse(response)
+
+def keywords_view(request: HttpRequest, slug:str, page:int, search=''):
+    page = 36 * page
+    if len(search) > 0:
+        keywords_list = [keyword for keyword in keywords if search in keyword[0]]
+    keywords_list = keywords[page:page+36]
+    return JsonResponse(keywords_list, safe=False)
