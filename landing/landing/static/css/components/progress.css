@@ -9,10 +9,12 @@
 }
 
 .progress__bar {
-    background-color: var(--gray);
+    background-color: transparent;
+    outline: 1px solid var(--primary-color);
     border-radius: .5rem;
     height: 2rem;
     width: 100%;
+    overflow: hidden;
 }
 
 .progress__inner {

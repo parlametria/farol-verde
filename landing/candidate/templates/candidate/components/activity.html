@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="adhesion">
     <div class="adhesion__data">
         <h3>Índice de Convergência Ambiental</h3>
@@ -29,5 +31,10 @@
 
 <div class="voting">
     <h3>Votação</h3>
-    <div class="voting__propositions"></div>
+    <div class="voting__propositions hide"></div>
+    <div class="voting__empty">
+        <img src="{% static 'img/sad-progress.svg' %}">
+        <h2>Dados indisponíveis</h2>
+        <p>Ops! Que tal <a href="/candidatos">pesquisar outro candidato</a>?</p>
+    </div>
 </div>

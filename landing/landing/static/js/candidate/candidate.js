@@ -9,6 +9,7 @@ const adhesionProgressValue = document.querySelector('.adhesion .progress h4');
 const adhesionProgressBar = document.querySelector('.adhesion .progress__inner');
 
 const votingPropositions = document.querySelector('.voting__propositions');
+const votingEmpty = document.querySelector('.voting__empty');
 
 function openTab(tabName) {
     const tab = tabName === 'result' ? resultTab : activityTab;
@@ -30,6 +31,9 @@ $.ajax({url: './api/adesao',})
         adhesionProgressBar.style.width = `${adhesion}%`;
 
         if(propositions.length == 0) return;
+
+        votingEmpty.classList.add('hide');
+        votingPropositions.classList.remove('hide');
         propositions.forEach((proposition) => {
             const propositionEl = votingPropositionTpl.content.cloneNode(true);
             propositionEl.querySelector('.voting__proposition h4').innerHTML = proposition.proposition_name;
