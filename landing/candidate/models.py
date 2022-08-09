@@ -91,12 +91,14 @@ class CandidatePage(MetadataPageMixin, Page):
 
     @property
     def opinions_answers(self):
-        answers = subjects_list
+        answers = list(subjects_list)
         answer_dict = {
             "Sim": "sim",
             "Não": "nao",
             "Prefiro não responder / Não sei": "nao_sei",
         }
+        if len(self.opinions) == 0:
+            return None
         opinions = self.opinions[0].value
         for key, answer in enumerate(answers):
             answer_key = opinions[answer["key"]]

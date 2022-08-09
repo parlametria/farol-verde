@@ -1,8 +1,10 @@
-{% for answer in page.opinions_answers %}
-    <div class="result__card {{answer.answer}}">
-        <div class="result__title">{{answer.label}}</div>
-        <h5 class="result__text">
-            {{answer.phrase}}
-        <h5/>
-    </div>
-{% endfor %}
+{% if page.opinions_answers %}
+    {% for answer in page.opinions_answers %}
+        <div class="result__card {{answer.answer}}">
+            <div class="result__title">{{answer.label}}</div>
+            <h5 class="result__text">
+                {{answer.phrase}}
+            <h5/>
+        </div>
+    {% endfor %}
+{% endif %}
