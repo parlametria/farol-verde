@@ -146,7 +146,7 @@ class CandidatePage(MetadataPageMixin, Page):
                 ], defult="Sim", label="Opinião do candidato em relação à frase \"Sou favorável à destinação dos 60 milhões de hectares de terras públicas não destinadas na Amazônia e no Cerrado para o uso sustentável, a conservação ambiental e a proteção dos povos indígenas, quilombolas, pequenos produtores extrativistas e Unidades de Conservação, pois sei que esta medida é imprescindível para a economia das regiões citadas e o equilíbrio climático de todo o planeta.\""
             )),
         ]))
-    ], null=True)
+    ], null=True, blank=True)
 
 
     @property
