@@ -54,8 +54,8 @@
 .tab:hover {box-shadow: unset !important;}
 
 .tab.open {
-    color: black;
-    border-color: black;
+    color: var(--dark-blue);
+    border-color: var(--dark-blue);
 }
 
 .result__content {
@@ -75,8 +75,8 @@
     --result-color: #777;
 }
 
-.Não {--result-color: #D00000;}
-.Sim {--result-color: #329c00;}
+.nao {--result-color: #D00000;}
+.sim {--result-color: #329c00;}
 
 .result__title {
     position: absolute;

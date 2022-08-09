@@ -90,6 +90,11 @@ p {
     line-height: 22px;
 }
 
+a {
+    color: var(--blue);
+    font-weight: 700;
+}
+
 button, .button-text {
     font-size: 14px;
     line-height: 16px;
