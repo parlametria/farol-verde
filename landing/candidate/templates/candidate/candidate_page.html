@@ -25,14 +25,18 @@
     </div>
 
     <div class="tabs">
-        <button onclick="openTab('result')" class="tab overline open result">resultados enquetes</button>
-        <button onclick="openTab('activity')" class="tab overline activity">atividade parlamentar</button>
-        <button onclick="openTab('social')" class="tab overline social">redes sociais</button>
+        {% if page.opinions_answers %}
+            <button onclick="openTab('result')" class="tab result">resultados enquetes</button>
+        {% endif %}
+        <button onclick="openTab('activity')" class="tab activity">atividade parlamentar</button>
+        <button onclick="openTab('social')" class="tab social">redes sociais</button>
     </div>
 
-    <div class="result tab__frame">
-        {% include 'candidate/components/result.html' %}
-    </div>
+    {% if page.opinions_answers %}
+        <div class="result tab__frame hide">
+            {% include 'candidate/components/result.html' %}
+        </div>
+    {% endif %}
 
     <div class="activity tab__frame hide">
         {% include 'candidate/components/activity.html' %}

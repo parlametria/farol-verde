@@ -21,7 +21,14 @@ const instagramFrame = document.querySelector('.social__frame.instagram');
 const postTpl = document.querySelector('#social__post--tpl');
 const keywordOptionTpl = document.querySelector("#keyword__option--tpl");
 
+const adhesionProgressValue = document.querySelector('.adhesion__data h4');
+const adhesionProgressBar = document.querySelector('.adhesion__data .progress__inner');
+const votingPropositions = document.querySelector('.voting__propositions');
+const votingPropositionTpl = document.querySelector('#voting__proposition--tpl');
+
 var searchValue = '';
+
+urlParams = new URLSearchParams(window.location.search);
 
 function openTab(tabName) {
     const tabBtn = document.querySelector(`.tab.${tabName}`);
@@ -34,6 +41,13 @@ function openTab(tabName) {
     tabContent.classList.remove('hide');
 }
 
+if (urlParams.has('tab')) {
+    const tab = urlParams.get('tab');
+    openTab(tab);
+} else {
+    document.querySelector(`.tab`).click();
+}
+
 $.ajax({url: './api/adesao',})
     .done((data) => {
         var {adhesion, propositions} = data;
@@ -44,13 +58,11 @@ $.ajax({url: './api/adesao',})
 
         if(propositions.length == 0) return;
 
-        votingEmpty.classList.add('hide');
         votingPropositions.classList.remove('hide');
         propositions.forEach((proposition) => {
             var {adhesion, about} = proposition;
             adhesion *= 100
             adhesion = adhesion.toFixed(2);
-            console.log(proposition);
             const propositionEl = votingPropositionTpl.content.cloneNode(true);
             propositionEl.querySelector('.voting__proposition h4').innerHTML = about;
             // propositionEl.querySelector('.proposition__number').innerHTML = proposition.proposition_number;
@@ -58,7 +70,11 @@ $.ajax({url: './api/adesao',})
             propositionEl.querySelector('.progress__inner').style.width = `${adhesion}%`;
             votingPropositions.appendChild(propositionEl);
         })
+    })
+    .fail((err) => {
+        votingEmpty.classList.remove('hide');
     });
+
 function openSocial(socialName) {
     const socialBtn = document.querySelector(`.social__btn.${socialName}`);
     const socialContent = document.querySelector(`.social__frame.${socialName}`);
@@ -70,7 +86,7 @@ function openSocial(socialName) {
     socialContent.classList.remove('hide');
 }
 
-var keywordsPage = {
+const keywordsPage = {
     page: 0,
     limit: 1000,
     next: () => {
@@ -90,6 +106,8 @@ var keywordsPage = {
     }
 };
 
+let sectionRequest;
+
 function get_keywords() {
     let sectionUrl = './api/keywords-sections';
     let url = './api/keywords/' + keywordsPage.page;
@@ -98,7 +116,8 @@ function get_keywords() {
         sectionUrl += '/' + searchValue;
     }
 
-    $.ajax({url: sectionUrl})
+    if(sectionRequest) sectionRequest.abort();
+    sectionRequest = $.ajax({url: sectionUrl})
         .done((data) => {
             var {sections, total} = data;
             keywordsPage.limit = total;
@@ -157,7 +176,6 @@ keywordsBtn.addEventListener('click', () => {
 get_keywords();
 
 function get_social_media(keyword) {
-    console.log("runs")
     let url = './api/social-media';
     if (keyword) url += '/' + keyword;
     $.ajax({url})
@@ -166,6 +184,7 @@ function get_social_media(keyword) {
             hits = hits.hits;
             const socialApps = {Facebook: facebookFrame, Twitter: twitterFrame, Instagram: instagramFrame,}
             hits = hits.map(hit => hit._source['social-data'])
+            Object.values(socialApps).forEach(app => app.innerHTML = '');
             hits = hits.forEach(post => {
                 var clone = postTpl.content.cloneNode(true);
                 if (post.tags) {
@@ -173,6 +192,7 @@ function get_social_media(keyword) {
                     keywords = keywords.map(keyword => {
                         var keywordItem = document.createElement('div');
                         keywordItem.classList.add('keyword__item', 'button-text');
+                        keywordItem.addEventListener('click', () => get_social_media(keyword));
                         keywordItem.innerText = keyword;
                         return keywordItem;
                     })
@@ -186,7 +206,6 @@ function get_social_media(keyword) {
                 var postLink = clone.querySelector('.post__link a');
                 postLink.href = post.link;
                 postLink.innerText = `abrir no ${post.rede}`;
-                socialApps[post.rede].innerHTML = '';
                 socialApps[post.rede].appendChild(clone);
             })
         });

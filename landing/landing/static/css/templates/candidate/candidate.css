@@ -58,12 +58,12 @@
     border-color: var(--dark-blue);
 }
 
-.result.tab__frame {
+.tab__frame {
     display: grid;
     grid-template-columns: 100%;
     justify-content: center;
     grid-gap: 2rem;
-    margin-block: 3rem;
+    margin-block: 2rem;
 }
 
 .result__card {

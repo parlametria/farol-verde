@@ -1,7 +1,4 @@
-.social__header {
-    display: grid;
-    margin-top: 1rem;
-}
+.social__header {display: grid;}
 
 .social__filters,
 .social__btns {
@@ -16,7 +13,6 @@
 
 .social__filters {
     border-bottom: 1px solid var(--blue);
-    padding-block: 1.25rem;
     grid-gap: 2.25rem;
     grid-auto-flow: row;
     grid-template-columns: 11.5rem auto;
@@ -87,7 +83,7 @@
 .keywords__btns {
     display: flex;
     justify-content: space-between;
-    padding-top: 1rem;
+    padding-block: 1rem;
 }
 
 .keywords__btns > * {cursor: pointer;}
@@ -121,6 +117,9 @@
     aspect-ratio: 1;
     border-radius: 50%;
 }
+
+.profile__img {background: var(--gray);}
+
 .social__btn.open {
     background: var(--blue);
     fill: white;

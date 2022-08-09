@@ -1,4 +1,5 @@
 import requests, os, json
+from urllib.parse import unquote
 from requests.auth import HTTPBasicAuth
 
 from django.http import HttpRequest
@@ -147,6 +148,8 @@ def social_media_view(request: HttpRequest, slug: str, keyword: str = None):
         "fields": [ "_source.social-data.*" ]
     }
     if keyword:
+        keyword = unquote(keyword)
+        print(keyword)
         value = {"wildcard": { "social-data.tags": { "value": f"*{keyword}*", "case_insensitive": True },}}
         query["query"]["bool"]["must"].append(value)
     response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
