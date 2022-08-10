@@ -175,10 +175,14 @@ keywordsBtn.addEventListener('click', () => {
 
 get_keywords();
 
+let socialMediaRequest;
+
 function get_social_media(keyword) {
     let url = './api/social-media';
     if (keyword) url += '/' + keyword;
-    $.ajax({url})
+    if(socialMediaRequest) socialMediaRequest.abort();
+
+    socialMediaRequest = $.ajax({url})
         .done((data) => {
             let {hits} = data;
             hits = hits.hits;
