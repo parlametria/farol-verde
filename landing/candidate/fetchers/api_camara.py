@@ -124,3 +124,84 @@ def fetch_deputado_data(id_depudado: int):
     url = f"{CAMARA_API}/deputados/{id_depudado}"
     response = requests.get(url)
     return response.json()
+
+
+def fetch_autores(id_proposicao: int):
+    """
+    {
+        "dados": [
+            {
+                "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204554",
+                "nome": "Abílio Santana",
+                "codTipo": 10000,
+                "tipo": "Deputado",
+                "ordemAssinatura": 1,
+                "proponente": 1
+            }
+        ],
+        "links": [
+            {
+                "rel": "self",
+                "href": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2287916/autores"
+            }
+        ]
+    }
+    """
+    url = f"{CAMARA_API}/proposicoes/{id_proposicao}/autores"
+    headers = {"Content-type": "application/json"}
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+def fetch_dados_proposicao(id_proposicao: int):
+    """
+    {
+        "dados": {
+            "id": 2287916,
+            "uri": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2287916",
+            "siglaTipo": "PL",
+            "codTipo": 139,
+            "numero": 2284,
+            "ano": 2021,
+            "ementa": "Proíbe a exposição, lançamento ou destinação, de material orgânico ou não, líquidos ou sólidos, matéria viva ou não, objetos sólidos ou rejeitos, que afetem, atentem ou poluam o meio ambiente, obstruam a livre circulação de pessoas e veículos, em todo Território Nacional.",
+            "dataApresentacao": "2021-06-22T16:17",
+            "uriOrgaoNumerador": null,
+            "statusProposicao": {
+                "dataHora": "2021-07-07T00:00",
+                "sequencia": 14,
+                "siglaOrgao": "CCP",
+                "uriOrgao": "https://dadosabertos.camara.leg.br/api/v2/orgaos/186",
+                "uriUltimoRelator": null,
+                "regime": "Prioridade (Art. 151, II, RICD)",
+                "descricaoTramitacao": "Publicação de Proposição",
+                "codTipoTramitacao": "604",
+                "descricaoSituacao": "Tramitando em Conjunto",
+                "codSituacao": 925,
+                "despacho": "Encaminhada à publicação. Publicação Inicial em avulso e no DCD de 08/07/21 PAG 440",
+                "url": "http://www.camara.gov.br/proposicoesWeb/prop_mostrarintegra?codteor=2057229",
+                "ambito": "Regimental"
+            },
+            "uriAutores": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2287916/autores",
+            "descricaoTipo": "Projeto de Lei",
+            "ementaDetalhada": "",
+            "keywords": "Proibição, lançamento, destinação, Resíduo orgânico, Resíduo inorgânico, praia, Corpo de água, via pública, local público, descumprimento, multa.",
+            "uriPropPrincipal": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2196952",
+            "uriPropAnterior": null,
+            "uriPropPosterior": null,
+            "urlInteiroTeor": "http://www.camara.gov.br/proposicoesWeb/prop_mostrarintegra?codteor=2032187",
+            "urnFinal": null,
+            "texto": null,
+            "justificativa": null
+        },
+        "links": [
+            {
+            "rel": "self",
+            "href": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2287916"
+            }
+        ]
+        }
+    """
+    url = f"{CAMARA_API}/proposicoes/{id_proposicao}"
+    headers = {"Content-type": "application/json"}
+    response = requests.get(url, headers=headers)
+    return response.json()

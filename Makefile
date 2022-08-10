@@ -30,5 +30,8 @@ camara-import:
 senado-import:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py senado --import
 
+proposicoes-import:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes --import
+
 shell:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py shell
