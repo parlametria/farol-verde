@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 from candidate.adhesion import get_adhesion_strategy
 
-from candidate.models import CandidatePage
+from candidate.models import CandidatePage, AutorProposicao
 
 
 def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
@@ -36,3 +36,27 @@ def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
         response["adhesion"] = 0
 
     return JsonResponse(response)
+
+
+def proposicoes_onde_parlamentar_e_autor_view(request: HttpRequest, id_candidate: int):
+    autor = AutorProposicao.objects.filter(id_parlamentar=id_candidate).first()
+
+    if autor is None:
+        return JsonResponse(
+            status=404,
+            data={
+                "message": "Autor not found",
+            },
+        )
+
+    proposicoes = []
+    for proposicao in autor.proposicoes.all():
+        proposicoes.append(
+            {
+                "id": proposicao.id_externo,
+                "title": str(proposicao),
+                "summary": proposicao.ementa,
+            }
+        )
+
+    return JsonResponse({"propositions": proposicoes})
