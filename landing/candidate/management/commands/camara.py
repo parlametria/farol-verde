@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError, OutputWrapper
 from django.core.management.color import Style
 
-
+from candidate.management.commands import ApiFetcher
 from candidate.models import Proposicao, VotacaoProsicao, VotacaoParlamentar, CasaChoices
 from candidate.fetchers.api_camara import (
     CAMARA_API,
@@ -25,10 +25,7 @@ class Command(BaseCommand):
             votacoes_fetcher.start_fetch()
 
 
-class CamaraVotacoesFetcher:
-    def __init__(self, stdout: OutputWrapper, style: Style):
-        self.stdout = stdout
-        self.style = style
+class CamaraVotacoesFetcher(ApiFetcher):
 
     def start_fetch(self):
         self._fetch_proposicoes()
@@ -42,6 +39,10 @@ class CamaraVotacoesFetcher:
             found = Proposicao.objects.filter(id_externo=prop_json["id"]).first()
 
             if found is not None:
+                if found.calculate_adhesion == False:
+                    found.calculate_adhesion = True
+                    found.save()
+
                 self.stdout.write(
                     self.style.WARNING(
                         f"\t{found}: {found.id_externo} already saved, skipping"
@@ -57,13 +58,18 @@ class CamaraVotacoesFetcher:
                 ementa=prop_json["ementa"],
                 sobre=prop_data[3],
                 casa=str(CasaChoices.CAMARA),
+                calculate_adhesion=True,
             )
             self.stdout.write(f"\tProposicao {created} created")
 
     def _fetch_votacoes_proposicoes(self):
         self.stdout.write(f"\nFetching votacoes from all Proposicao")
 
-        proposicoes_camara = Proposicao.objects.filter(casa=str(CasaChoices.CAMARA))
+        proposicoes_camara = (
+            Proposicao.objects
+            .filter(casa=str(CasaChoices.CAMARA))
+            .filter(calculate_adhesion=True)
+        )
         for prop in proposicoes_camara:
             votacoes = get_votacoes_proposicao(prop.id_externo)["dados"]
 

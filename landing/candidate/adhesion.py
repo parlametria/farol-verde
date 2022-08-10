@@ -126,7 +126,7 @@ class CandidateAdhesionCamara(CandidateAdhesion):
     def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
         voted = []
 
-        for prop in Proposicao.proposicoes_camara():
+        for prop in Proposicao.proposicoes_camara().filter(calculate_adhesion=True):
             adhesion = self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
 
             if adhesion is not None:
@@ -151,7 +151,7 @@ class CandidateAdhesionSenado(CandidateAdhesion):
     def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
         voted = []
 
-        for prop in Proposicao.proposicoes_senado():
+        for prop in Proposicao.proposicoes_senado().filter(calculate_adhesion=True):
             voted.append(
                 self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
             )
