@@ -12,7 +12,7 @@ from wagtail.core.fields import StreamField
 from wagtailstreamforms.models import FormSubmission
 
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
-from django.db.models import CharField, ImageField, EmailField, URLField, DateField
+from django.db.models import CharField, ImageField, EmailField, URLField, DateField, BooleanField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -313,6 +313,7 @@ class Proposicao(models.Model):
         max_length=6,
         choices=CasaChoices.choices,
     )
+    calculate_adhesion = BooleanField(default=True)
 
     def __str__(self) -> str:
         # MPV 867/2018
@@ -388,3 +389,8 @@ class VotacaoParlamentar(models.Model):
         max_length=7,
         choices=CasaChoices.choices,
     )
+
+class AutorProposicao(models.Model):
+    id_parlamentar = models.IntegerField(blank=False, null=False, primary_key=True)
+    nome = CharField(max_length=120, blank=True, null=True)
+    proposicoes = models.ManyToManyField(Proposicao, related_name="autores")
