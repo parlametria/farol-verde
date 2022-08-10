@@ -137,17 +137,17 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
         "query": {
             "bool":{
                 "must": [
-                {
-                    "wildcard": { 
-                        "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                    {
+                        "wildcard": { 
+                            "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                        }
+                    },
+                    {
+                        "wildcard": {
+                            "social-data.rede": { "value": f"{social_app}*", "case_insensitive": True },
+                        }
                     }
-                },
-                {
-                    "wildcard": {
-                        "social-data.rede": { "value": f"{social_app}*", "case_insensitive": True },
-                    }
-                }
-            ]
+                ]
             }
         },
         "fields": [ "_source.social-data.*" ]

@@ -2,13 +2,12 @@ from django.db import migrations, models
 from candidate.models import form_submission_link_candidate
 from wagtailstreamforms.models.form import Form
 
-social_questions = ['twitter', 'facebook', 'instagram', 'youtube']
 get_field_data = lambda field, data: field.__dict__['value'].get(data)
 
 def update_phone_help_text(apps, schema_editor):
     form = Form.objects.get(title='Enquete')
     fields = [field for field in form.fields
-        if get_field_data(field, 'label').lower() == 'Telefone do contato']
+        if get_field_data(field, 'label') == 'Telefone do contato']
     for field in fields:
         help_text = get_field_data(field, 'help_text')
         if 'phone' in help_text:
@@ -19,7 +18,7 @@ def update_phone_help_text(apps, schema_editor):
 def update_phone_help_text_reverse(apps, schema_editor):
     form = Form.objects.get(title='Enquete')
     fields = [field for field in form.fields
-        if get_field_data(field, 'label').lower() in social_questions]
+        if get_field_data(field, 'label') == 'Telefone do contato']
     for field in fields:
         help_text = get_field_data(field, 'help_text')
         help_text.replace('phone', '')
