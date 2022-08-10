@@ -1,16 +1,17 @@
 from django.http import HttpRequest
 from django.http import JsonResponse
+from candidate.models import CandidatePage
 
 from candidate.adhesion import get_adhesion_strategy
 
 from candidate.models import CandidatePage, AutorProposicao
 
 
-def adesao_parlamentar_view(request: HttpRequest, id_candidate: int):
+def adesao_parlamentar_view(request: HttpRequest, slug: str):
+    candidate = CandidatePage.objects.filter(slug=slug).first()
+
     response = {"adhesion": 0.0, "propositions": []}
-
-    candidate = CandidatePage.objects.filter(id_autor=id_candidate).first()
-
+    
     if candidate is None:
         return JsonResponse(
             status=404,

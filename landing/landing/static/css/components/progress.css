@@ -1,0 +1,26 @@
+.proposition__number {
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.progress {
+    display: flex;
+    gap: 2rem;
+}
+
+.progress__bar {
+    background-color: transparent;
+    outline: 1px solid var(--primary-color);
+    border-radius: .5rem;
+    height: 2rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+.progress__inner {
+    background: var(--primary-color);
+    height: 100%;
+    width: 100%;
+    animation: shrink 2s ease-out 1;
+    border-radius: .5rem;
+}

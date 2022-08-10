@@ -1,10 +1,13 @@
-import requests
+import requests, os, json
+from urllib.parse import unquote
+from requests.auth import HTTPBasicAuth
 
 from django.http import HttpRequest
 from django.http import JsonResponse
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from candidate.models import CandidatePage
-from candidate.util import lru_cache_time
+from candidate.util import lru_cache_time, keywords
 
 API_PERFIIL = "https://perfil.parlametria.org.br/api"
 
@@ -93,8 +96,8 @@ def process_candidate_votes(candidate_json):
     return proposicoes_com_votos_do_candidato
 
 
-def votacoes_perfil_parlamentar_view(request: HttpRequest, id_candidate: int):
-    candidate = CandidatePage.objects.filter(id_autor=id_candidate).first()
+def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
+    candidate = CandidatePage.objects.filter(slug=slug).first()
 
     if not candidate:
         return JsonResponse(
@@ -124,3 +127,48 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, id_candidate: int):
     }
 
     return JsonResponse(candidate_votes)
+
+def social_media_view(request: HttpRequest, slug: str, keyword: str = None):
+    candidate = CandidatePage.objects.filter(slug=slug).first()
+    url = os.environ.get("ELASTIC_URL")
+    login = os.environ.get("ELASTIC_USER")
+    password = os.environ.get("ELASTIC_PASSWORD")
+    query = { 
+        "query": {
+            "bool":{
+                "must": [
+                {
+                    "wildcard": { 
+                        "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                    }
+                }
+            ]
+            }
+        },
+        "fields": [ "_source.social-data.*" ]
+    }
+    if keyword:
+        keyword = unquote(keyword)
+        print(keyword)
+        value = {"wildcard": { "social-data.tags": { "value": f"*{keyword}*", "case_insensitive": True },}}
+        query["query"]["bool"]["must"].append(value)
+    response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
+    return JsonResponse(response.json())
+
+def keywords_sections_view(request: HttpRequest, slug: str, search: str=''):
+    keywords_list = list(keywords)
+    sections = []
+    if len(search) > 0:
+        keywords_list = [keyword for keyword in keywords_list if search in keyword]
+    for i in range(0, len(keywords_list), 36):
+        sections.append(keywords_list[i:i+36])
+    sections = [f"{section[0][0]} - {section[-1][0]}".upper() for section in sections]
+    response = {"sections": sections, "total": len(keywords_list) - 1}
+    return JsonResponse(response)
+
+def keywords_view(request: HttpRequest, slug:str, page:int, search=''):
+    page = 36 * page
+    if len(search) > 0:
+        keywords_list = [keyword for keyword in keywords if search in keyword[0]]
+    keywords_list = keywords[page:page+36]
+    return JsonResponse(keywords_list, safe=False)

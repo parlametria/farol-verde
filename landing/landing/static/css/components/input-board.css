@@ -23,19 +23,15 @@
     border-radius: 100vmax;
     width: 2.25rem;
     aspect-ratio: 1;
+    --marked-color: var(--dark-gray);
 }
 
 .input-board__selector .btn-toggle span {
     height: 100%;
     font-weight: 700;
     font-size: .875rem;
-    color: var(--dark-gray);
 }
 
 .input-board__selector.open {
     visibility: visible;
-}
-
-.input-board__selector .btn-toggle input:checked + span {
-    background: var(--dark-gray);
 }

@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('candidate', '0009_auto_20220804_2101'),
+        ('candidate', '0010_auto_20220804_2101'),
     ]
 
     operations = [

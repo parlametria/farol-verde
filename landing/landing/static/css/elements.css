@@ -90,6 +90,11 @@ p {
     line-height: 22px;
 }
 
+a {
+    color: var(--blue);
+    font-weight: 700;
+}
+
 button, .button-text {
     font-size: 14px;
     line-height: 16px;
@@ -100,7 +105,7 @@ caption {
     line-height: 12px;
 }
 
-p.overline {
+.overline {
     font-size: 12px;
     line-height: 12px;
     letter-spacing: 0.07em;

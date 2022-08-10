@@ -65,10 +65,7 @@
 
 .spin {
     transform: rotate(0deg);
-    animation-name: spin;
-    animation-duration: .5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    animation: spin 2s linear infinite;
 }
 
 @keyframes fade-in {
@@ -133,4 +130,8 @@
 
 @keyframes loader-animate {
     from {transform: scaleX(0);}
+}
+
+@keyframes shrink {
+    from {width: 100%;}
 }
