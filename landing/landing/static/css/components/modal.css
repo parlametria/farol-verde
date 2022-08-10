@@ -76,3 +76,7 @@
 
     .modal.open {justify-items: center;}
 }
+
+@media (max-width: 720px) {
+    .modal-content {width: 92%;}
+}
