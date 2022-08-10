@@ -94,6 +94,20 @@
     cursor: pointer;
 }
 
+.keyword__item.marked {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.keyword__item.marked::after {
+    font-family: FontAwesome;
+    font-style: normal;
+    content: "\f05c";
+    color: var(--primary-color);
+    margin-left: .5rem;
+    text-decoration: none;
+}
+
 .keyword__item.long {height: 3rem;}
 
 .social__btn {

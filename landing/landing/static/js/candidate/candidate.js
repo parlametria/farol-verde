@@ -26,8 +26,6 @@ const adhesionProgressBar = document.querySelector('.adhesion__data .progress__i
 const votingPropositions = document.querySelector('.voting__propositions');
 const votingPropositionTpl = document.querySelector('#voting__proposition--tpl');
 
-var searchValue = '';
-
 urlParams = new URLSearchParams(window.location.search);
 
 function openTab(tabName) {
@@ -79,6 +77,9 @@ function openSocial(socialName) {
     const socialBtn = document.querySelector(`.social__btn.${socialName}`);
     const socialContent = document.querySelector(`.social__frame.${socialName}`);
 
+    socialName = socialName.charAt(0).toUpperCase() + socialName.slice(1);
+    get_social_media(socialName);
+
     socialBtns.forEach(social => social.classList.remove('open'));
     socialContents.forEach(content => content.classList.add('hide'));
     
@@ -107,6 +108,12 @@ const keywordsPage = {
 };
 
 let sectionRequest;
+let searchValue = '';
+let markedKeyword = '';
+
+function setSearchValue(value) {
+    searchValue = value == searchValue ? '' : value;
+}
 
 function get_keywords() {
     let sectionUrl = './api/keywords-sections';
@@ -132,6 +139,7 @@ function get_keywords() {
                 return clone
             } )
             keywordsOptionsList.innerHTML = '';
+            if(sections.length == 0) return;
             keywordsOptionsList.append(...sections);
         } )
 
@@ -143,8 +151,14 @@ function get_keywords() {
                 if (word.length == 1) {
                     item.className = 'keyword__category overline'
                 } else {
-                    item.addEventListener('click', () => get_social_media(word));
+                    item.addEventListener('click', (e) => {
+                        get_social_media(word)
+                        get_keywords()
+                    });
                     item.className = 'keyword__item button-text';
+                }
+                if (word == markedKeyword) {
+                    item.classList.add('marked');
                 }
                 item.innerHTML = word;
                 if (word.length > 30) item.classList.add('long');
@@ -163,8 +177,8 @@ keywordsNext.addEventListener('click', keywordsPage.next);
 keywordsPrev.addEventListener('click', keywordsPage.prev);
 
 keywordsInput.addEventListener('keyup', (e) => {
-    searchValue = e.target.value;
-    keywordsPage = 0;
+    setSearchValue(e.target.value);
+    keywordsPage.page = 0;
     get_keywords();
 })
 
@@ -177,13 +191,18 @@ get_keywords();
 
 let socialMediaRequest;
 
-function get_social_media(keyword) {
-    let url = './api/social-media';
-    if (keyword) url += '/' + keyword;
+function get_social_media(keyword, socialApp='Twitter') {
+    let url = './api/social-media/' + socialApp;
+    if (keyword) {
+        url += '/' + keyword.replaceAll(' ', '_');
+        markedKeyword = keyword;
+    }
+
     if(socialMediaRequest) socialMediaRequest.abort();
 
     socialMediaRequest = $.ajax({url})
         .done((data) => {
+            console.log(data)
             let {hits} = data;
             hits = hits.hits;
             const socialApps = {Facebook: facebookFrame, Twitter: twitterFrame, Instagram: instagramFrame,}
@@ -195,6 +214,9 @@ function get_social_media(keyword) {
                     var keywords = post.tags.split('|');
                     keywords = keywords.map(keyword => {
                         var keywordItem = document.createElement('div');
+                        if(keyword == markedKeyword) {
+                            keywordItem.classList.add('marked');
+                        }
                         keywordItem.classList.add('keyword__item', 'button-text');
                         keywordItem.addEventListener('click', () => get_social_media(keyword));
                         keywordItem.innerText = keyword;
