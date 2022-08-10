@@ -58,9 +58,13 @@ class CandidateAdhesion(ABC):
     ):
         total_votacoes = proposicao.votacoes.count()
 
+        if total_votacoes == 0:
+            return None
+
         adesao = {
             "casa": proposicao.casa,
             "id_externo": proposicao.id_externo,
+            "title": str(proposicao),
             "summary": proposicao.ementa,
             "about": proposicao.sobre,
             "same": 0,
@@ -123,9 +127,10 @@ class CandidateAdhesionCamara(CandidateAdhesion):
         voted = []
 
         for prop in Proposicao.proposicoes_camara().filter(calculate_adhesion=True):
-            voted.append(
-                self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
-            )
+            adhesion = self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
+
+            if adhesion is not None:
+                voted.append(adhesion)
 
         return voted
 
