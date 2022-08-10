@@ -14,14 +14,16 @@
 
 .input-board__content {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, auto);
     justify-content: space-between;
     grid-row-gap: .5rem;
 }
 
+.input-board__content .long {grid-column: span 2;}
+
 .input-board__selector .btn-toggle {
     border-radius: 100vmax;
-    width: 2.25rem;
+    min-width: 2.25rem;
     aspect-ratio: 1;
     --marked-color: var(--dark-gray);
 }

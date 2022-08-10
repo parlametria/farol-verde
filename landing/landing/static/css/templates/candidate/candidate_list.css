@@ -69,10 +69,10 @@
   object-position: top;
   width: 120px;
   height: 120px;
+  background: var(--gray);
 }
 
 .candidate__picture.empty {
-  background: var(--gray);
   display: block;
 }
 

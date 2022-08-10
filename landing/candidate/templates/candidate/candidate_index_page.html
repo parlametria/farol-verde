@@ -55,7 +55,7 @@
                         <p>Mostrar candidatos do(s) partido(s):</p>
                         <div class="input-board__content">
                             {% for party in party_list %}
-                                <label class="btn-toggle">
+                                <label class="btn-toggle {% if party|length > 4 %} long {% endif %}">
                                     <input type="checkbox" value="{{ party }}" name="party[]">
                                     <span>{{ party }}</span>
                                 </label>
