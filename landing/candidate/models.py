@@ -341,7 +341,7 @@ class VotacaoProsicao(models.Model):
         max_length=30,
     )
     data = models.DateField()
-    data_hora_registro = models.CharField(blank=False, null=False, max_length=30)
+    data_hora_registro = models.CharField(blank=True, null=True, max_length=30)
 
 
 class VotacaoParlamentar(models.Model):
