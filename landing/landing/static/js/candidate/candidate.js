@@ -20,6 +20,7 @@ const instagramFrame = document.querySelector('.social__frame.instagram');
 
 const postTpl = document.querySelector('#social__post--tpl');
 const keywordOptionTpl = document.querySelector("#keyword__option--tpl");
+const emptyFrame = document.querySelector('.social__empty--tpl');
 
 const adhesionProgressValue = document.querySelector('.adhesion__data h4');
 const adhesionProgressBar = document.querySelector('.adhesion__data .progress__inner');
@@ -200,15 +201,24 @@ function get_social_media(keyword, socialApp='Twitter') {
 
     if(socialMediaRequest) socialMediaRequest.abort();
 
+    const socialApps = {Facebook: facebookFrame, Twitter: twitterFrame, Instagram: instagramFrame,}
+    let socialFrame = socialApps[socialApp];
+
     socialMediaRequest = $.ajax({url})
         .done((data) => {
-            console.log(data)
+            socialFrame.innerHTML = '';
             let {hits} = data;
             hits = hits.hits;
-            const socialApps = {Facebook: facebookFrame, Twitter: twitterFrame, Instagram: instagramFrame,}
+
+            if (hits.length == 0) {
+                let clone = socialMediaTpl.content.cloneNode(true);
+                socialFrame.appendChild(clone);
+                return;
+            }
+            
             hits = hits.map(hit => hit._source['social-data'])
             Object.values(socialApps).forEach(app => app.innerHTML = '');
-            hits = hits.forEach(post => {
+            hits = hits.map(post => {
                 var clone = postTpl.content.cloneNode(true);
                 if (post.tags) {
                     var keywords = post.tags.split('|');
@@ -232,8 +242,9 @@ function get_social_media(keyword, socialApp='Twitter') {
                 var postLink = clone.querySelector('.post__link a');
                 postLink.href = post.link;
                 postLink.innerText = `abrir no ${post.rede}`;
-                socialApps[post.rede].appendChild(clone);
+                return clone;
             })
+            socialFrame.append(...hits);
         });
 }
 

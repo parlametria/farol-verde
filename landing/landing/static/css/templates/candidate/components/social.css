@@ -189,3 +189,18 @@
     font-weight: 700;
     cursor: pointer;
 }
+
+.social__frame .empty {
+    display: grid;
+    grid-gap: 2rem;
+    margin-inline: auto;
+    place-items: center;
+    text-align: center;
+}
+
+.social__frame .empty :is(p, h2) {
+    width: 50%;
+    margin: 0;
+}
+
+.social__frame .empty img {padding-block: 2rem;}
