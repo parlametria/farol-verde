@@ -177,3 +177,7 @@ def keywords_view(request: HttpRequest, slug:str, page:int, search=''):
         keywords_list = [keyword for keyword in keywords_list if search in keyword]
     keywords_list = keywords_list[page:page+36]
     return JsonResponse(keywords_list, safe=False)
+
+def propositions_view(request: HttpRequest, slug: str, search: str=''):
+    response = requests.get('http://demo9950798.mockable.io/')
+    return JsonResponse(response.json())

@@ -21,11 +21,16 @@ const instagramFrame = document.querySelector('.social__frame.instagram');
 const postTpl = document.querySelector('#social__post--tpl');
 const keywordOptionTpl = document.querySelector("#keyword__option--tpl");
 const emptyFrame = document.querySelector('#social__empty--tpl');
+const propositionItemTpl = document.querySelector('#proposition__item--tpl');
 
 const adhesionProgressValue = document.querySelector('.adhesion__data h4');
 const adhesionProgressBar = document.querySelector('.adhesion__data .progress__inner');
 const votingPropositions = document.querySelector('.voting__propositions');
 const votingPropositionTpl = document.querySelector('#voting__proposition--tpl');
+
+const propositionsList = document.querySelector('.propositions__list');
+
+var searchValue = '';
 
 urlParams = new URLSearchParams(window.location.search);
 
@@ -274,3 +279,24 @@ function getSocialMedia(socialApp, keyword) {
 }
 
 getSocialMedia();
+
+function getPropositions(search) {
+    let url = './api/propositions';
+    if (search) url += '/' + search;
+    $.ajax({url})
+        .done((data) => {
+            let {propositions} = data;
+            propositions = propositions.map(proposition => {
+                let { title, summary } = proposition;
+                var clone = propositionItemTpl.content.cloneNode(true);
+                clone.querySelector('.proposition__number').innerText = title;
+                clone.querySelector('.proposition__summary').innerText = summary;
+                clone.querySelector('.proposition__date').innerText = '07 AGO 2022';
+                return clone;
+            } )
+            propositionsList.innerHTML = '';
+            propositionsList.append(...propositions);
+        })
+}
+
+getPropositions();

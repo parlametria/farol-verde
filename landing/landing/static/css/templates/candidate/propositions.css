@@ -1,0 +1,28 @@
+.propositions {
+    display: grid;
+    grid-gap: 2rem;
+}
+
+.propositions__search {
+    padding: .5rem .875rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    max-width: 15rem;
+}
+
+.propositions__list {
+    display: grid;
+    grid-gap: 3rem;
+}
+
+.proposition__item {
+    display: grid;
+    grid-gap: 1rem;
+    padding-bottom: 2.125rem;
+    border-bottom: 1px solid var(--gray);
+}
+
+.proposition__number, .proposition__date {color: var(--blue);}
+
+.proposition__summary {font-weight: 400;}
+

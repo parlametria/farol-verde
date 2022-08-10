@@ -1,7 +1,7 @@
 from django.urls import path
 
 
-from candidate.views.perfil_parlamentar import votacoes_perfil_parlamentar_view, social_media_view, keywords_view, keywords_sections_view
+from candidate.views.perfil_parlamentar import votacoes_perfil_parlamentar_view, social_media_view, keywords_view, keywords_sections_view, propositions_view
 from candidate.views.parlamentar import adesao_parlamentar_view, proposicoes_onde_parlamentar_e_autor_view
 
 urlpatterns = [
@@ -17,4 +17,8 @@ urlpatterns = [
 
     path("<slug:slug>/api/keywords-sections/<str:search>", keywords_sections_view),
     path("<slug:slug>/api/keywords-sections", keywords_sections_view),
+
+    path("<slug:slug>/api/propositions/<str:search>", propositions_view),
+    path("<slug:slug>/api/propositions", propositions_view),
+
 ]
