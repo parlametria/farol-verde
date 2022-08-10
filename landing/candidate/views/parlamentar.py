@@ -11,7 +11,7 @@ def adesao_parlamentar_view(request: HttpRequest, slug: str):
     candidate = CandidatePage.objects.filter(slug=slug).first()
 
     response = {"adhesion": 0.0, "propositions": []}
-    
+
     if candidate is None:
         return JsonResponse(
             status=404,
@@ -39,8 +39,9 @@ def adesao_parlamentar_view(request: HttpRequest, slug: str):
     return JsonResponse(response)
 
 
-def proposicoes_onde_parlamentar_e_autor_view(request: HttpRequest, id_candidate: int):
-    autor = AutorProposicao.objects.filter(id_parlamentar=id_candidate).first()
+def proposicoes_onde_parlamentar_e_autor_view(request: HttpRequest, slug: str):
+    id_parlamentar = int(slug.split("-")[-1])
+    autor = AutorProposicao.objects.filter(id_parlamentar=id_parlamentar).first()
 
     if autor is None:
         return JsonResponse(
