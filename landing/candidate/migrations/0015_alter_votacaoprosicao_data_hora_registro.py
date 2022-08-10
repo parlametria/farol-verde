@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0013_autorproposicao'),
+        ('candidate', '0014_add_autorproposicao_model'),
     ]
 
     operations = [

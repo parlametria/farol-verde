@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0011_alter_candidatepage_opinions'),
+        ('candidate', '0012_set_opinions_blankable'),
     ]
 
     operations = [
