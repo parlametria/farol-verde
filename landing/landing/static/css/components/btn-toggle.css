@@ -1,10 +1,13 @@
 .btn-toggle {
+    --unmarked-color: white;
+    --marked-color: var(--blue);
+
     display: grid;
     grid-template-columns: 0 1fr;
     justify-content: center;
     align-items: center;
     flex: 1;
-    background: white;
+    background: var(--unmarked-color);
     overflow: hidden;
 }
 
@@ -21,14 +24,14 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    color: var(--blue);
-    background-color: white;
+    color: var(--marked-color);
+    background-color: var(--unmarked-color);
     z-index: 3;
     font-size: 1rem;
 }
 
 .btn-toggle input:checked + span {
-    background-color: var(--blue);
-    color: white;
+    background-color: var(--marked-color);
+    color: var(--unmarked-color);
     z-index: 1;
 }

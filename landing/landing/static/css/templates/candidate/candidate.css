@@ -46,7 +46,7 @@
     background: white;
     font-size: .75rem;
     color: #777;
-    padding-block: 1rem;
+    padding: 1rem 0;
     border-radius: 0;
     border-bottom: .25rem solid white;
 }
@@ -58,12 +58,12 @@
     border-color: var(--dark-blue);
 }
 
-.result__content {
+.tab__frame {
     display: grid;
     grid-template-columns: 100%;
     justify-content: center;
     grid-gap: 2rem;
-    margin-block: 3rem;
+    margin-block: 2rem;
 }
 
 .result__card {
