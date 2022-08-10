@@ -3,6 +3,7 @@ from django.core.management.color import Style
 
 from django.template.defaultfilters import slugify
 
+from candidate.management.commands import ApiFetcher
 from candidate.fetchers.api_parlametria import fetch_autores
 from candidate.fetchers.api_camara import fetch_deputado_data
 from candidate.fetchers.api_senado import fetch_senador_data
@@ -27,7 +28,7 @@ class Command(BaseCommand):
             parla_fetcher.start_fetch()
 
 
-class CandidateFetcher:
+class CandidateFetcher(ApiFetcher):
     DEFAULT_EMPTY = {
         "email": "email.nao@informado.com",
         "manager_name": "Não informado",
@@ -40,8 +41,7 @@ class CandidateFetcher:
     }
 
     def __init__(self, stdout: OutputWrapper, style: Style):
-        self.stdout = stdout
-        self.style = style
+        super().__init__(stdout, style)
         self.candidates_index = CandidateIndexPage.objects.all().first()
 
     def start_fetch(self):

@@ -3,6 +3,7 @@ from django.core.management.color import Style
 
 from typing import List
 
+from candidate.management.commands import ApiFetcher
 from candidate.fetchers.api_senado import (
     SENADO_API,
     get_all_materia_iterator,
@@ -31,10 +32,7 @@ class Command(BaseCommand):
             votacoes_fetcher.start_fetch()
 
 
-class SenadoVotacoesFetcher:
-    def __init__(self, stdout: OutputWrapper, style: Style):
-        self.stdout = stdout
-        self.style = style
+class SenadoVotacoesFetcher(ApiFetcher):
 
     def start_fetch(self):
         self._fetch_proposicoes()
@@ -65,13 +63,18 @@ class SenadoVotacoesFetcher:
                 ementa=prop_json["ementa"],
                 sobre=prop_json["sobre"],
                 casa=str(CasaChoices.SENADO),
+                calculate_adhesion=True,
             )
             self.stdout.write(f"\tProposicao {created} created")
 
     def _fetch_votacoes_proposicoes(self):
         self.stdout.write(f"\nFetching votacoes from all Proposicao")
 
-        proposicoes_senado = Proposicao.objects.filter(casa=str(CasaChoices.SENADO))
+        proposicoes_senado = (
+            Proposicao.objects
+            .filter(casa=str(CasaChoices.SENADO))
+            .filter(calculate_adhesion=True)
+        )
         for prop in proposicoes_senado:
             for votacao_json in get_votacoes_materia_iterator(prop.id_externo):
                 votacao_prosicao = VotacaoProsicao.objects.filter(
