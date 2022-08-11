@@ -150,6 +150,7 @@ def get_votacoes_materia_iterator(codigo_materia: int):
             "votacao_parmanentares": votacoes["Votos"]["VotoParlamentar"],
         }
 
+
 def fetch_senador_data(id_senador: int):
     """
     {
@@ -188,4 +189,12 @@ def fetch_senador_data(id_senador: int):
     """
     url = f"{SENADO_API}/senador/{id_senador}.json"
     response = requests.get(url)
+    return response.json()
+
+
+def fetch_dados_materia(id_materia: int):
+    # https://legis.senado.leg.br/dadosabertos/materia/140256.json
+    url = f"{SENADO_API}/materia/{id_materia}.json"
+    headers = {"Content-type": "application/json"}
+    response = requests.get(url, headers=headers)
     return response.json()
