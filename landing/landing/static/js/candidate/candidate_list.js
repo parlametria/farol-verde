@@ -11,7 +11,7 @@ const ufButton = document.querySelector('#uf button');
 const countriesModal = document.querySelector('.modal');
 const showModal = document.querySelector('#show-modal');
 const modalInput = showModal.querySelector('input');
-const states = document.querySelectorAll('.estado');
+const states = document.querySelectorAll('#svg-map .estado');
 
 const selectedStates = []
 

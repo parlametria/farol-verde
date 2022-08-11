@@ -160,60 +160,6 @@ input::placeholder {color: var(--dark-blue);}
     cursor: pointer;
 }
 
-.country-selector :is(path:hover, g.selected path) {
-    fill: #C1FF00;
-    stroke: #13A538;
-    cursor: pointer;
-}
-
-.country-selector .modal-header {
-    display: flex;
-    justify-content: center;
-    color: var(--dark-blue);
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.country-selector .modal-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.country-selector .modal-footer {
-    display: flex;
-    align-items: center;
-    border-top-width: 0 !important;
-    justify-content: space-between;
-    
-    font-size: .875rem;
-    font-weight: 700;
-    color: var(--blue);
-}
-
-.country-selector .modal-footer label {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    cursor: pointer;
-}
-
-.country-selector .modal-footer .right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.country-selector .modal-footer .right button {
-    padding-inline: 1rem;
-    font-size: 1rem;
-}
-
-.country-selector .modal-footer .right a {
-    text-decoration: underline;
-    color: var(--blue);
-}
-
 @media (max-width: 820px) {
     .query__subjects {justify-content: center;}
     .query__sortby {flex: 1;}
