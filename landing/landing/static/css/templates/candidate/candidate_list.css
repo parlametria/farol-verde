@@ -69,11 +69,8 @@
   object-position: top;
   width: 120px;
   height: 120px;
-}
-
-.candidate__picture.empty {
   background: var(--gray);
-  display: block;
+  outline: 1px solid var(--gray);
 }
 
 .empty {

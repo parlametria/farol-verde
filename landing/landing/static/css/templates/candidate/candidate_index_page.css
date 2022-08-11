@@ -33,12 +33,6 @@ input::placeholder {color: var(--dark-blue);}
     gap: .75rem;
 }
 
-
-.input-board {
-    display: flex;
-    position: relative;
-}
-
 .input-board > button {
     display: flex;
     flex: 1;
@@ -231,3 +225,4 @@ input::placeholder {color: var(--dark-blue);}
 
     #query__input {flex: unset;}
 }
+

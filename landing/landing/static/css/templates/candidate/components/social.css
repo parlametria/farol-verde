@@ -1,3 +1,5 @@
+.social {grid-gap: 0;}
+
 .social__header {display: grid;}
 
 .social__filters,
@@ -94,6 +96,20 @@
     cursor: pointer;
 }
 
+.keyword__item.marked {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.keyword__item.marked::after {
+    font-family: FontAwesome;
+    font-style: normal;
+    content: "\f05c";
+    color: var(--primary-color);
+    margin-left: .5rem;
+    text-decoration: none;
+}
+
 .keyword__item.long {height: 3rem;}
 
 .social__btn {
@@ -139,8 +155,10 @@
     display: grid;
     grid-gap: 1rem;
     border-bottom: 1px solid var(--gray);
-    padding-block: 2rem;
+    padding-block: 1rem;
 }
+
+.social__post:first-child {padding-top: 0;}
 
 .post__content {
     font-size: 20px;
@@ -174,4 +192,27 @@
     color: var(--blue);
     font-weight: 700;
     cursor: pointer;
+}
+
+.social__frame .empty {
+    display: grid;
+    grid-gap: 2rem;
+    padding-top: 2rem;
+    margin-inline: auto;
+    place-items: center;
+    text-align: center;
+}
+
+.social__frame .empty :is(p, h2) {
+    width: 50%;
+    margin: 0;
+}
+
+.social__frame .empty img {padding-block: 2rem;}
+
+.spinning-load {
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+    padding-top: 2rem;
 }

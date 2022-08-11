@@ -103,7 +103,7 @@ class BlogPost(MetadataPageMixin, Page):
     category = models.ForeignKey(
         "blog.BlogCategory", on_delete=models.SET_NULL, null=True
     )
-    cover_image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    cover_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     def get_context(self, request):
         panels = BlogIndexPage.objects.first().specific.sidebar_panels
