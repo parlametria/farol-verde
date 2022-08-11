@@ -202,8 +202,16 @@ function get_social_media(socialApp, keyword) {
     }
 
     function formatDate(date) {
-        const d = new Date(date);
-        return d.toLocaleDateString('pt-BR');
+        let d = new Date(date);
+        let year = d.getFullYear();
+        let month = d.getMonth();
+        let day = d.getDate();
+        let hour = `${d.getHours()}`;
+        let minute = `${d.getMinutes()}`;
+        hour = hour.length == 1 ? '0' + hour : hour;
+        minute = minute.length == 1 ? '0' + minute : minute;
+        let months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+        return `${hour}:${minute} ${day} ${months[month]} ${year}`;
     }
 
     if(socialMediaRequest) socialMediaRequest.abort();
