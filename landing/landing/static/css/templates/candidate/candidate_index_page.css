@@ -67,13 +67,17 @@ input::placeholder {color: var(--dark-blue);}
     margin: 0;
 }
 
-#query__input {flex: 1;}
+#query__input {
+    flex: 1;
+    height: 2.25rem;
+}
 
 .query__sortby {
     outline: 1px solid var(--dark-blue);
     border-radius: .25rem;
     display: flex;
-    width: 7rem;
+    min-width: 7rem;
+    min-height: 2.25rem;
     overflow: hidden;
 }
 
@@ -212,13 +216,13 @@ input::placeholder {color: var(--dark-blue);}
 
 @media (max-width: 820px) {
     .query__subjects {justify-content: center;}
+    .query__sortby {flex: 1;}
+
 }
 
 @media (max-width: 520px) {
     .query__select {flex-direction: column}
 
-    .query__sortby {
-        flex: 1;
-        width: 100%;
-    }
+    #query__input {flex: unset;}
 }
+

@@ -136,5 +136,17 @@ header {
 
     .header__close {visibility: visible;}
 
-    .header__links .header__item.active {border-bottom: 0;}
+    .header__links .header__item.active {border: 0;}
+    .header__links .header__item.active a{color: white;}
+
+    .header__links .header__item.active::before {
+        content: "";
+        display: inline-block;
+        margin-right: .5rem;
+        margin-bottom: .25rem;
+        width: .5rem;
+        height: .5rem;
+        border-radius: 50%;
+        background: white;
+    }
 }
