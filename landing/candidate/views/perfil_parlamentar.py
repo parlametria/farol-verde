@@ -128,7 +128,7 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
 
     return JsonResponse(candidate_votes)
 
-def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword: str = None):
+def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword: str = ''):
     candidate = CandidatePage.objects.filter(slug=slug).first()
     url = os.environ.get("ELASTIC_URL")
     login = os.environ.get("ELASTIC_USER")
@@ -152,9 +152,8 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
         },
         "fields": [ "_source.social-data.*" ]
     }
-    if keyword:
+    if len(keyword) > 0:
         keyword = unquote(keyword)
-        print(keyword)
         value = {"wildcard": { "social-data.tags": { "value": f"*{keyword}*", "case_insensitive": True },}}
         query["query"]["bool"]["must"].append(value)
     response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))

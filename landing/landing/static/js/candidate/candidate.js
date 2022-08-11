@@ -20,7 +20,7 @@ const instagramFrame = document.querySelector('.social__frame.instagram');
 
 const postTpl = document.querySelector('#social__post--tpl');
 const keywordOptionTpl = document.querySelector("#keyword__option--tpl");
-const emptyFrame = document.querySelector('.social__empty--tpl');
+const emptyFrame = document.querySelector('#social__empty--tpl');
 
 const adhesionProgressValue = document.querySelector('.adhesion__data h4');
 const adhesionProgressBar = document.querySelector('.adhesion__data .progress__inner');
@@ -78,7 +78,7 @@ function openSocial(socialName) {
     const socialBtn = document.querySelector(`.social__btn.${socialName}`);
     const socialContent = document.querySelector(`.social__frame.${socialName}`);
 
-    socialName = socialName.charAt(0).toUpperCase() + socialName.slice(1);
+    console.log(socialName);
     get_social_media(socialName);
 
     socialBtns.forEach(social => social.classList.remove('open'));
@@ -192,27 +192,34 @@ get_keywords();
 
 let socialMediaRequest;
 
-function get_social_media(keyword, socialApp='Twitter') {
+function get_social_media(socialApp, keyword) {
+    socialApp ??= 'twitter';
+    socialApp = socialApp.toLowerCase();
     let url = './api/social-media/' + socialApp;
     if (keyword) {
         url += '/' + keyword.replaceAll(' ', '_');
         markedKeyword = keyword;
     }
 
+    function formatDate(date) {
+        const d = new Date(date);
+        return d.toLocaleDateString('pt-BR');
+    }
+
     if(socialMediaRequest) socialMediaRequest.abort();
 
-    const socialApps = {Facebook: facebookFrame, Twitter: twitterFrame, Instagram: instagramFrame,}
+    const socialApps = {facebook: facebookFrame, twitter: twitterFrame, instagram: instagramFrame,}
     let socialFrame = socialApps[socialApp];
 
     socialMediaRequest = $.ajax({url})
         .done((data) => {
-            socialFrame.innerHTML = '';
             let {hits} = data;
             hits = hits.hits;
 
             if (hits.length == 0) {
-                let clone = socialMediaTpl.content.cloneNode(true);
-                socialFrame.appendChild(clone);
+                let clone = emptyFrame.content.cloneNode(true);
+                socialFrame.innerHTML = '';
+                socialFrame.append(clone);
                 return;
             }
             
@@ -238,12 +245,14 @@ function get_social_media(keyword, socialApp='Twitter') {
                     });
                 }
                 clone.querySelector('.post__content').innerText = post.texto;
-                clone.querySelector('.post__date').innerText = post['data criado'];
+                let postDate = formatDate(post['data criado']);
+                clone.querySelector('.post__date').innerText = postDate;
                 var postLink = clone.querySelector('.post__link a');
                 postLink.href = post.link;
                 postLink.innerText = `abrir no ${post.rede}`;
                 return clone;
-            })
+            });
+            socialFrame.innerHTML = '';
             socialFrame.append(...hits);
         });
 }

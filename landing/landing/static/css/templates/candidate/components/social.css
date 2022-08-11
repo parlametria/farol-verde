@@ -1,3 +1,5 @@
+.social {grid-gap: 0;}
+
 .social__header {display: grid;}
 
 .social__filters,
@@ -153,8 +155,10 @@
     display: grid;
     grid-gap: 1rem;
     border-bottom: 1px solid var(--gray);
-    padding-block: 2rem;
+    padding-block: 1rem;
 }
+
+.social__post:first-child {padding-top: 0;}
 
 .post__content {
     font-size: 20px;
@@ -193,6 +197,7 @@
 .social__frame .empty {
     display: grid;
     grid-gap: 2rem;
+    padding-top: 2rem;
     margin-inline: auto;
     place-items: center;
     text-align: center;
@@ -204,3 +209,10 @@
 }
 
 .social__frame .empty img {padding-block: 2rem;}
+
+.spinning-load {
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+    padding-top: 2rem;
+}
