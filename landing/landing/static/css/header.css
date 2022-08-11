@@ -111,10 +111,10 @@ header {
         visibility: hidden;
         flex-direction: column;
         position: absolute;
-        border-radius: 100%;
         text-align: left;
         gap: 1rem;
-        left: -20rem;
+        left: 0;
+        right: 0;
         top: -20rem;
 
         background: var(--primary-color);
@@ -132,6 +132,7 @@ header {
         border-radius: 0;
         top: 0;
         left: 0;
+        right: 0;
     }
 
     .header__close {visibility: visible;}
