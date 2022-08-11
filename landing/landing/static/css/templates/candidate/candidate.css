@@ -15,11 +15,6 @@
     aspect-ratio: 1;
 }
 
-.candidate__picture.empty {
-    background: var(--gray);
-    display: block;
-}
-
 .candidate__name {
     font-size: 1.5rem;
     font-weight: 700;

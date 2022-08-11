@@ -39,7 +39,7 @@ function toggleSubjects() {
     subjects.classList.toggle('closed');
     toggleIcon.classList.toggle('closed');
 
-    var status = toggleIcon.classList.contains('closed');
+    let status = toggleIcon.classList.contains('closed');
     localStorage.setItem('toggleStatus', status);
 
     if (status) {
@@ -74,7 +74,7 @@ nameInput.addEventListener('keypress', () => getCandidatesList());
 
 states.forEach(state => state.addEventListener('click', () => {
     state.classList.toggle('selected');
-    var input = Array.from(inputs)
+    let input = Array.from(inputs)
         .filter(input => input.value == state.id)
     if (state.classList.contains('selected')) {
         selectedStates.push(state.id);
@@ -83,7 +83,7 @@ states.forEach(state => state.addEventListener('click', () => {
 
 function getSelectedStates() {
     selectedStates.forEach(state => {
-        var input = Array.from(inputs)
+        let input = Array.from(inputs)
             .filter(input => input.value == state)
         input[0].checked = true;
     })
@@ -92,12 +92,15 @@ function getSelectedStates() {
 }
 
 showModal.addEventListener('click', () => {
-    var { value } = modalInput;
+    let { value } = modalInput;
     localStorage.setItem('countriesModal', !!value);
 });
 
 ufButton.addEventListener('click', toggleUfBoard);
 partyButton.addEventListener('click', togglePartyBoard);
 
-ufBoard.addEventListener('focusout', toggleUfBoard);
-partyBoard.addEventListener('focusout', togglePartyBoard);
+document.addEventListener('click', e => {
+    let comp = e.target;
+    if (comp != partyBoard && comp != partyButton) partyBoard.classList.remove('open');
+    if (comp != ufBoard && comp != ufButton) ufBoard.classList.remove('open');
+})

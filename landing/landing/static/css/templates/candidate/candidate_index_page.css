@@ -33,13 +33,6 @@ input::placeholder {color: var(--dark-blue);}
     gap: .75rem;
 }
 
-
-.input-board {
-    width: 5rem;
-    position: relative;
-    flex: 0;
-}
-
 .input-board > button {
     display: flex;
     flex: 1;

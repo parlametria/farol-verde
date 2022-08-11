@@ -12,7 +12,7 @@
             <div class="post__keywords">
                 <div class="text-button">palavras-chave:</div>
             </div>
-        </div>
+        </div><h2>
     </div>
 </template>
 
@@ -21,6 +21,14 @@
         <input type="radio" name="sortby" value="keyword__section">
         <span></span>
     </label>
+</template>
+
+<template id="social__empty--tpl">
+    <div class="empty">
+        <img src="{% static 'img/sadboi.svg' %}">
+        <h2>Nenhum resultado encontrado</h2>
+        <p>O monitoramento não identificou postagens do candidato relacionadas às palavras-chave</p>
+    </div>
 </template>
 
 <div class="social__header">
@@ -69,10 +77,17 @@
     </div> -->
 </div>
 
-<div class="social__frame instagram"></div>
-<div class="social__frame facebook hide"></div>
-<div class="social__frame twitter hide"></div>
+<div class="social__frame twitter">
+    <div class="spinning-load"><i class="spin fa fa-2x fa-spinner"></i></div>
+</div>
 
+<div class="social__frame facebook hide">
+    <div class="spinning-load"><i class="spin fa fa-2x fa-spinner"></i></div>
+</div>
+
+<div class="social__frame instagram hide">
+    <div class="spinning-load"><i class="spin fa fa-2x fa-spinner"></i></div>
+</div>
 
 <!-- <script>
     const socialMedia = {

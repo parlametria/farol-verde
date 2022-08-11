@@ -51,11 +51,11 @@
                 </div>
                 <div id='party' class="input-board">
                     <button>Partido <i class="fas fa-caret-down"></i></button>
-                    <div class="input-board__selector">
+                    <div class="input-board__selector large">
                         <p>Mostrar candidatos do(s) partido(s):</p>
                         <div class="input-board__content">
                             {% for party in party_list %}
-                                <label class="btn-toggle">
+                                <label class="btn-toggle {% if party|length > 4 %} long {% endif %}">
                                     <input type="checkbox" value="{{ party }}" name="party[]">
                                     <span>{{ party }}</span>
                                 </label>

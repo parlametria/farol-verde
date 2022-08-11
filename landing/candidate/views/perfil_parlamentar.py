@@ -128,7 +128,7 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
 
     return JsonResponse(candidate_votes)
 
-def social_media_view(request: HttpRequest, slug: str, keyword: str = None):
+def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword: str = ''):
     candidate = CandidatePage.objects.filter(slug=slug).first()
     url = os.environ.get("ELASTIC_URL")
     login = os.environ.get("ELASTIC_USER")
@@ -137,19 +137,23 @@ def social_media_view(request: HttpRequest, slug: str, keyword: str = None):
         "query": {
             "bool":{
                 "must": [
-                {
-                    "wildcard": { 
-                        "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                    {
+                        "wildcard": { 
+                            "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                        }
+                    },
+                    {
+                        "wildcard": {
+                            "social-data.rede": { "value": f"{social_app}*", "case_insensitive": True },
+                        }
                     }
-                }
-            ]
+                ]
             }
         },
         "fields": [ "_source.social-data.*" ]
     }
-    if keyword:
+    if len(keyword) > 0:
         keyword = unquote(keyword)
-        print(keyword)
         value = {"wildcard": { "social-data.tags": { "value": f"*{keyword}*", "case_insensitive": True },}}
         query["query"]["bool"]["must"].append(value)
     response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
@@ -168,7 +172,8 @@ def keywords_sections_view(request: HttpRequest, slug: str, search: str=''):
 
 def keywords_view(request: HttpRequest, slug:str, page:int, search=''):
     page = 36 * page
+    keywords_list = list(keywords)
     if len(search) > 0:
-        keywords_list = [keyword for keyword in keywords if search in keyword[0]]
-    keywords_list = keywords[page:page+36]
+        keywords_list = [keyword for keyword in keywords_list if search in keyword]
+    keywords_list = keywords_list[page:page+36]
     return JsonResponse(keywords_list, safe=False)

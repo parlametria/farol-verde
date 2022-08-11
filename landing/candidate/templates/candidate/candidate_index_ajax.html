@@ -21,11 +21,7 @@
         <a href="{{item.candidate.url}}" class="candidate {% if item.opinion == 'Prefiro não responder / Não sei' %} doubt
         {% else %} {{item.opinion}} {% endif %}">
             {% with picture=item.candidate.get_picture %}
-                {% if picture|length %}
-                    <img src="{{ picture }}" alt="{{ item.candidate.title }}" class="candidate__picture">
-                {% else %}
-                    <span class="candidate__picture empty"></span>
-                {% endif %}
+                <img {% if picture|length %} src="{{ picture }}" alt="{{ item.candidate.title }}" {% endif %} class="candidate__picture">
             {% endwith %}
             <div class="candidate__data">
                 <div class="candidate__name">{{ item.candidate.campaign_name }}</div>

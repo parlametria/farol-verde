@@ -56,9 +56,35 @@ function setCPFmask() {
   }
 }
 
+function setPhoneMask() {
+  const phoneInputs = document.querySelectorAll('input[type="tel"], .phone input');
+  phoneInputs.forEach(input => {
+    input.type = 'text'
+    input.oninput = function (e) {
+      if (!e.data) return;
+      if (isNaN(Number(e.data))) {
+        input.value = input.value.replace(e.data,'');
+      }
+      if (input.value.length == 1 && input.value != '(') {
+        input.value = '('+input.value;
+      }
+      if (input.value.length == 3) {
+        input.value = input.value+') ';
+      }
+      if (input.value.length == 9) {
+        input.value = input.value+'-';
+      }
+      if (input.value.length == 15) {
+        input.value = input.value.replace('-','');
+        input.value = input.value.slice(0, 10) + '-' + input.value.slice(10,15);
+      }
+    }
+  })
+}
+
 function setFormSubmit() {
   const form = document.querySelector('form.survey-form');
-  const submit = document.querySelector('.modal-close.submit').addEventListener('click',(e) => {
+  document.querySelector('.modal-close.submit').addEventListener('click',(e) => {
     function removeCPFmask() {
       const cpf = document.querySelector('input[name="cpf"]');
       if(!cpf) return;
@@ -101,6 +127,7 @@ function setEmailConfirmation() {
 
 function setFormValidations() {
   setCPFmask();
+  setPhoneMask();
   setEmailConfirmation();
   setFormSubmit();
   setDateValidations()
@@ -133,6 +160,7 @@ function addError(element, text) {
   element.classList.add('error');
   element.appendChild(errorDiv);
 }
+
 function removeError(element) {
   if(!element.classList.contains('error')) return;
   errorDiv = element.querySelector('.requided_error');
