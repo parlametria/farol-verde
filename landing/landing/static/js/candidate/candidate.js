@@ -78,7 +78,6 @@ function openSocial(socialName) {
     const socialBtn = document.querySelector(`.social__btn.${socialName}`);
     const socialContent = document.querySelector(`.social__frame.${socialName}`);
 
-    console.log(socialName);
     getSocialMedia(socialName);
 
     socialBtns.forEach(social => social.classList.remove('open'));
@@ -156,7 +155,7 @@ function getKeywords() {
                     item.className = 'keyword__category overline'
                 } else {
                     item.addEventListener('click', (e) => {
-                        getSocialMedia(word)
+                        getSocialMedia(null, word)
                         getKeywords()
                     });
                     item.className = 'keyword__item button-text';
@@ -205,6 +204,8 @@ function getSocialMedia(socialApp, keyword) {
         markedKeyword = keyword;
     }
 
+    if(socialMediaRequest) socialMediaRequest.abort();
+
     function formatDate(date) {
         let d = new Date(date);
         let year = d.getFullYear();
@@ -218,23 +219,25 @@ function getSocialMedia(socialApp, keyword) {
         return `${hour}:${minute} ${day} ${months[month]} ${year}`;
     }
 
-    if(socialMediaRequest) socialMediaRequest.abort();
-
     const socialApps = {facebook: facebookFrame, twitter: twitterFrame, instagram: instagramFrame,}
     let socialFrame = socialApps[socialApp];
+
+    const setEmpty = () => {
+        let clone = emptyFrame.content.cloneNode(true);
+        socialFrame.innerHTML = '';
+        socialFrame.append(clone);
+    }
+
+    let children = socialFrame.childNodes
+    if (children.length == 1 && children[0].classList.contains('empty')) return setEmpty();
 
     socialMediaRequest = $.ajax({url})
         .done((data) => {
             let {hits} = data;
             hits = hits.hits;
+            aterro
+            if (hits.length == 0) return setEmpty();
 
-            if (hits.length == 0) {
-                let clone = emptyFrame.content.cloneNode(true);
-                socialFrame.innerHTML = '';
-                socialFrame.append(clone);
-                return;
-            }
-            
             hits = hits.map(hit => hit._source['social-data'])
             Object.values(socialApps).forEach(app => app.innerHTML = '');
             hits = hits.map(post => {
@@ -267,11 +270,7 @@ function getSocialMedia(socialApp, keyword) {
             socialFrame.innerHTML = '';
             socialFrame.append(...hits);
         })
-        .fail(() => {
-            let clone = emptyFrame.content.cloneNode(true);
-            socialFrame.innerHTML = '';
-            socialFrame.append(clone);
-        });
+        .fail(setEmpty);
 }
 
 getSocialMedia();
