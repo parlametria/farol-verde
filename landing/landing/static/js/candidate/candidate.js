@@ -79,7 +79,7 @@ function openSocial(socialName) {
     const socialContent = document.querySelector(`.social__frame.${socialName}`);
 
     console.log(socialName);
-    get_social_media(socialName);
+    getSocialMedia(socialName);
 
     socialBtns.forEach(social => social.classList.remove('open'));
     socialContents.forEach(content => content.classList.add('hide'));
@@ -94,17 +94,17 @@ const keywordsPage = {
     next: () => {
         if (keywordsPage.page >= keywordsPage.limit) return;
         keywordsPage.page++;
-        get_keywords();
+        getKeywords();
     },
     prev: () => {
         if (keywordsPage == 0) return
         keywordsPage.page--;
-        get_keywords();
+        getKeywords();
     },
     setPage: (page) => {
         if(page < 0 || page >= keywordsPage.limit) return;
         keywordsPage.page = page;
-        get_keywords();
+        getKeywords();
     }
 };
 
@@ -116,7 +116,7 @@ function setSearchValue(value) {
     searchValue = value == searchValue ? '' : value;
 }
 
-function get_keywords() {
+function getKeywords() {
     let sectionUrl = './api/keywords-sections';
     let url = './api/keywords/' + keywordsPage.page;
     if (searchValue.length) {
@@ -140,21 +140,24 @@ function get_keywords() {
                 return clone
             } )
             keywordsOptionsList.innerHTML = '';
-            if(sections.length == 0) return;
+            if(sections.length == 0) {
+                let alert = document.createElement('h4')
+                alert.innerText = "Nenhuma palavra-chave encontrada"
+                sections.push(alert);
+            };
             keywordsOptionsList.append(...sections);
         } )
 
     $.ajax({url})
         .done((keywords) => {
-            keywordsList.innerHTML = '';
             keywords = keywords.map(word => {
                 const item = document.createElement('div');
                 if (word.length == 1) {
                     item.className = 'keyword__category overline'
                 } else {
                     item.addEventListener('click', (e) => {
-                        get_social_media(word)
-                        get_keywords()
+                        getSocialMedia(word)
+                        getKeywords()
                     });
                     item.className = 'keyword__item button-text';
                 }
@@ -165,6 +168,7 @@ function get_keywords() {
                 if (word.length > 30) item.classList.add('long');
                 return item;
             })
+            keywordsList.innerHTML = '';
             keywordsList.append(...keywords);
         });
 
@@ -180,7 +184,7 @@ keywordsPrev.addEventListener('click', keywordsPage.prev);
 keywordsInput.addEventListener('keyup', (e) => {
     setSearchValue(e.target.value);
     keywordsPage.page = 0;
-    get_keywords();
+    getKeywords();
 })
 
 keywordsBtn.addEventListener('click', () => {
@@ -188,11 +192,11 @@ keywordsBtn.addEventListener('click', () => {
     keywordsBtn.classList.toggle('open');
 } );
 
-get_keywords();
+getKeywords();
 
 let socialMediaRequest;
 
-function get_social_media(socialApp, keyword) {
+function getSocialMedia(socialApp, keyword) {
     socialApp ??= 'twitter';
     socialApp = socialApp.toLowerCase();
     let url = './api/social-media/' + socialApp;
@@ -243,7 +247,7 @@ function get_social_media(socialApp, keyword) {
                             keywordItem.classList.add('marked');
                         }
                         keywordItem.classList.add('keyword__item', 'button-text');
-                        keywordItem.addEventListener('click', () => get_social_media(keyword));
+                        keywordItem.addEventListener('click', () => getSocialMedia(keyword));
                         keywordItem.innerText = keyword;
                         return keywordItem;
                     })
@@ -262,7 +266,12 @@ function get_social_media(socialApp, keyword) {
             });
             socialFrame.innerHTML = '';
             socialFrame.append(...hits);
+        })
+        .fail(() => {
+            let clone = emptyFrame.content.cloneNode(true);
+            socialFrame.innerHTML = '';
+            socialFrame.append(clone);
         });
 }
 
-get_social_media();
+getSocialMedia();
