@@ -1,7 +1,6 @@
 .btn-toggle {
     --unmarked-color: white;
     --marked-color: var(--blue);
-
     display: grid;
     grid-template-columns: 0 1fr;
     justify-content: center;
