@@ -119,6 +119,7 @@ def get_all_materia_iterator():
         materia_json = fetch_materia(prop[0], prop[1], prop[2])
         codigo = get_codigo_materia(materia_json)
         ementa = get_ementa_materia(materia_json)
+        data =  materia_json["DetalheMateria"]["Materia"]["DadosBasicosMateria"]["DataApresentacao"]
 
         row = {
             "id_externo": codigo,
@@ -127,6 +128,7 @@ def get_all_materia_iterator():
             "ano": prop[2],
             "ementa": ementa,
             "sobre": prop[3],
+            "data": data
         }
 
         yield row, prop

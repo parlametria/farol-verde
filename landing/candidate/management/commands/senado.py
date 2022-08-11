@@ -62,6 +62,7 @@ class SenadoVotacoesFetcher(ApiFetcher):
                 ano=prop_json["ano"],
                 ementa=prop_json["ementa"],
                 sobre=prop_json["sobre"],
+                data=prop_json["data"],
                 casa=str(CasaChoices.SENADO),
                 calculate_adhesion=True,
             )
