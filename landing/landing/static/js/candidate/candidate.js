@@ -50,8 +50,7 @@ if (urlParams.has('tab')) {
 $.ajax({url: './api/adesao',})
     .done((data) => {
         var {adhesion, propositions} = data;
-        adhesion *= 100
-        adhesion = adhesion.toFixed(2);
+        adhesion = Math.round(adhesion * 100)
         adhesionProgressValue.innerHTML = `${adhesion}%`;
         adhesionProgressBar.style.width = `${adhesion}%`;
 
@@ -60,8 +59,7 @@ $.ajax({url: './api/adesao',})
         votingPropositions.classList.remove('hide');
         propositions.forEach((proposition) => {
             var {adhesion, about} = proposition;
-            adhesion *= 100
-            adhesion = adhesion.toFixed(2);
+            adhesion = Math.round(adhesion * 100)
             const propositionEl = votingPropositionTpl.content.cloneNode(true);
             propositionEl.querySelector('.voting__proposition h4').innerHTML = about;
             // propositionEl.querySelector('.proposition__number').innerHTML = proposition.proposition_number;
