@@ -18,6 +18,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 TAGGIT_CASE_INSENSITIVE = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 WAGTAILSTREAMFORMS_ENABLE_FORM_PROCESSING = False
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
