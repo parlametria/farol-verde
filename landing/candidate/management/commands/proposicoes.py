@@ -1,15 +1,12 @@
 import csv
-import time
-import json
 from os.path import abspath
-
-
 from typing import Generator
 
 from django.core.management.base import BaseCommand
 
 from candidate.management.commands import ApiFetcher
 from candidate.fetchers.api_camara import fetch_autores, fetch_dados_proposicao
+from candidate.fetchers.api_senado import fetch_dados_materia
 from candidate.models import Proposicao, AutorProposicao, CasaChoices
 
 
@@ -21,15 +18,44 @@ class Command(BaseCommand):
             help="Import data from parlametria api",
         )
 
+        parser.add_argument(
+            "--update-date",
+            action="store_true",
+            help="Update the date of registered propositions",
+        )
+
     def handle(self, *args, **options):
         if options["import"]:
             parla_fetcher = ProposicoesFetcher(self.stdout, self.style)
             parla_fetcher.start_fetch()
 
+        if options["update_date"]:
+            parla_fetcher = ProposicoesFetcher(self.stdout, self.style)
+            parla_fetcher.update_proposition_date()
+
 
 class ProposicoesFetcher(ApiFetcher):
     def start_fetch(self):
         self._fetch_autors()
+
+    def update_proposition_date(self):
+        self.stdout.write("Updating all stored proposition date with API data")
+
+        for prop in Proposicao.objects.all():
+            data = None
+
+            if prop.casa == str(CasaChoices.CAMARA):
+                self.stdout.write(f"Fetching date of {prop.id_externo} from {CasaChoices.CAMARA} API")
+                dados_json = fetch_dados_proposicao(prop.id_externo)["dados"]
+                data = dados_json["dataApresentacao"].split("T")[0]
+            else:
+                self.stdout.write(f"Fetching date of {prop.id_externo} from {CasaChoices.SENADO} API")
+                dados_json = fetch_dados_materia(prop.id_externo)["DetalheMateria"]["Materia"]
+                data = dados_json["DadosBasicosMateria"]["DataApresentacao"]
+
+            prop.data = data
+            prop.save()
+
 
     def _proposicoes_iterator(self) -> Generator[int, None, None]:
         filepath = "".join(
@@ -81,6 +107,7 @@ class ProposicoesFetcher(ApiFetcher):
                 sobre="...",
                 casa=str(CasaChoices.CAMARA),
                 calculate_adhesion=False,
+                data=dados_json["dataApresentacao"].split("T")[0],
             )
 
         return proposicao

@@ -33,5 +33,8 @@ senado-import:
 proposicoes-import:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes --import
 
+proposicoes-update-date:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes --update-date
+
 shell:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py shell

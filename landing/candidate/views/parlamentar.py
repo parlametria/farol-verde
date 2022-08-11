@@ -58,6 +58,7 @@ def proposicoes_onde_parlamentar_e_autor_view(request: HttpRequest, slug: str):
                 "id": proposicao.id_externo,
                 "title": str(proposicao),
                 "summary": proposicao.ementa,
+                "date": proposicao.data,
             }
         )
 

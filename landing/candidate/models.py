@@ -57,7 +57,7 @@ class CandidatePage(MetadataPageMixin, Page):
 
     election_state = CharField(null=True, max_length=255)
     election_city = CharField(null=True, max_length=255)
-    
+
     global make_block
 
     def make_block(subject):
@@ -133,7 +133,7 @@ class CandidatePage(MetadataPageMixin, Page):
     @property
     def is_senador(self) -> bool:
         return not self.is_deputado
-    
+
     @property
     def keywords(self):
         return keywords
@@ -279,6 +279,7 @@ class Proposicao(models.Model):
         choices=CasaChoices.choices,
     )
     calculate_adhesion = BooleanField(default=True)
+    data = models.DateField(default="1900-01-01")
 
     def __str__(self) -> str:
         # MPV 867/2018
