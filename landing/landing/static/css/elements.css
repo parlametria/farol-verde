@@ -118,7 +118,6 @@ h5, p {
     font-family: 'Noto Sans';
     font-style: normal;
     font-weight: 400;
-    
 }
 
 h1, h2, h3, h4, button, .button-text, caption {
@@ -126,7 +125,6 @@ h1, h2, h3, h4, button, .button-text, caption {
     font-family: 'Noto Sans';
     font-style: normal;
     font-weight: 700;
-    color: black;
 }
 
 a:hover {text-decoration: underline;}
