@@ -2,11 +2,10 @@ import requests, os, json
 from urllib.parse import unquote
 from requests.auth import HTTPBasicAuth
 
-from django.http import HttpRequest
-from django.http import JsonResponse
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import HttpRequest, JsonResponse
+from django.db.models import Q
 
-from candidate.models import CandidatePage
+from candidate.models import CandidatePage, AutorProposicao
 from candidate.util import lru_cache_time, keywords
 
 API_PERFIIL = "https://perfil.parlametria.org.br/api"
@@ -179,5 +178,10 @@ def keywords_view(request: HttpRequest, slug:str, page:int, search=''):
     return JsonResponse(keywords_list, safe=False)
 
 def propositions_view(request: HttpRequest, slug: str, search: str=''):
-    response = requests.get('http://demo9950798.mockable.io/')
-    return JsonResponse(response.json())
+    candidate = CandidatePage.objects.filter(slug=slug).first()
+    propositionsAutor = AutorProposicao.objects.filter(id_parlamentar=candidate.id_autor).first()
+    propositions = propositionsAutor.proposicoes.values()
+    propositions = propositions.order_by('-data')
+    if len(search) > 0:
+        propositions = propositions.filter(ementa__icontains=search) | propositions.filter(sigla_tipo__icontains=search) | propositions.filter(numero__icontains=search) | propositions.filter(data__icontains=search)
+    return JsonResponse(list(propositions), safe=False)

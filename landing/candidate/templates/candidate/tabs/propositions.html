@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="propositions">
     <h3>Proposições de autoria do candidato</h3>
     <input placeholder="Busca" type="text" class="propositions__search">
@@ -9,5 +11,13 @@
         <h4 class="proposition__number"></h4>
         <h3 class="proposition__summary"></h3>
         <div class="proposition__date overline"></div>
+    </div>
+</template>
+
+<template id="proposition__empty--tpl">
+    <div class="proposition__empty">
+        <img src="{% static 'img/sadboi_nobg.svg' %}">
+        <h2>Nenhuma proposição encontrada</h2>
+        <p>Infelizmente o candidato não tem<br>proposições para os termos da busca.</p>
     </div>
 </template>

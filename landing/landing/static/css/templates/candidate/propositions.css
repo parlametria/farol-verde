@@ -26,3 +26,15 @@
 
 .proposition__summary {font-weight: 400;}
 
+.proposition__empty {
+    display: grid;
+    padding-top: 2rem;
+    margin-inline: auto;
+    width: 75%;
+    place-items: center;
+    text-align: center;
+}
+
+.proposition__empty img {
+    padding-bottom: 2rem;
+}
