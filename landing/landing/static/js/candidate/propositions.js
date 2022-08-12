@@ -31,7 +31,7 @@ function getPropositions(search) {
             propositionsList.append(...propositions);
         })
 }
-
-propositionsSearch.addEventListener('keyup', (e) => getPropositions(propositionsSearch.value))
-
-getPropositions();
+if(propositionsSearch) {
+    propositionsSearch.addEventListener('keyup', (e) => getPropositions(propositionsSearch.value))
+    getPropositions();
+}
