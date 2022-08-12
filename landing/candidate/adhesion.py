@@ -7,6 +7,27 @@ from django.db.models.query import QuerySet
 from candidate.models import Proposicao, VotacaoParlamentar, CandidatePage, CasaChoices
 
 
+def _check_camara_or_senado(candidate: CandidatePage):
+    """
+    Retorna a casa da legislação 56 do candidato.
+    Se na proxima eleição ele mudou de cargo(dep -> sen or sen -> dep)
+    retorna a casa anterior, senao retorna a casa atual
+    """
+    if (
+        candidate.is_deputado and not candidate.charge_changed
+    ):  # é deputado, nao mudou
+        return str(CasaChoices.CAMARA)
+    elif (
+        candidate.is_deputado and candidate.charge_changed
+    ):  # é deputado, mas era senador
+        return str(CasaChoices.SENADO)
+    elif (
+        candidate.is_senador and not candidate.charge_changed
+    ):  # é senador, nao mudou
+        return str(CasaChoices.SENADO)
+    else:  # candidate.is_senador and candidate.charge_changed. # é senador, mas era deputado
+        return str(CasaChoices.CAMARA)
+
 class CandidateAdhesion(ABC):
     VOTE_SAME = "same"
     VOTE_DIFFERENT = "different"
@@ -113,23 +134,12 @@ class CandidateAdhesion(ABC):
         return adesao
 
     def _get_propositions(self) -> QuerySet[Proposicao]:
-        camara = Proposicao.proposicoes_camara().filter(calculate_adhesion=True)
-        senado = Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
+        check = _check_camara_or_senado(self.candidate)
 
-        if (
-            self.candidate.is_deputado and not self.candidate.charge_changed
-        ):  # é deputado, nao mudou
-            return camara
-        elif (
-            self.candidate.is_deputado and self.candidate.charge_changed
-        ):  # é deputado, mas era senador
-            return senado
-        elif (
-            self.candidate.is_senador and not self.candidate.charge_changed
-        ):  # é senador, nao mudou
-            return senado
-        else:  # self.candidate.is_senador and self.candidate.charge_changed. # é senador, mas era deputado
-            return camara
+        if check == str(CasaChoices.CAMARA):
+            return Proposicao.proposicoes_camara().filter(calculate_adhesion=True)
+        else:
+            Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
 
     def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
         voted = []
@@ -164,7 +174,9 @@ class CandidateAdhesionSenado(CandidateAdhesion):
 
 
 def get_adhesion_strategy(candidate: CandidatePage):
-    if candidate.is_deputado:
+    check = _check_camara_or_senado(candidate)
+
+    if check == str(CasaChoices.CAMARA):
         return CandidateAdhesionCamara(candidate)
     else:
         return CandidateAdhesionSenado(candidate)
