@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/activity.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/propositions.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/progress.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/components/social.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/btn-toggle.css' %}">
@@ -29,21 +30,26 @@
             <button onclick="openTab('result')" class="tab overline result">resultados enquetes</button>
         {% endif %}
         <button onclick="openTab('activity')" class="tab overline activity">atividade parlamentar</button>
+        <button onclick="openTab('propositions')" class="tab overline propositions">proposições</button>
         <button onclick="openTab('social')" class="tab overline social">redes sociais</button>
     </div>
 
     {% if page.opinions_answers %}
         <div class="result tab__frame hide">
-            {% include 'candidate/components/result.html' %}
+            {% include 'candidate/tabs/result.html' %}
         </div>
     {% endif %}
 
     <div class="activity tab__frame hide">
-        {% include 'candidate/components/activity.html' %}
+        {% include 'candidate/tabs/activity.html' %}
     </div>
 
     <div class="social tab__frame hide">
-        {% include 'candidate/components/social.html' %}
+        {% include 'candidate/tabs/social.html' %}
+    </div>
+
+    <div class="propositions tab__frame hide">
+        {% include 'candidate/tabs/propositions.html' %}
     </div>
 </main>
 
@@ -52,4 +58,6 @@
 {% block extra_js %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'js/candidate/candidate.js' %}"></script>
+    <script src="{% static 'js/candidate/social.js' %}"></script>
+    <script src="{% static 'js/candidate/propositions.js' %}"></script>
 {% endblock %}
