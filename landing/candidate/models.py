@@ -19,6 +19,11 @@ from django.dispatch import receiver
 from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords
 from candidate.factories import SurveyCandidateFactory
 
+class GenderChoices(models.TextChoices):
+    MASCULINE = "M", "MASCULINO"
+    FEMININE = "F", "FEMININO"
+
+
 class CandidatePage(MetadataPageMixin, Page):
     DEPUTADO_CHARGE_TEXT = "Deputado(a) Federal"
     SENADOR_CHARGE_TEXT = "Senador(a)"
@@ -43,6 +48,10 @@ class CandidatePage(MetadataPageMixin, Page):
     email = EmailField(null=True)
     picture = ImageField(null=True, blank=True, default=None)
     charge = CharField(null=True, max_length=255)
+    charge_changed = BooleanField(
+        default=False,
+        help_text="Charge changed from parlametria api to TSE 2022 csv data"
+    )
     social_media = StreamField([
         ('twitter', URLBlock(max_length=255)),
         ('facebook', URLBlock(max_length=255)),
@@ -57,6 +66,14 @@ class CandidatePage(MetadataPageMixin, Page):
 
     election_state = CharField(null=True, max_length=255)
     election_city = CharField(null=True, max_length=255)
+
+    gender = models.CharField(
+        blank=True,
+        null=True,
+        max_length=1,
+        choices=GenderChoices.choices,
+    )
+    tse_image_code = CharField(null=True, blank=True, max_length=60)
 
     global make_block
 
