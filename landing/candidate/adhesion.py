@@ -100,6 +100,9 @@ class CandidateAdhesion(ABC):
 
         adesao["total_com_votos"] = total_calculadas
 
+        if adesao["total_com_votos"] == 0:
+            return None
+
         # quanto menos o parlamentar divergir do lider, maior é a sua adesão
         adesao["adhesion"] = (
             (total_calculadas - adesao["different"]) / total_calculadas
