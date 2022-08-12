@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('candidate', '0015_alter_votacaoprosicao_data_hora_registro'),
+        ('candidate', '0016_proposicao_data'),
     ]
 
     operations = [
