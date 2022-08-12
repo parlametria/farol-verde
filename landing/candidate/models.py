@@ -217,6 +217,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         candidates_opinions = [''] * len(search_results)
 
         if subject:
+            search_results = [candidate for candidate in search_results if len(candidate.opinions)]
             candidates_opinions = [
                 candidate.opinions[0].value.get(subject_dict[subject])
                 for candidate in search_results
