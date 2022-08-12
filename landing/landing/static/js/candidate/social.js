@@ -103,13 +103,21 @@ function getKeywords() {
                     item.className = 'keyword__category overline'
                 } else {
                     item.addEventListener('click', (e) => {
-                        getSocialMedia(null, word)
-                        getKeywords()
+                        if(!item.classList.contains('marked')) {
+                            item.classList.add('marked');
+                            getSocialMedia(null, word);
+                            getKeywords();
+                        } else {
+                            getSocialMedia(null, null);
+                            getKeywords();
+                        }
                     });
                     item.className = 'keyword__item button-text';
                 }
                 if (word == markedKeyword) {
                     item.classList.add('marked');
+                } else {
+                    item.classList.remove('marked');
                 }
                 item.innerHTML = word;
                 if (word.length > 30) item.classList.add('long');
@@ -147,9 +155,9 @@ function getSocialMedia(socialApp, keyword) {
     socialApp ??= 'twitter';
     socialApp = socialApp.toLowerCase();
     let url = './api/social-media/' + socialApp;
+    markedKeyword = keyword;
     if (keyword) {
-        url += '/' + keyword.replaceAll(' ', '_');
-        markedKeyword = keyword;
+        url += '/' + keyword;
     }
 
     if(socialMediaRequest) socialMediaRequest.abort();
