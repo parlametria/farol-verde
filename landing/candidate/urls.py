@@ -20,5 +20,4 @@ urlpatterns = [
 
     path("<slug:slug>/api/propositions/<str:search>", propositions_view),
     path("<slug:slug>/api/propositions", propositions_view),
-
 ]

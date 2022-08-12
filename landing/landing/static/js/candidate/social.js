@@ -55,7 +55,6 @@ function openSocial(socialName) {
     socialContent.classList.remove('hide');
 }
 
-
 let sectionRequest;
 let searchValue = '';
 let markedKeyword = '';
