@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0016_set_phone_fields_class'),
+        ('candidate', '0015_alter_votacaoprosicao_data_hora_registro'),
     ]
 
     operations = [

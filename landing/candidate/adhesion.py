@@ -4,8 +4,29 @@ from typing import Dict, List, Union
 
 from django.db.models.query import QuerySet
 
-from candidate.models import Proposicao, VotacaoParlamentar, CandidatePage
+from candidate.models import Proposicao, VotacaoParlamentar, CandidatePage, CasaChoices
 
+
+def _check_camara_or_senado(candidate: CandidatePage):
+    """
+    Retorna a casa da legislação 56 do candidato.
+    Se na proxima eleição ele mudou de cargo(dep -> sen or sen -> dep)
+    retorna a casa anterior, senao retorna a casa atual
+    """
+    if (
+        candidate.is_deputado and not candidate.charge_changed
+    ):  # é deputado, nao mudou
+        return str(CasaChoices.CAMARA)
+    elif (
+        candidate.is_deputado and candidate.charge_changed
+    ):  # é deputado, mas era senador
+        return str(CasaChoices.SENADO)
+    elif (
+        candidate.is_senador and not candidate.charge_changed
+    ):  # é senador, nao mudou
+        return str(CasaChoices.SENADO)
+    else:  # candidate.is_senador and candidate.charge_changed. # é senador, mas era deputado
+        return str(CasaChoices.CAMARA)
 
 class CandidateAdhesion(ABC):
     VOTE_SAME = "same"
@@ -15,9 +36,9 @@ class CandidateAdhesion(ABC):
     def _get_ids_lideres(self) -> Dict[str, int]:
         pass
 
-    @abstractmethod
-    def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
-        pass
+    def __init__(self, candidate: CandidatePage):
+        self.id_parlamentar = candidate.id_autor
+        self.candidate = candidate
 
     def _get_leader_votes(
         self, votacao_queryset: QuerySet, votacao_date: date, casa: str
@@ -112,6 +133,24 @@ class CandidateAdhesion(ABC):
 
         return adesao
 
+    def _get_propositions(self) -> QuerySet[Proposicao]:
+        check = _check_camara_or_senado(self.candidate)
+
+        if check == str(CasaChoices.CAMARA):
+            return Proposicao.proposicoes_camara().filter(calculate_adhesion=True)
+        else:
+            Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
+
+    def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
+        voted = []
+
+        for prop in self._get_propositions():
+            adhesion = self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
+
+            if adhesion is not None:
+                voted.append(adhesion)
+
+        return voted
 
 class CandidateAdhesionCamara(CandidateAdhesion):
 
@@ -123,21 +162,6 @@ class CandidateAdhesionCamara(CandidateAdhesion):
     def _get_ids_lideres(self):
         return self.IDS_LIDERES_CAMARA
 
-    def __init__(self, candidate: CandidatePage):
-        self.id_parlamentar = candidate.id_autor
-
-    def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
-        voted = []
-
-        for prop in Proposicao.proposicoes_camara().filter(calculate_adhesion=True):
-            adhesion = self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
-
-            if adhesion is not None:
-                voted.append(adhesion)
-
-        return voted
-
-
 class CandidateAdhesionSenado(CandidateAdhesion):
 
     IDS_LIDERES_SENADO = {
@@ -148,22 +172,11 @@ class CandidateAdhesionSenado(CandidateAdhesion):
     def _get_ids_lideres(self):
         return self.IDS_LIDERES_SENADO
 
-    def __init__(self, candidate: CandidatePage):
-        self.id_parlamentar = candidate.id_autor
-
-    def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
-        voted = []
-
-        for prop in Proposicao.proposicoes_senado().filter(calculate_adhesion=True):
-            voted.append(
-                self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
-            )
-
-        return voted
-
 
 def get_adhesion_strategy(candidate: CandidatePage):
-    if candidate.is_deputado:
+    check = _check_camara_or_senado(candidate)
+
+    if check == str(CasaChoices.CAMARA):
         return CandidateAdhesionCamara(candidate)
     else:
         return CandidateAdhesionSenado(candidate)

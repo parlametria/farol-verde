@@ -36,5 +36,8 @@ proposicoes-import:
 proposicoes-update-date:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes --update-date
 
+tse-process:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py tse --process
+
 shell:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py shell
