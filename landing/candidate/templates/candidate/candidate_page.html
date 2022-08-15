@@ -33,7 +33,7 @@
         <button onclick="openTab('activity')" class="tab overline activity">Convergência ambiental</button>
         <button onclick="openTab('propositions')" class="tab overline propositions">Proposições</button>
         {% endif %}
-        <button onclick="openTab('social')" class="tab overline social">Redes sociais</button>
+        {% comment %} <button onclick="openTab('social')" class="tab overline social">Redes sociais</button> {% endcomment %}
     </div>
 
     {% if page.opinions_answers %}
@@ -50,9 +50,9 @@
           {% include 'candidate/tabs/propositions.html' %}
       </div>
     {% endif %}
-    <div class="social tab__frame hide">
+    {% comment %} <div class="social tab__frame hide">
         {% include 'candidate/tabs/social.html' %}
-    </div>
+    </div> {% endcomment %}
 </main>
 
 {% endblock %}
