@@ -8,12 +8,41 @@
 {% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/home/home.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/popup.css' %}">
 
 <main class="container">
 
     <div class="heading fade-up">
         {{page.heading|richtext}}
     </div>
+
+    {% for popup in page.popup %}
+        {%if popup.value.active %}
+            <div class="popup open fade-down" id="{{ popup.id }}">
+                <div class="popup__content">
+                    <div class="popup__header">
+                        <div class="popup__title">
+                            {{ popup.value.title }}
+                        </div>
+                        <div class="popup__close">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                    <div class="popup__body">
+                        {{ popup.value.text|richtext }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {% if popup.block.active %}
+        <div class="popup">
+            <div class="popup__content">
+                Estaremos prospectando e aceitando adesões de candidaturas para o Painel Farol Verde até as 12h do dia 30 de setembro.
+            </div>
+        </div>
+    {% endif %}
 
     <section>
         <div class="home__ctas fade-up">
@@ -23,7 +52,7 @@
             </div>
             <div class="cta-eleitor">
                 <h3 class="label">É eleitor(a)?</h3>
-                <h2><a class="btn btn-round" href="{{ contact_url }}">Aguarde o lançamento!</a></h1>
+                <h2><a class="btn btn-round" href="{{ contact_url }}">Escolha AQUI</a></h1>
             </div>
         </div>
     </section>
@@ -92,6 +121,7 @@
 </main>
 
 <script type="text/javascript" src="{% static 'js/animations/general.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/components/popup.js' %}"></script>
 <!-- <script type="text/javascript" src="{% static 'js/home/carousel.js' %}"></script> -->
 
 {% endblock %}
