@@ -13,6 +13,9 @@ const showModal = document.querySelector('#show-modal');
 const modalInput = showModal.querySelector('input');
 const states = document.querySelectorAll('#svg-map .estado');
 
+let params = {};
+let pages = [];
+
 const selectedStates = []
 
 $('#form').ajaxForm( result => {
@@ -20,10 +23,14 @@ $('#form').ajaxForm( result => {
 });
 
 function getCandidatesList(page) {
+    if (page) {
+       window.history.pushState('', 'Candidatos - Farol Verde', `/candidatos/?page=${page}`);
+    }
     pagination.value = page ?? 1;
 
     $('#form').ajaxSubmit( result => {
         candidatesList.innerHTML = result;
+        initPagination();
     });
 }
 
@@ -104,3 +111,26 @@ document.addEventListener('click', e => {
     if (comp != partyBoard && comp != partyButton) partyBoard.classList.remove('open');
     if (comp != ufBoard && comp != ufButton) ufBoard.classList.remove('open');
 })
+
+function initPagination() {
+    params = location.search.slice(1).split('&').reduce((acc, s) => {
+          const [k, v] = s.split('=')
+          return Object.assign(acc, {[k]: v})
+    }, {});
+    pages = document.querySelectorAll('.pagination button:not(.page-prev)');
+    const page = params.page ?? 1;
+    const visiblePages = document.querySelectorAll(`.pagination .page-prev, .pagination .page-${page}, .pagination .page-${Number(page)-1}, .pagination .page-${Number(page)+1}`);
+    visiblePages.forEach((e) => {
+        if (e.classList.contains(`page-${page}`)) {
+              e.classList.add('active');
+        }
+        e.style.display = 'inline-block';
+    });
+}
+
+function getCandidatesPrev() {
+    if (params.page > 1) getCandidatesList(Number(params.page) - 1);
+}
+function getCandidatesNext() {
+    if (params.page < pages.length) getCandidatesList(Number(params.page) + 1);
+}

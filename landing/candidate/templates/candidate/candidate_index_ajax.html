@@ -41,8 +41,10 @@
 
 {% if candidates_list.paginator.num_pages > 1 %}
     <div class="pagination">
+        <button class="page-prev" onclick="getCandidatesPrev()">&#x3c;</button>
         {% for page_num in candidates_list.paginator.page_range %}
-            <button onclick="getCandidatesList({{ page_num }})">{{ page_num }}</button>
+            <button class="page-{{ page_num }}" onclick="getCandidatesList({{ page_num }})">{{ page_num }}</button>
         {% endfor %}
+        <button class="page-prev" onclick="getCandidatesNext()">&#x3e;</button>
     </div>
 {% endif %}
