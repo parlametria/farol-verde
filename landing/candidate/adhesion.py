@@ -62,11 +62,7 @@ class CandidateAdhesion(ABC):
     def _compare_votes(
         self, parlamentar: VotacaoParlamentar, lider: VotacaoParlamentar
     ):
-
-        if parlamentar == None and lider != None:
-            return self.VOTE_DIFFERENT
-
-        if lider == None and parlamentar != None:
+        if parlamentar == None:
             return self.VOTE_DIFFERENT
 
         if parlamentar.casa == str(CasaChoices.CAMARA):
@@ -121,7 +117,8 @@ class CandidateAdhesion(ABC):
                 id_parlamentar=id_parlamentar
             ).first()
 
-            if votos_lider == None and votos_parlamentar == None:
+            # ignora votacao quando lider não votou
+            if votos_lider == None:
                 continue
 
             voto = self._compare_votes(votos_parlamentar, votos_lider)
