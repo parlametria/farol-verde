@@ -1,9 +1,9 @@
-.country-selector {
+.state-selector {
     --green: #13a538;
     --yellow-green: #c1ff00;
 }
 
-.country-selector .modal-header {
+.state-selector .modal-header {
     display: flex;
     justify-content: center;
     color: var(--dark-blue);
@@ -11,14 +11,14 @@
     font-weight: 700;
 }
 
-.country-selector .modal-body {
+.state-selector .modal-body {
     overflow-y: hidden;
     display: grid;
     align-items: center;
     justify-items: stretch;
 }
 
-.country-selector .modal-footer {
+.state-selector .modal-footer {
     display: flex;
     align-items: center;
     border-top-width: 0 !important;
@@ -29,26 +29,26 @@
     color: var(--blue);
 }
 
-.country-selector .modal-footer label {
+.state-selector .modal-footer label {
     display: flex;
     align-items: center;
     gap: .5rem;
     cursor: pointer;
 }
 
-.country-selector .modal-footer .right {
+.state-selector .modal-footer .right {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
-.country-selector .modal-footer .right button {
+.state-selector .modal-footer .right button {
     padding-inline: 1rem;
     font-size: 1rem;
     color: white;
 }
 
-.country-selector .modal-footer .right a {
+.state-selector .modal-footer .right a {
     text-decoration: underline;
     color: var(--blue);
 }
@@ -67,7 +67,17 @@
     cursor: pointer;
 }
 
-#svg-map a:hover text {fill: var(--green);}
+
+#svg-map .circle {display: none;}
+#svg-map .circle + text {
+    display: none;
+    fill: var(--green) !important;
+}
+
+#svg-map a:hover text {
+    fill: var(--green);
+    display: block
+}
 
 #svg-map a {text-decoration: none;}
 
@@ -81,6 +91,7 @@
 #svg-map :is(a:hover path, .circle) {fill: var(--yellow-green) !important;}
 
 #svg-map a:hover .circle {
-    fill: var(--yellow-green) !important;
+    display: block;
+    fill: var(--yellow-green);
     cursor: pointer;
 }
