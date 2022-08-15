@@ -17,7 +17,7 @@
 
 .popup__content {
     display: grid;
-    grid-template-rows: 2rem auto;
+    grid-template-rows: 2rem auto 2rem;
     max-width: 30rem;
     min-width: 16rem;
     min-height: 12rem;
@@ -27,14 +27,20 @@
     box-shadow: 0 0 .5rem rgba(0, 0, 0, .5);
 }
 
-.popup__header {
+.popup__header, .popup__footer {
     display: flex;
     justify-content: space-between;
+    font-weight: 700;
+}
+
+.popup__footer {
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .popup__close {
-    justify-self: end;
     cursor: pointer;
+    color: var(--dark-blue);
 }
 
 .popup__body {

@@ -6,7 +6,7 @@ from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
 from wagtailstreamforms.blocks import WagtailFormBlock
 from candidate.models import CandidateIndexPage
 from blog.models import BlogPost
-from wagtail.core.blocks import BooleanBlock, TextBlock, StructBlock
+from wagtail.core.blocks import BooleanBlock, TextBlock, StructBlock, CharBlock
 
 class LandingPage(MetadataPageMixin, Page):
     is_creatable = False
@@ -20,6 +20,7 @@ class LandingPage(MetadataPageMixin, Page):
     popup = StreamField([
         ("popup", StructBlock([
             ("active", BooleanBlock(label="Ativo", required=False)),
+            ("title", CharBlock(label="Título", required=False)),
             ("text", TextBlock(label="Texto do popup", required=False))
         ], max_num=1))
     ], max_num=1, null=True)
