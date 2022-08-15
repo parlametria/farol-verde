@@ -67,17 +67,27 @@
             <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
             <div class="query__sortby">
                 <label class="btn-toggle">
-                    <input type="radio" name="sortby" value="descending" id="sortby_desc" checked>
+                    <input type="radio" name="sortby" value="ascending" id="sortby_desc" checked>
                     <span><i class="fas fa-sort-alpha-down fa-lg"></i></span>
                 </label>
                 <label class="btn-toggle">
-                    <input type="radio" name="sortby" value="ascending" id="sortby_asc">
+                    <input type="radio" name="sortby" value="descending" id="sortby_asc">
                     <span><i class="fas fa-sort-alpha-up fa-lg"></i></span>
                 </label>
             </div>
         </div>
-        <div class="query__heading">Mostrar</div>
+        <div class="query__heading">Mostrar candidatos:</div>
         <div class="query__show">
+            <label for='reelection'>
+                Reeleição: 
+                <input type='checkbox' id='reelection' name='reelection' checked>
+                Sim
+            </label>
+            <label for='no_reelection'>
+                <input type='checkbox' id='no_reelection' name='no_reelection' checked>
+                Não
+            </label>
+            <div class="divider"></div>
             <label for='senators'>
                 <input type='checkbox' id='senators' name='senators' checked>
                 Senadores
@@ -86,6 +96,17 @@
                 <input type='checkbox' id='deputies' name='deputies' checked>
                 Deputados
             </label>
+            <div class="divider"></div>
+            <label for='men'>
+                <input type='checkbox' id='men' name='men' checked>
+                Homens
+            </label>
+            <label for='women'>
+                <input type='checkbox' id='women' name='women' checked>
+                Mulheres
+            </label>
+        </div>
+        <div class="query__show">
             <div class="query__heading" onclick="toggleSubjects()">
                 <img src="{% static 'img/icons/voting.svg' %}">
                 Como cada candidato votou nos temas da enquete:

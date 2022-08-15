@@ -138,7 +138,7 @@ class CandidatePage(MetadataPageMixin, Page):
         senador_picture_url = "https://www.senado.leg.br/senadores/img/fotos-oficiais/senador"
         deputado_picture_url = "https://www.camara.leg.br/internet/deputado/bandep/"
 
-        if self.charge == "Senador(a)":
+        if self.charge == self.SENADOR_CHARGE_TEXT:
             return f"{senador_picture_url}{self.id_autor}.jpg" if not self.charge_changed else f"{deputado_picture_url}{self.id_autor}.jpg"
         return f"{deputado_picture_url}{self.id_autor}.jpg" if not self.charge_changed else f"{senador_picture_url}{self.id_autor}.jpg"
 
@@ -166,6 +166,7 @@ class CandidatePage(MetadataPageMixin, Page):
         FieldPanel('email'),
         FieldPanel('picture'),
         FieldPanel('charge'),
+        FieldPanel('gender'),
         StreamFieldPanel('social_media'),
         FieldPanel('manager_name'),
         FieldPanel('manager_email'),
@@ -205,24 +206,38 @@ class CandidateIndexPage(MetadataPageMixin, Page):
 
         charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
         charges = []
+        gender_dict = {'men': 'M', 'women': 'F'}
+        genders = []
+        election_dict = {'reelection': False, 'no_reelection': True }
+        reelections = []
 
         params_functions = {
             'name': lambda queryset, value: queryset.filter(title__icontains=value),
             'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
             'party[]': lambda queryset, values: queryset.filter(party__in=values),
             'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
+            'id_autor': lambda queryset, value: queryset.filter(id_autor__isnull=value),
         }
 
         request_items = dict(request.GET)
         for param, value in list(request_items.items()):
             if param in charges_dict.keys():
                 charges.append(charges_dict[param])
+            if param in gender_dict.keys():
+                genders.append(gender_dict[param])
+            if param in election_dict.keys():
+                reelections.append(election_dict[param])
             if param not in ['uf[]', 'party[]']:
                 value = value[0]
             if value and param in params_functions:
+                pass
                 queryset = params_functions[param](queryset, value)
+        
+        if len(reelections) == 1:
+            print(reelections)
+            queryset = params_functions['id_autor'](queryset, reelections[0])
 
-        return queryset.filter(charge__in=charges)
+        return queryset.filter(charge__in=charges, gender__in=genders)
 
 
     def get_context(self, request):

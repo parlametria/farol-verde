@@ -85,12 +85,23 @@ input::placeholder {color: var(--dark-blue);}
 
 .query__show {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     flex-wrap: wrap;
     gap: 1.5rem;
     color: var(--dark-blue);
+    line-height: 2;
+}
+.query__show .divider {
+    background: var(--dark-gray);
+    width: 1px;
+}
+.query__show label {
+    filter: grayscale(1);
 }
 
+.query__heading {
+    font-weight: 700;
+}
 .query__show .query__heading {
     display: flex;
     cursor: pointer;
@@ -107,7 +118,8 @@ input::placeholder {color: var(--dark-blue);}
     display: flex;
     flex-wrap: wrap;
     padding-top: .5rem;
-    gap: .75rem;
+    justify-content: space-between;
+    gap: 0.5rem;
 }
 
 .query__subjects.closed {display: none;}
