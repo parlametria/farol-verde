@@ -139,7 +139,7 @@ class CandidateAdhesion(ABC):
         if check == str(CasaChoices.CAMARA):
             return Proposicao.proposicoes_camara().filter(calculate_adhesion=True)
         else:
-            Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
+            return Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
 
     def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
         voted = []
