@@ -83,7 +83,9 @@ class CandidateAdhesion(ABC):
     def _adhesion_calculation_on_proposition(
         self, id_parlamentar: int, proposicao: Proposicao
     ):
-        total_votacoes = proposicao.votacoes.count()
+        # desconsiderar votações anteriores a 01/01/2019
+        votacoes = proposicao.votacoes.filter(data__gte="2019-01-01")
+        total_votacoes = votacoes.count()
 
         if total_votacoes == 0:
             return None
@@ -105,7 +107,7 @@ class CandidateAdhesion(ABC):
             return adesao
 
         total_calculadas = 0
-        for votacao in proposicao.votacoes.all():
+        for votacao in votacoes.all():
             if votacao.votacoes_parlamentares.count() == 0:
                 continue
 
