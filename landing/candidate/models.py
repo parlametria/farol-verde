@@ -138,7 +138,7 @@ class CandidatePage(MetadataPageMixin, Page):
         senador_picture_url = "https://www.senado.leg.br/senadores/img/fotos-oficiais/senador"
         deputado_picture_url = "https://www.camara.leg.br/internet/deputado/bandep/"
 
-        if self.charge == "Senador(a)":
+        if self.id_autor and str(self.id_autor)[0] == '2':
             return f"{senador_picture_url}{self.id_autor}.jpg"
         return f"{deputado_picture_url}{self.id_autor}.jpg"
 
