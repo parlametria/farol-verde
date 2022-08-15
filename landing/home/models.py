@@ -36,7 +36,7 @@ class LandingPage(MetadataPageMixin, Page):
     def get_context(self, request):
         context = super(LandingPage, self).get_context(request)
         survey_url = SurveysPage.objects.get(title="Enquete").slug
-        contact_url = SurveysPage.objects.get(title="Contato").slug
+        contact_url = CandidateIndexPage.objects.first().slug
         candidates_url = CandidateIndexPage.objects.first().slug
 
         context["survey_url"] = survey_url
