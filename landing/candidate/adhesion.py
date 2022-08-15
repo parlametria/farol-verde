@@ -62,11 +62,21 @@ class CandidateAdhesion(ABC):
     def _compare_votes(
         self, parlamentar: VotacaoParlamentar, lider: VotacaoParlamentar
     ):
+
         if parlamentar == None and lider != None:
             return self.VOTE_DIFFERENT
 
         if lider == None and parlamentar != None:
             return self.VOTE_DIFFERENT
+
+        if parlamentar.casa == str(CasaChoices.CAMARA):
+            nao_vote = VotacaoParlamentar.TIPOS_VOTO["camara"]["nao"]
+            obstrucao_vote = VotacaoParlamentar.TIPOS_VOTO["camara"]["obstrucao"]
+
+            # Se lider votou não e candidato votou obstrução, considerar voto do candidato
+            # como "não", ou seja, ambos votaram não
+            if lider.tipo_voto == nao_vote and parlamentar.tipo_voto == obstrucao_vote:
+                return self.VOTE_SAME
 
         return (
             self.VOTE_SAME
