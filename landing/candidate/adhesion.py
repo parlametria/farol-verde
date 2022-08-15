@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, date
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 from django.db.models.query import QuerySet
 
@@ -33,7 +33,7 @@ class CandidateAdhesion(ABC):
     VOTE_DIFFERENT = "different"
 
     @abstractmethod
-    def _get_ids_lideres(self) -> Dict[str, int]:
+    def _get_ids_lideres(self) -> Dict[str, List[int]]:
         pass
 
     def __init__(self, candidate: CandidatePage):
@@ -41,23 +41,25 @@ class CandidateAdhesion(ABC):
         self.candidate = candidate
 
     def _get_leader_votes(
-        self, votacao_queryset: QuerySet, votacao_date: date, casa: str
-    ):
+        self, votacao_queryset: QuerySet, votacao_date: date
+    ) -> Optional[QuerySet]:
         date_check = datetime.strptime("2022-02-02", "%Y-%m-%d").date()
-        ids_lideres = self._get_ids_lideres()
+        ids_lideres: List[int] = []
+        date_filter: QuerySet = None
 
         if votacao_date < date_check:
-            return (
-                votacao_queryset
-                .filter(data__lt="2022-02-02")
-                .filter(id_parlamentar=ids_lideres["antes-02-02-2022"])
-            )
+            ids_lideres = self._get_ids_lideres()["antes-02-02-2022"]
+            date_filter = votacao_queryset.filter(data__lt="2022-02-02")
         else:
-            return (
-                votacao_queryset
-                .filter(data__gte="2022-02-02")
-                .filter(id_parlamentar=ids_lideres["apos-02-02-2022"])
-            )
+            ids_lideres = self._get_ids_lideres()["apos-02-02-2022"]
+            date_filter = votacao_queryset.filter(data__gte="2022-02-02")
+
+        for id_lider in ids_lideres:
+            votes = date_filter.filter(id_parlamentar=id_lider).first()
+            if votes is not None:
+                return votes
+
+        return None
 
     def _compare_votes(
         self, parlamentar: VotacaoParlamentar, lider: VotacaoParlamentar
@@ -66,12 +68,10 @@ class CandidateAdhesion(ABC):
             return self.VOTE_DIFFERENT
 
         if parlamentar.casa == str(CasaChoices.CAMARA):
-            nao_vote = VotacaoParlamentar.TIPOS_VOTO["camara"]["nao"]
             obstrucao_vote = VotacaoParlamentar.TIPOS_VOTO["camara"]["obstrucao"]
 
-            # Se lider votou não e candidato votou obstrução, considerar voto do candidato
-            # como "não", ou seja, ambos votaram não
-            if lider.tipo_voto == nao_vote and parlamentar.tipo_voto == obstrucao_vote:
+            if parlamentar.tipo_voto == obstrucao_vote:
+                # Todo voto obstrução, deve ser convergente
                 return self.VOTE_SAME
 
         return (
@@ -106,14 +106,16 @@ class CandidateAdhesion(ABC):
             adesao["total_com_votos"] = 0
             return adesao
 
+        voto_art_17 = VotacaoParlamentar.TIPOS_VOTO["camara"]["artigo_17"]
+
         total_calculadas = 0
         for votacao in votacoes.all():
             if votacao.votacoes_parlamentares.count() == 0:
                 continue
 
             votos_lider = self._get_leader_votes(
-                votacao.votacoes_parlamentares, votacao.data, proposicao.casa
-            ).first()
+                votacao.votacoes_parlamentares, votacao.data
+            )
 
             votos_parlamentar = votacao.votacoes_parlamentares.filter(
                 id_parlamentar=id_parlamentar
@@ -121,6 +123,10 @@ class CandidateAdhesion(ABC):
 
             # ignora votacao quando lider não votou
             if votos_lider == None:
+                continue
+
+            # Voto artigo 17 deve-se descartar a votação do candidato
+            if votos_parlamentar is not None and votos_parlamentar.tipo_voto == voto_art_17:
                 continue
 
             voto = self._compare_votes(votos_parlamentar, votos_lider)
@@ -164,8 +170,10 @@ class CandidateAdhesion(ABC):
 class CandidateAdhesionCamara(CandidateAdhesion):
 
     IDS_LIDERES_CAMARA = {
-        "antes-02-02-2022": 204530,  # Dep. Rodrigo Agostinho
-        "apos-02-02-2022": 160511,  # Dep. Alessandro Molon
+        # 1.º: Dep. Rodrigo Agostinho, 2º: Dep. Alessandro Molon, 3º: Dep. Nilto Tatto
+        "antes-02-02-2022": [204530, 160511, 178986],
+        # 1.º: Dep. Alessandro Molon, 2º: Dep. Rodrigo Agostinho , 3º: Dep. Nilto Tatto
+        "apos-02-02-2022": [160511, 204530, 178986],  # Dep. Alessandro Molon
     }
 
     def _get_ids_lideres(self):
@@ -174,8 +182,10 @@ class CandidateAdhesionCamara(CandidateAdhesion):
 class CandidateAdhesionSenado(CandidateAdhesion):
 
     IDS_LIDERES_SENADO = {
-        "antes-02-02-2022": 5953,  # Sen. Fabiano Contarato
-        "apos-02-02-2022": 5718,  # Sen. Eliziane Gama
+        # 1º: Sen. Fabiano Contarato, 2º: Sen. Eliziane Gama, 3º: Sen. Randolfe Rodrigues
+        "antes-02-02-2022": [5953, 5718, 5012],  # Sen. Fabiano Contarato
+        # 1º: Sen. Eliziane Gama, 2º: Sen. Fabiano Contarato, 3º: Sen. Randolfe Rodrigues
+        "apos-02-02-2022": [5718, 5953, 5012],  # Sen. Eliziane Gama
     }
 
     def _get_ids_lideres(self):
