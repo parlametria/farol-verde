@@ -8,17 +8,17 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/modal.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/input-board.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/btn-toggle.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/components/country-selector.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/components/state-selector.css' %}">
 
 <main class="candidates container">
-    <div class="country-selector modal">
+    <div class="state-selector modal">
         <div class="modal-backdrop"></div>
         <div class="modal-content">
             <div class="modal-header">
                 Em qual estado você deseja encontrar um candidato?
             </div>
             <div class="modal-body">
-                {% include 'candidate/components/country-selector.html' %}
+                {% include 'candidate/components/state-selector.html' %}
             </div>
             <div class="modal-footer">
                 <label id="show-modal">
