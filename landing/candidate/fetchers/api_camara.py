@@ -4,18 +4,18 @@ CAMARA_API = "https://dadosabertos.camara.leg.br/api/v2"
 
 # (numero/ano)
 FETCH_LIST = [
-    ("MPV", 867, 2018, "Programa de Regularização Ambiental (PRA)"),
-    ("MPV", 910, 2019, "Regularizão fundiária de ocupações"),
+    ("MPV", 867, 2018, "Anistias no Código Florestal (MP 867/18)"),
+    ("MPV", 910, 2019, "MP da Grilagem (MP 910/19)"),
     ("PL", 3729, 2004, "Licenciamento ambiental"),
-    ("PL", 6299, 2002, "Altera Lei dos Agrotóxicos"),
-    ("PL", 2633, 2020, "Regularização Fundiária"),
-    ("PL", 5028, 2019, "Política Nacional de Pagamento por serviços ambientais"),
-    ("PL", 191, 2020, "Mineração em terras indígenas"),
-    ("PL", 528, 2021, "Regulamenta o Mercado Brasileiro de Redução de Emissões (MBRE)"),
+    ("PL", 6299, 2002, "PL do Veneno (PL 6299/02)"),
+    ("PL", 2633, 2020, "PL da Grilagem (PL 2633/20)"),
+    ("PL", 5028, 2019, "Pagamento por Serviços Ambientais (derrubada de vetos PL 5028/19)"),
+    ("PL", 191, 2020, "Mineração em Terras Indígenas (req. urgência PL 191/20)"),
+    ("PL", 528, 2021, "Mercado Brasileiro de Redução de Emissões (req. urgência PL 528/21)"),
     ("PL", 2510, 2019, "APP urbana"),
     ("PL", 5466, 2019, "Dia dos Povos Indígenas"),
     ("PL", 4162, 2019, "Marco legal do saneamento básico"),
-    ("PL", 4476, 2020, "Gás natural"),
+    # ("PL", 4476, 2020, "Gás natural"),
 ]
 
 
