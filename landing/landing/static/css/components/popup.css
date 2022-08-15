@@ -1,6 +1,6 @@
 .popup {
     display: grid;
-    position: absolute;
+    position: fixed;
     visibility: hidden;
     top: 0;
     bottom: 0;
@@ -8,8 +8,8 @@
     right: 0;
     width: 100%;
     height: 100%;
-    background: transparent;
-    z-index: 100;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
     place-items: center;
 }
 
@@ -35,7 +35,6 @@
 .popup__close {
     justify-self: end;
     cursor: pointer;
-    color: var(--blue);
 }
 
 .popup__body {

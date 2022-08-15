@@ -19,8 +19,8 @@ class LandingPage(MetadataPageMixin, Page):
 
     popup = StreamField([
         ("popup", StructBlock([
-            ("active", BooleanBlock(label="Ativo")),
-            ("text", TextBlock(label="Texto do popup"))
+            ("active", BooleanBlock(label="Ativo", required=False)),
+            ("text", TextBlock(label="Texto do popup", required=False))
         ], max_num=1))
     ], max_num=1, null=True)
 
