@@ -1,5 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/modal.css' %}">
+
 <form class="survey-form fade-up" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %} action="{{ value.form_action }}" method="post" novalidate>
     {% csrf_token %}
     {{ form.media }}
@@ -9,20 +11,20 @@
     {% endfor %}
 
     <div class="actions">
-    <a class="btn btn-round modal-toggle">Confirmar envio</a>
+    <a class="btn btn-round modal__toggle">Confirmar envio</a>
     </div>
     <div class="modal">
-        <div class="modal-backdrop"></div>
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
                 <h2>Confirme seus dados</h2>
-                <a class="modal-close">
+                <a class="modal__close">
                     <img src="{% static 'img/icons/times.svg' %}">
                 </a>
             </div>
             
-            <div class="modal-all">
-                <div class="modal-body">
+            <div class="modal__all">
+                <div class="modal__body">
                 </div>
                 <hr>
                 <div class="lgpd_text">
@@ -30,10 +32,11 @@
                 </div>
             </div>
             
-            <div class="modal-footer">
-            <a class="btn btn-round btn-primary modal-close submit" href="#">{{ value.form.submit_button_text }}</a>
+            <div class="modal__footer">
+            <a class="btn btn-round btn-primary modal__close submit" href="#">{{ value.form.submit_button_text }}</a>
             </div>
         </div>
+    </div>
 </form>
 <script src="{% static 'js/components/modal.js' %}"></script>
 <script src="{% static 'js/home/surveys.js' %}"></script>

@@ -1,8 +1,8 @@
 function setToggle() {
   const modal = document.querySelector('.modal');
-  document.querySelector('.modal-toggle').addEventListener('click',() => {
+  document.querySelector('.modal__toggle').addEventListener('click',() => {
     modal.classList.add('open');
-    const openEvent = new Event('modal-open', {
+    const openEvent = new Event('modal__open', {
         bubbles: true,
         cancelable: true,
         composed: false
@@ -11,7 +11,7 @@ function setToggle() {
   });
 
   
-  document.querySelectorAll('.modal-backdrop, .modal-close').forEach(
+  document.querySelectorAll('.modal__backdrop, .modal__close').forEach(
     (elm) => elm.addEventListener('click',() => {
       modal.classList.remove('open');
     }));

@@ -49,3 +49,13 @@
 }
 
 .voting__empty img {padding-bottom: 1rem;}
+
+.modal__content {grid-template-rows: 2rem auto !important;}
+
+.know-more {
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: underline;
+    color: var(--primary-color);
+    cursor: pointer;
+}
