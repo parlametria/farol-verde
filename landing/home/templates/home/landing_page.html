@@ -18,18 +18,18 @@
 
     {% for popup in page.popup %}
         {%if popup.value.active %}
-            <div class="popup open fade-down" id="{{ popup.id }}">
-                <div class="popup__content">
+            <div class="popup open" id="{{ popup.id }}">
+                <div class="popup__content fade-down">
                     <div class="popup__header">
                         <div class="popup__title">
                             {{ popup.value.title }}
                         </div>
-                        <div class="popup__close">
-                            <i class="fas fa-times"></i>
-                        </div>
                     </div>
-                    <div class="popup__body">
+                    <p class="popup__body">
                         {{ popup.value.text|richtext }}
+                    </p>
+                    <div class="popup__footer">
+                        <div class="popup__close">Ok</div>
                     </div>
                 </div>
             </div>
