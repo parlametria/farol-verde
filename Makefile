@@ -42,5 +42,8 @@ adesao-to-csv:
 tse-process:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py tse --process
 
+vetos-import:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py vetos --import
+
 shell:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py shell
