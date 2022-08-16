@@ -1,4 +1,4 @@
-document.querySelector('.modal').addEventListener('modal-open', () => {
+document.querySelector('.modal').addEventListener('modal__open', () => {
   setQuestionsModal();
 });
 
@@ -29,9 +29,9 @@ function setQuestionsModal() {
     </div>`;
   }
   
-  document.querySelector('.modal-body').textContent = ''
+  document.querySelector('.modal__body').textContent = ''
   questionsData.map(makeQuestion).forEach(elm => {
-    document.querySelector('.modal-body').innerHTML += elm;
+    document.querySelector('.modal__body').innerHTML += elm;
   })
 }
 
@@ -84,7 +84,7 @@ function setPhoneMask() {
 
 function setFormSubmit() {
   const form = document.querySelector('form.survey-form');
-  document.querySelector('.modal-close.submit').addEventListener('click',(e) => {
+  document.querySelector('.modal__close.submit').addEventListener('click',(e) => {
     function removeCPFmask() {
       const cpf = document.querySelector('input[name="cpf"]');
       if(!cpf) return;
