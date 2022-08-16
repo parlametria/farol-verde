@@ -59,7 +59,7 @@ class VetosSheet:
             raise Exception(f"Proposition not found from tab: {tab}")
 
         sheet_csv_url = self.get_google_sheet_csv_url(SHEET_ID, tab)
-        csv_iterator = self.url_csv_iterator(sheet_csv_url)
+        csv_iterator = self.url_to_row_iterator(sheet_csv_url)
         reader = csv.reader(csv_iterator, delimiter=",")
         dispositivos = next(reader)[1:]
         sessoes: List[SessaoVeto] = []
@@ -78,6 +78,7 @@ class VetosSheet:
 
             if nome_parlamentar == "-":
                 casa = str(CasaChoices.SENADO)
+                continue
 
             self._process_votacoes_dispositivo(nome_parlamentar, sessoes, votos, casa)
 
@@ -85,7 +86,7 @@ class VetosSheet:
         sheet_name_url = urllib.parse.quote_plus(sheet_name)
         return f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name_url}"
 
-    def url_csv_iterator(self, url: str) -> Generator[str, None, None]:
+    def url_to_row_iterator(self, url: str) -> Generator[str, None, None]:
         headers = {"Content-type": "text/csv"}
         response = requests.get(url, headers=headers)
         return (it.decode("utf-8") for it in response.iter_lines())
