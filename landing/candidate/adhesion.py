@@ -151,7 +151,7 @@ class CandidateAdhesion(ABC):
             candidate = CandidatePage.objects.filter(id_autor=id_parlamentar).first()
 
             for sessao in sessao_vetos:
-                voto_veto = self._compare_votes_veto(sessao, candidate.title)
+                voto_veto = self._compare_votes_veto(sessao, candidate.campaign_name)
                 if voto_veto == self.IGNORE_VOTE:
                     continue
 
