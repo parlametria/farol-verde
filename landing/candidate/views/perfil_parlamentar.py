@@ -149,6 +149,11 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
                 ]
             }
         },
+        "sort": { 
+            "social-data.data criado" : {
+                "order" : "desc"
+            }
+        },
         "fields": [ "_source.social-data.*" ]
     }
     if len(keyword) > 0:
