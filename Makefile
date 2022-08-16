@@ -36,6 +36,9 @@ proposicoes-import:
 proposicoes-update-date:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes --update-date
 
+adesao-to-csv:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py adesao --all-candidates-adhesion-csv
+
 tse-process:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py tse --process
 
