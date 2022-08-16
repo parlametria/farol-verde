@@ -28,13 +28,13 @@
 }
 
 .candidate.Sim::after {
-  content: "é favorável";
+  content: "sim";
   background-color: var(--primary-color);
 }
 
 .candidate.Não::after {
-  content: "não é favorável";
-  background-color: black;
+  content: "não";
+  background-color: #D00000;
 }
 
 .candidate.doubt::after {

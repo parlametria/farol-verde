@@ -70,6 +70,11 @@
     --result-color: #777;
 }
 
+.result__card h5 {
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
 .nao {--result-color: #D00000;}
 .sim {--result-color: #329c00;}
 
@@ -81,4 +86,21 @@
     color: white;
     border-radius: 100vmax;
     padding: .5rem .75rem;
+}
+
+.answer.sim,
+.answer.nao_sei,
+.answer.nao {
+  font-weight: 700;
+  color: var(--result-color);
+}
+
+.answer.sim:before {
+    content: "SIM";
+}
+.answer.nao:before {
+    content: "NÃO";
+}
+.answer.nao_sei:before {
+    content: "NÃO SEI";
 }
