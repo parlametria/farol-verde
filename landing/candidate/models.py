@@ -236,7 +236,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
             if value and param in params_functions:
                 pass
                 queryset = params_functions[param](queryset, value)
-        
+
         if len(reelections) == 1:
             print(reelections)
             queryset = params_functions['id_autor'](queryset, reelections[0])
@@ -397,3 +397,52 @@ class AutorProposicao(models.Model):
     id_parlamentar = models.IntegerField(blank=False, null=False, primary_key=True)
     nome = CharField(max_length=120, blank=True, null=True)
     proposicoes = models.ManyToManyField(Proposicao, related_name="autores")
+
+
+#https://www.congressonacional.leg.br/materias/vetos/-/veto/detalhe/13965
+#https://www.congressonacional.leg.br/materias/vetos/-/veto/detalhe/13965/1
+class SessaoVeto(models.Model):
+    proposicao = models.ForeignKey(
+        Proposicao,
+        on_delete=models.CASCADE,
+        related_name="sessoes_vetos",
+    )
+    dispositivo = models.CharField(blank=False, null=False, max_length=12)
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=["dispositivo", "proposicao"],
+                name="sessaoveto_disp_prop_idx",
+            ),
+        ]
+        unique_together = (("dispositivo", "proposicao"),)
+
+    def __str__(self):
+        return f"({self.proposicao}, {self.dispositivo})"
+
+
+class VotacaoDispositivo(models.Model):
+    nome_parlamentar = models.CharField(blank=False, null=False, max_length=120)
+    tipo_voto = models.CharField(blank=False, null=False, max_length=26)
+    sessao_veto = models.ForeignKey(
+        SessaoVeto,
+        on_delete=models.CASCADE,
+        related_name="votacoes",
+    )
+    casa = models.CharField(
+        blank=False,
+        null=False,
+        max_length=7,
+        choices=CasaChoices.choices,
+    )
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=["nome_parlamentar", "sessao_veto"],
+                name="votacaodispositivo_nomsess_idx",
+            ),
+        ]
+        unique_together = (("nome_parlamentar", "sessao_veto"),)
+
+    def __str__(self):
+        return f"{self.sessao_veto} -- {self.nome_parlamentar} -- {self.tipo_voto}"
