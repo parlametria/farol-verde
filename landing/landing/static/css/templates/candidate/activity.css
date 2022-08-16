@@ -54,6 +54,7 @@
 
 .know-more {
     font-weight: 700;
+    font-size: 14px;
     text-decoration: underline;
     color: var(--primary-color);
     cursor: pointer;
