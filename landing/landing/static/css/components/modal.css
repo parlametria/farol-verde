@@ -17,8 +17,6 @@
 
 .modal__close {
     cursor: pointer;
-    display: grid;
-    align-items: center;
 }
 
 .modal__close img {width: 1rem;}
