@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='landingpage',
             name='popup',
-            field=wagtail.core.fields.StreamField([('popup', wagtail.core.blocks.StructBlock([('active', wagtail.core.blocks.BooleanBlock(label='Ativo', required=False)), ('title', wagtail.core.blocks.CharBlock(label='Título', required=False)), ('text', wagtail.core.blocks.TextBlock(label='Texto do popup', required=False))], max_num=1))], null=True),
+            field=wagtail.core.fields.StreamField([('popup', wagtail.core.blocks.StructBlock([('active', wagtail.core.blocks.BooleanBlock(label='Ativo')), ('text', wagtail.core.blocks.TextBlock(label='Texto do popup'))], max_num=1))], null=True),
         ),
     ]
