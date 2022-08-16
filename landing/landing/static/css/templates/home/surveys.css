@@ -66,10 +66,10 @@ main {padding-top: 2rem;}
     margin-bottom: 1rem;
 }
 
-input[type="submit"]:hover, .modal-toggle:hover, .modal-close.submit:hover {
+input[type="submit"]:hover, .modal__toggle:hover, .modal__close.submit:hover {
     text-decoration: none;
 }
-input[type="submit"], .modal-toggle, .modal-close.submit {
+input[type="submit"], .modal__toggle, .modal__close.submit {
     color: white;
     background: var(--primary-color);
     padding: .5rem 1rem;

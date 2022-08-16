@@ -3,7 +3,7 @@
     --yellow-green: #c1ff00;
 }
 
-.state-selector .modal-header {
+.state-selector .modal__header {
     display: flex;
     justify-content: center;
     color: var(--dark-blue);
@@ -11,14 +11,14 @@
     font-weight: 700;
 }
 
-.state-selector .modal-body {
+.state-selector .modal__body {
     overflow-y: hidden;
     display: grid;
     align-items: center;
     justify-items: stretch;
 }
 
-.state-selector .modal-footer {
+.state-selector .modal__footer {
     display: flex;
     align-items: center;
     border-top-width: 0 !important;
@@ -29,26 +29,26 @@
     color: var(--blue);
 }
 
-.state-selector .modal-footer label {
+.state-selector .modal__footer label {
     display: flex;
     align-items: center;
     gap: .5rem;
     cursor: pointer;
 }
 
-.state-selector .modal-footer .right {
+.state-selector .modal__footer .right {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
-.state-selector .modal-footer .right button {
+.state-selector .modal__footer .right button {
     padding-inline: 1rem;
     font-size: 1rem;
     color: white;
 }
 
-.state-selector .modal-footer .right a {
+.state-selector .modal__footer .right a {
     text-decoration: underline;
     color: var(--blue);
 }
