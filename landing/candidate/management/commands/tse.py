@@ -79,11 +79,18 @@ class TseProcessor:
     def process(self):
         self._unpublish_all_candidates()
         self._publish_reelection_candidates()
+        self._publish_no_reelection_candidates()
 
     def _unpublish_all_candidates(self):
         return CandidatePage.objects.filter(live=True).update(live=False)
 
     def _publish_reelection_candidates(self):
+        return self._publish_candidates(reelection=True)
+
+    def _publish_no_reelection_candidates(self):
+        return self._publish_candidates(reelection=False)
+
+    def _publish_candidates(self, reelection=False):
         for candidato in self._tse_csv_iterator():
             is_deputado_or_senador = candidato.is_deputado or candidato.is_senador
             if not is_deputado_or_senador:
@@ -94,10 +101,16 @@ class TseProcessor:
             if found is None:  # candidate not in database, skip
                 continue
 
-            # canditado sem id_autor foi criado pela enquete e não foi encontrado no parlametria
-            # nesse case não deve ser publicado(live=True) automaticamente
-            if found.id_autor is None:
-                continue
+            if reelection is True:
+                # canditado sem id_autor foi criado pela enquete e não foi encontrado no parlametria
+                # nesse case não deve ser publicado(live=True) automaticamente
+                if found.id_autor is None:
+                    continue
+            else:
+                # candidato sem id_autor deve ser publicado caso a flag reelection indique a
+                # publicação de candidatos semser reeleição
+                if found.id_autor is not None:
+                    continue
 
             gender = (
                 GenderChoices.MASCULINE.value

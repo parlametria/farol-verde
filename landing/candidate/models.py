@@ -131,6 +131,9 @@ class CandidatePage(MetadataPageMixin, Page):
         if self.id_autor:
             return self._get_external_picture_link()
 
+        if self.tse_image_code:
+            return f"https://farolverde.org.br/static/tse/F{self.election_state}{self.tse_image_code}_div.jpg"
+
         return ""
 
 
