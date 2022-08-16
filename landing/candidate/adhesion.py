@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime, date
 from typing import Dict, List, Union, Optional
 
+from django.db.models import Q
 from django.db.models.query import QuerySet
 
 from candidate.models import (
@@ -151,7 +152,7 @@ class CandidateAdhesion(ABC):
             candidate = CandidatePage.objects.filter(id_autor=id_parlamentar).first()
 
             for sessao in sessao_vetos:
-                voto_veto = self._compare_votes_veto(sessao, candidate.campaign_name)
+                voto_veto = self._compare_votes_veto(sessao, candidate.title, candidate.campaign_name)
                 if voto_veto == self.IGNORE_VOTE:
                     continue
 
@@ -196,12 +197,8 @@ class CandidateAdhesion(ABC):
 
         return voted
 
-    def _compare_votes_veto(self, sessao: SessaoVeto, candidate_name: str):
-        votacao_parlamentar = (
-            VotacaoDispositivo.objects.filter(nome_parlamentar=candidate_name)
-            .filter(sessao_veto=sessao)
-            .first()
-        )
+    def _compare_votes_veto(self, sessao: SessaoVeto, candidate_name: str, campaign_name: str):
+        votacao_parlamentar = self._get_votacao_veto_parlamentar(sessao, candidate_name, campaign_name)
 
         if votacao_parlamentar is None:
             return self.VOTE_DIFFERENT
@@ -217,6 +214,14 @@ class CandidateAdhesion(ABC):
             else self.VOTE_DIFFERENT
         )
 
+    def _get_votacao_veto_parlamentar(self, sessao: SessaoVeto, candidate_name: str, campaign_name: str):
+        return (
+            VotacaoDispositivo.objects
+            .filter(Q(nome_parlamentar__icontains=candidate_name) | Q(nome_parlamentar__icontains=campaign_name))
+            .filter(sessao_veto=sessao)
+            .first()
+        )
+
     def _get_votacao_dispositivo_lider(
         self, sessao: SessaoVeto
     ) -> Optional[VotacaoDispositivo]:
@@ -229,7 +234,8 @@ class CandidateAdhesion(ABC):
                 continue
 
             votacao_lider = (
-                VotacaoDispositivo.objects.filter(nome_parlamentar=lider.title)
+                VotacaoDispositivo.objects
+                .filter(Q(nome_parlamentar__icontains=lider.title) | Q(nome_parlamentar__icontains=lider.campaign_name))
                 .filter(sessao_veto=sessao)
                 .first()
             )
