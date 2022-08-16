@@ -135,7 +135,7 @@ class SurveyCandidateFactory:
                             "sou-favoravel-a-politica-de-desmatamento-zero-em-todos-os-biomas-brasileiros-porque-acredito-ser-possivel-manter-e-ate-aumentar-a-producao-agropecuaria-atual-sem-novos-desmatamentos-por-meio-da-conversao-de-pastagens-degradadas-ou-subaproveitadas"
                         ],
                         "desmatamento": self.form[
-                            "sou-favoravel-a-retomada-dos-processos-demarcatorios-de-terras-indigenas-no-brasil-pois-sei-que-ainda-ha-mais-de-200-processos-pendentes-e-concordo-que-os-povos-e-as-culturas-indigenas-contribuem-para-o-enfrentamento-da-mudanca-climatica-para-a-conservacao-dessas-areas-protegidas-e-da-sociobiodiversidade-brasileira"
+                            "sou-favoravel-a-retomada-dos-processos-de-demarcacao-de-terras-indigenas-e-de-titulacao-de-territorios-quilombolas-no-brasil-pois-concordo-que-os-povos-e-comunidades-tradicionais-indigenas-e-quilombolas-e-suas-culturas-contribuem-para-o-enfrentamento-da-mudanca-climatica-para-a-conservacao-dessas-areas-protegidas-e-da-sociobiodiversidade-brasileira"
                         ],
                         "terras_indigenas": self.form[
                             "sou-favoravel-a-uma-reforma-e-a-uma-politica-tributaria-socioambiental-progressiva-e-promotora-de-saude-que-reduza-tributos-sobre-atividades-economicas-com-baixas-emissoes-de-gases-de-efeito-estufa-gee-e-com-baixo-nivel-de-poluicao-e-que-ao-mesmo-tempo-aumente-tributos-para-atividades-altamente-emissoras-de-gee-de-poluentes-ou-nocivas-a-saude"
