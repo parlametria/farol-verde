@@ -2,7 +2,7 @@
 
 <div class="adhesion">
     <div class="adhesion__data">
-        <h3>Índice de Convergência Ambiental</h3>
+        <h3>Índice de Convergência Ambiental total (ICAt)</h3>
         <div class="progress">
             <h4></h4>
             <div class="progress__bar">
@@ -11,8 +11,27 @@
         </div>
     </div>
     <div class="adhesion__definition">
-        <h4> O que significa esse número?</h4>
+        <h4>Como foi calculado o ICAt?</h4>
         <p> Índice que afere o percentual de convergência do voto do candidato na legislatura atual, em relação ao voto do então Líder da Frente Parlamentar Ambientalista. </p>
+        <p onclick="openModal()" class="know-more">Saiba mais</p>
+    </div>
+</div>
+
+<div class="modal">
+    <div class="modal__backdrop"></div>
+    <div class="modal__content">
+        <div class="modal__header">
+            <div></div>
+            <a class="modal__close modal__toggle">
+                <img src="{% static 'img/icons/times.svg' %}">
+            </a>
+        </div>
+        
+        <div class="modal__all">
+            <div class="modal__body">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pretium leo non nisl vehicula interdum. Quisque at dui mi. Donec commodo imperdiet purus, quis dictum quam euismod ut. Quisque vitae eros quis libero faucibus cursus id ac erat. Nulla facilisi. Nunc eget sem vel ante aliquam hendrerit. Mauris neque justo, tristique ut risus faucibus, malesuada luctus mauris. Donec viverra, neque in semper tempus, est nibh dapibus risus, eu volutpat dui orci vitae ex. Aenean pulvinar, odio eget aliquet volutpat, ex diam malesuada lectus, eget malesuada odio risus non erat. Maecenas venenatis ligula non euismod semper.
+            </div>
+        </div>
     </div>
 </div>
 

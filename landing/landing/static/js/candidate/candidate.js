@@ -1,12 +1,16 @@
 const tabs = document.querySelectorAll('.tab');
 const frames = document.querySelectorAll('.tab__frame');
 
+const modal = document.querySelector('.modal');
+
 const adhesionProgressValue = document.querySelector('.adhesion__data h4');
 const adhesionProgressBar = document.querySelector('.adhesion__data .progress__inner');
 const votingPropositions = document.querySelector('.voting__propositions');
 const votingPropositionTpl = document.querySelector('#voting__proposition--tpl');
 
 const votingEmpty = document.querySelector('.voting__empty');
+
+const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
 
 urlParams = new URLSearchParams(window.location.search);
 
@@ -53,6 +57,10 @@ if(adhesionProgressValue) {
         .fail((err) => {
             votingEmpty.classList.remove('hide');
         });
+}
+
+function openModal() {
+    modal.classList.add('open');
 }
 
 function formatDate(date) {
