@@ -170,6 +170,7 @@ class CandidatePage(MetadataPageMixin, Page):
         FieldPanel('picture'),
         FieldPanel('charge'),
         FieldPanel('gender'),
+        FieldPanel('tse_image_code'),
         StreamFieldPanel('social_media'),
         FieldPanel('manager_name'),
         FieldPanel('manager_email'),
