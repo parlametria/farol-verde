@@ -4,7 +4,14 @@ from typing import Dict, List, Union, Optional
 
 from django.db.models.query import QuerySet
 
-from candidate.models import Proposicao, VotacaoParlamentar, CandidatePage, CasaChoices
+from candidate.models import (
+    Proposicao,
+    VotacaoParlamentar,
+    CandidatePage,
+    CasaChoices,
+    SessaoVeto,
+    VotacaoDispositivo,
+)
 
 
 def _check_camara_or_senado(candidate: CandidatePage):
@@ -31,14 +38,16 @@ def _check_camara_or_senado(candidate: CandidatePage):
 class CandidateAdhesion(ABC):
     VOTE_SAME = "same"
     VOTE_DIFFERENT = "different"
+    IGNORE_VOTE = "ignore"
 
     @abstractmethod
     def _get_ids_lideres(self) -> Dict[str, List[int]]:
         pass
 
-    def __init__(self, candidate: CandidatePage):
+    def __init__(self, candidate: CandidatePage, use_vetos=True):
         self.id_parlamentar = candidate.id_autor
         self.candidate = candidate
+        self.use_vetos = use_vetos
 
     def _get_leader_votes(
         self, votacao_queryset: QuerySet, votacao_date: date
@@ -99,6 +108,7 @@ class CandidateAdhesion(ABC):
             "same": 0,
             "different": 0,
             "total_votacoes": total_votacoes,
+            "total_vetos": 0.0
         }
 
         if total_votacoes == 0:
@@ -134,7 +144,23 @@ class CandidateAdhesion(ABC):
             adesao[voto] += 1
             total_calculadas += 1
 
+
+        if self.use_vetos:
+            total_vetos = 0
+            sessao_vetos = self._get_sessao_vetos_proposition(proposicao)
+            candidate = CandidatePage.objects.filter(id_autor=id_parlamentar).first()
+
+            for sessao in sessao_vetos:
+                voto_veto = self._compare_votes_veto(sessao, candidate.title)
+                if voto_veto == self.IGNORE_VOTE:
+                    continue
+
+                adesao[voto_veto] += 1
+                total_calculadas += 1
+                total_vetos += 1
+
         adesao["total_com_votos"] = total_calculadas
+        adesao["total_vetos"] = total_vetos
 
         if adesao["total_com_votos"] == 0:
             return None
@@ -156,6 +182,9 @@ class CandidateAdhesion(ABC):
         else:
             return Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
 
+    def _get_sessao_vetos_proposition(self, proposition: Proposicao):
+        return SessaoVeto.objects.filter(proposicao=proposition).all()
+
     def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
         voted = []
 
@@ -166,6 +195,50 @@ class CandidateAdhesion(ABC):
                 voted.append(adhesion)
 
         return voted
+
+    def _compare_votes_veto(self, sessao: SessaoVeto, candidate_name: str):
+        votacao_parlamentar = (
+            VotacaoDispositivo.objects.filter(nome_parlamentar=candidate_name)
+            .filter(sessao_veto=sessao)
+            .first()
+        )
+
+        if votacao_parlamentar is None:
+            return self.VOTE_DIFFERENT
+
+        votacao_lider = self._get_votacao_dispositivo_lider(sessao)
+
+        if votacao_lider is None:
+            return self.IGNORE_VOTE
+
+        return (
+            self.VOTE_SAME
+            if votacao_parlamentar.tipo_voto == votacao_lider.tipo_voto
+            else self.VOTE_DIFFERENT
+        )
+
+    def _get_votacao_dispositivo_lider(
+        self, sessao: SessaoVeto
+    ) -> Optional[VotacaoDispositivo]:
+        antes = self._get_ids_lideres()["antes-02-02-2022"]
+
+        for _id in antes:
+            lider = CandidatePage.objects.filter(id_autor=_id).first()
+
+            if lider is None:
+                continue
+
+            votacao_lider = (
+                VotacaoDispositivo.objects.filter(nome_parlamentar=lider.title)
+                .filter(sessao_veto=sessao)
+                .first()
+            )
+
+            if votacao_lider is not None:
+                return votacao_lider
+
+        return None
+
 
 class CandidateAdhesionCamara(CandidateAdhesion):
 
