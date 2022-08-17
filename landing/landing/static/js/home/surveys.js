@@ -1,6 +1,6 @@
-document.querySelector('.modal').addEventListener('modal__open', () => {
-  setQuestionsModal();
-});
+const phoneInputs = document.querySelectorAll('input[type="tel"], .phone input');
+
+document.querySelector('.modal').addEventListener('modal__open', setQuestionsModal)
 
 setFormValidations();
 setDateInputs();
@@ -92,6 +92,9 @@ function setFormSubmit() {
       cpf.value = value;
       cpf.type="number";
     }
+    phoneInputs.forEach( input => {
+      input.value = input.value.replace(/\D/g, '');
+    } )
     removeCPFmask();
     form.submit();
   });
@@ -167,3 +170,4 @@ function removeError(element) {
   element.classList.remove('error');
   element.removeChild(errorDiv);
 }
+
