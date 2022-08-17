@@ -267,6 +267,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
 
         party_list = [candidate.party for candidate in CandidatePage.objects.live()]
         party_list = list(set(party_list))
+        party_list = [i for i in party_list if i is not None]
         party_list.sort()
 
         paginator = Paginator(search_results, 20)
