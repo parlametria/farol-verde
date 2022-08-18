@@ -1,12 +1,14 @@
 from wagtail.core.models import Page
+from django.db import models
 
 from wagtailmetadata.models import MetadataPageMixin
+from wagtail.snippets.models import register_snippet
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
+from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, PageChooserPanel
 from wagtailstreamforms.blocks import WagtailFormBlock
 from candidate.models import CandidateIndexPage
 from blog.models import BlogPost
-from wagtail.core.blocks import BooleanBlock, TextBlock, StructBlock, CharBlock
+from wagtail.core.blocks import BooleanBlock, TextBlock, StructBlock, CharBlock, PageChooserBlock
 
 class LandingPage(MetadataPageMixin, Page):
     is_creatable = False
@@ -22,8 +24,8 @@ class LandingPage(MetadataPageMixin, Page):
             ("active", BooleanBlock(label="Ativo", required=False)),
             ("title", CharBlock(label="Título", required=False)),
             ("text", TextBlock(label="Texto do popup", required=False))
-        ], max_num=1))
-    ], max_num=1, null=True)
+        ], max_num=1, required=False))
+    ], max_num=1, null=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("heading"),
@@ -58,4 +60,3 @@ class SurveysPage(MetadataPageMixin, Page):
     content_panels = Page.content_panels + [
         StreamFieldPanel("surveys"),
     ]
-
