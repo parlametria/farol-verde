@@ -81,6 +81,9 @@
   text-transform: uppercase;
 }
 
+.blog-section a {
+  text-decoration: none;
+}
 .blog-section h2 {
   font-family: 'Noto Sans';
   font-weight: 700;

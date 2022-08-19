@@ -63,7 +63,9 @@
             {% for post in page.blog_posts %}
                 <article class="carousel__slide fade-left">
                     <div>
-                        <h2>{{ post.title }}</h2>
+                        <a href="{{ post.url }}">
+                            <h2>{{ post.title }}</h2>
+                        </a>
                         <h4>{{ post.date|date:"d/m/Y" }}</h4>
                     </div>
                     <a href="{{ post.url }}">
