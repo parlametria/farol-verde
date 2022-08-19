@@ -183,8 +183,8 @@ function getSocialMedia(socialApp, keyword) {
             Object.values(socialApps).forEach(app => app.innerHTML = '');
             hits = hits.map(post => {
                 var clone = postTpl.content.cloneNode(true);
-                if (post.tags) {
-                    var keywords = post.tags.split('|');
+                if (post.termo_filtro) {
+                    var keywords = post.termo_filtro.split('|');
                     keywords = keywords.map(keyword => {
                         var keywordItem = document.createElement('div');
                         if(keyword == markedKeyword) {
