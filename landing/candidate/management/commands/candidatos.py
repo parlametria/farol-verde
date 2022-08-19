@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+from unidecode import unidecode
 
 from django.core.management.base import BaseCommand, OutputWrapper
 from django.core.management.color import Style
@@ -47,6 +48,9 @@ class CandidateFetcher(ApiFetcher):
     def start_fetch(self):
         self._get_autors()
 
+    def _as_key(self, nome_urna: str):
+        return unidecode(nome_urna.upper())
+
     def _get_autors(self):
         self.stdout.write("Fetching all deputados")
         deputados = self._remap_deputados_by_nome_urna(fetch_deputados())
@@ -54,7 +58,6 @@ class CandidateFetcher(ApiFetcher):
         senadores = self._remap_seadores_by_nome_urna(fetch_senadores())
 
         self.stdout.write("Processing TSE csv data")
-        self.stdout.write(", ".join(deputados.keys()))
         for tse_row in csv_row_iterator(self.TSE_CSV_FILENAME):
             candidato = CandidatoTSE.from_list(tse_row)
 
@@ -62,14 +65,20 @@ class CandidateFetcher(ApiFetcher):
                 # skip candidates that are neither senador or deputado
                 continue
 
-            if candidato.is_deputado and candidato.nome_urna in deputados.keys():
+            if (
+                candidato.is_deputado
+                and deputados.get(self._as_key(candidato.nome_urna)) is not None
+            ):
                 self._process_deputado_candidate(
-                    candidato, deputados[candidato.nome_urna]
+                    candidato, deputados[self._as_key(candidato.nome_urna)]
                 )
 
-            if candidato.is_senador and candidato.nome_urna in senadores.keys():
+            if (
+                candidato.is_senador
+                and senadores.get(self._as_key(candidato.nome_urna)) is not None
+            ):
                 self._process_senador_candidate(
-                    candidato, senadores[candidato.nome_urna]
+                    candidato, senadores[self._as_key(candidato.nome_urna)]
                 )
 
     def _process_deputado_candidate(self, candidato: CandidatoTSE, deputado_json: List):
@@ -80,6 +89,7 @@ class CandidateFetcher(ApiFetcher):
             else deputado_json[0]
         )
         if deputado is None:
+            self.stdout.write(f"[DEPUTADO] CPF={candidato.cpf} no found")
             return
 
         found = CandidatePage.objects.filter(id_autor=deputado["id"]).first()
@@ -105,6 +115,7 @@ class CandidateFetcher(ApiFetcher):
             else senador_json[0]
         )
         if senador is None:
+            self.stdout.write(f"[SENADOR] CPF={candidato.cpf} no found")
             return
 
         _id = senador["IdentificacaoParlamentar"]["CodigoParlamentar"]
@@ -125,12 +136,12 @@ class CandidateFetcher(ApiFetcher):
     def _remap_deputados_by_nome_urna(self, deputados_json) -> Dict[str, List[Any]]:
         remap = dict()
         for deputado in deputados_json["dados"]:
-            nome = deputado["nome"].upper()
+            nome_key = self._as_key(deputado["nome"])
 
-            if nome not in remap.keys():
-                remap[nome] = []
+            if remap.get(nome_key) is None:
+                remap[nome_key] = []
 
-            remap[nome].append(deputado)
+            remap[nome_key].append(deputado)
 
         return remap
 
@@ -138,12 +149,13 @@ class CandidateFetcher(ApiFetcher):
         remap = dict()
         parlamentares = senadores_json["ListaParlamentarEmExercicio"]["Parlamentares"]
         for senador in parlamentares["Parlamentar"]:
-            nome = senador["IdentificacaoParlamentar"]["NomeParlamentar"].upper()
+            nome = senador["IdentificacaoParlamentar"]["NomeParlamentar"]
+            nome_key = self._as_key(nome)
 
-            if nome not in remap.keys():
-                remap[nome] = []
+            if remap.get(nome_key) is None:
+                remap[nome_key] = []
 
-            remap[nome].append(senador)
+            remap[nome_key].append(senador)
 
         return remap
 
@@ -158,10 +170,15 @@ class CandidateFetcher(ApiFetcher):
 
     def _find_unique_senador(self, candidato: CandidatoTSE, senadores: List):
         for sen in senadores:
-            nome_urna = sen["IdentificacaoParlamentar"]["NomeParlamentar"]
-            nome_completo = sen["IdentificacaoParlamentar"]["NomeCompletoParlamentar"]
+            nome_urna = self._as_key(sen["IdentificacaoParlamentar"]["NomeParlamentar"])
+            nome_completo = self._as_key(
+                sen["IdentificacaoParlamentar"]["NomeCompletoParlamentar"]
+            )
 
-            if candidato.nome_urna == nome_urna and candidato.nome == nome_completo:
+            if (
+                self._as_key(candidato.nome_urna) == nome_urna
+                and self._as_key(candidato.nome) == nome_completo
+            ):
                 return sen
 
         return None
