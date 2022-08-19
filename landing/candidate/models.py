@@ -238,7 +238,6 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 queryset = params_functions[param](queryset, value)
 
         if len(reelections) == 1:
-            print(reelections)
             queryset = params_functions['id_autor'](queryset, reelections[0])
 
         return queryset.filter(charge__in=charges, gender__in=genders)
