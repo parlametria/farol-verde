@@ -25,6 +25,11 @@
     color: var(--secondary-color) !important;
 }
 
+#blog,
+.main .container main {
+    min-height: calc(100vh - 20.6rem);
+}
+
 .tag-mark {
     border-radius: 5px;
 
