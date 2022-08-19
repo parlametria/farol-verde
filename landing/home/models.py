@@ -1,4 +1,5 @@
 from wagtail.core.models import Page
+from django.db import models
 
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.fields import RichTextField, StreamField
@@ -22,8 +23,8 @@ class LandingPage(MetadataPageMixin, Page):
             ("active", BooleanBlock(label="Ativo", required=False)),
             ("title", CharBlock(label="Título", required=False)),
             ("text", TextBlock(label="Texto do popup", required=False))
-        ], max_num=1))
-    ], max_num=1, null=True)
+        ], max_num=1, required=False))
+    ], max_num=1, null=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("heading"),
@@ -58,4 +59,3 @@ class SurveysPage(MetadataPageMixin, Page):
     content_panels = Page.content_panels + [
         StreamFieldPanel("surveys"),
     ]
-
