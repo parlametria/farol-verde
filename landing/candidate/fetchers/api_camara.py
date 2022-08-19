@@ -205,3 +205,42 @@ def fetch_dados_proposicao(id_proposicao: int):
     headers = {"Content-type": "application/json"}
     response = requests.get(url, headers=headers)
     return response.json()
+
+
+def fetch_deputados():
+    """
+    {
+        "dados": [
+            {
+                "id": 204521,
+                "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/204521",
+                "nome": "Abou Anni",
+                "siglaPartido": "UNIÃO",
+                "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/38009",
+                "siglaUf": "SP",
+                "idLegislatura": 56,
+                "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/204521.jpg",
+                "email": "dep.abouanni@camara.leg.br"
+            },
+            ...
+        ],
+        "links": [
+            {
+                "rel": "self",
+                "href": "https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome"
+            },
+            {
+                "rel": "first",
+                "href": "https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome&pagina=1&itens=1000"
+            },
+            {
+                "rel": "last",
+                "href": "https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome&pagina=1&itens=1000"
+            }
+        ]
+    }
+    """
+    url = f"{CAMARA_API}/deputados?ordem=ASC&ordenarPor=nome"
+    headers = {"Content-type": "application/json"}
+    response = requests.get(url, headers=headers)
+    return response.json()

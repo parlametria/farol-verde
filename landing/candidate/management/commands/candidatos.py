@@ -1,17 +1,16 @@
-from django.core.management.base import BaseCommand, CommandError, OutputWrapper
+from typing import List, Dict, Any
+
+from django.core.management.base import BaseCommand, OutputWrapper
 from django.core.management.color import Style
 
 from django.template.defaultfilters import slugify
 
 from candidate.management.commands import ApiFetcher
-from candidate.fetchers.api_parlametria import fetch_autores
-from candidate.fetchers.api_camara import fetch_deputado_data
-from candidate.fetchers.api_senado import fetch_senador_data
+from candidate.fetchers.api_camara import fetch_deputado_data, fetch_deputados
+from candidate.fetchers.api_senado import fetch_senadores
+from candidate.util import CandidatoTSE, csv_row_iterator
 
-from candidate.models import (
-    CandidatePage,
-    CandidateIndexPage,
-)
+from candidate.models import CandidatePage, CandidateIndexPage, GenderChoices
 
 
 class Command(BaseCommand):
@@ -29,6 +28,7 @@ class Command(BaseCommand):
 
 
 class CandidateFetcher(ApiFetcher):
+    TSE_CSV_FILENAME = "candidatos_tse_2022"
     DEFAULT_EMPTY = {
         "email": "email.nao@informado.com",
         "manager_name": "Não informado",
@@ -37,7 +37,7 @@ class CandidateFetcher(ApiFetcher):
         "cpf": "00000000000",
         "manager_site": "https://farolverde.org.br",
         "election_city": "Não informado",
-        "election_state": "Não informado",  # API senado não informa e no parlametria está "nan"
+        "election_state": "Não informado",
     }
 
     def __init__(self, stdout: OutputWrapper, style: Style):
@@ -48,147 +48,167 @@ class CandidateFetcher(ApiFetcher):
         self._get_autors()
 
     def _get_autors(self):
-        self.stdout.write(f"Fetching all actors from PARLAMETRIA")
-        for autor in fetch_autores():
-            found = CandidatePage.objects.filter(id_autor=autor["id_autor"]).first()
+        self.stdout.write("Fetching all deputados")
+        deputados = self._remap_deputados_by_nome_urna(fetch_deputados())
+        self.stdout.write("Fetching all senadores")
+        senadores = self._remap_seadores_by_nome_urna(fetch_senadores())
 
-            if found is not None:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f"\tCandidate {found.id_autor} already saved, skipping"
-                    )
-                )
+        self.stdout.write("Processing TSE csv data")
+        self.stdout.write(", ".join(deputados.keys()))
+        for tse_row in csv_row_iterator(self.TSE_CSV_FILENAME):
+            candidato = CandidatoTSE.from_list(tse_row)
+
+            if not candidato.is_senador and not candidato.is_deputado:
+                # skip candidates that are neither senador or deputado
                 continue
 
-            slug = slugify(" ".join([autor["nome_autor"], str(autor["id_autor"])]))
+            if candidato.is_deputado and candidato.nome_urna in deputados.keys():
+                self._process_deputado_candidate(
+                    candidato, deputados[candidato.nome_urna]
+                )
 
-            base_data = {
-                "id_autor": autor["id_autor"],
-                "id_parlametria": autor["id_autor_parlametria"],
-                "id_serenata": None,
-                "name": autor["nome_autor"],
-                "title": autor["nome_autor"],
-                "party": autor["partido"],
-                "slug": slug,
-                "charge": self._get_charge(autor["casa_autor"]),
-                "social_media": None,
-                # "opinions": [("opinions", self._get_default_options())],
-                "opinions": [],
-                "picture": None,
-            }
+            if candidato.is_senador and candidato.nome_urna in senadores.keys():
+                self._process_senador_candidate(
+                    candidato, senadores[candidato.nome_urna]
+                )
 
-            extra_data = dict()
-            if autor["casa_autor"] == "camara":
-                extra_data = self._get_candidate_data_camara(autor["id_autor"])
-            else:
-                extra_data = self._get_candidate_data_senado(autor["id_autor"])
-
-            self._make_candidate({**base_data, **extra_data})
-
-    def _get_candidate_data_camara(self, id_deputado):
-        self.stdout.write(
-            f"\tCandidate {id_deputado} from CAMARA, fetch data from CAMARA api"
+    def _process_deputado_candidate(self, candidato: CandidatoTSE, deputado_json: List):
+        # candidates can have the same nome_urna
+        deputado = (
+            self._find_unique_deputado(candidato.cpf, deputado_json)
+            if len(deputado_json) > 1
+            else deputado_json[0]
         )
-        data = fetch_deputado_data(id_deputado)
+        if deputado is None:
+            return
 
-        ultimo_status = data["dados"]["ultimoStatus"]
+        found = CandidatePage.objects.filter(id_autor=deputado["id"]).first()
+        if found is not None:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"\t[CAMARA] Candidate {found.id_autor} already saved, skipping"
+                )
+            )
+            return
 
-        email = self.DEFAULT_EMPTY["email"]
-        manager_email = self.DEFAULT_EMPTY["manager_email"]
-        manager_phone = self.DEFAULT_EMPTY["manager_phone"]
-
-        if (
-            "email" in ultimo_status
-            and ultimo_status["email"] is not None
-            and len(ultimo_status["email"]) > 0
-        ):
-            email = ultimo_status["email"]
-
-        if "gabinete" in ultimo_status:
-            if (
-                "email" in ultimo_status["gabinete"]
-                and ultimo_status["gabinete"]["email"] is not None
-                and len(str(ultimo_status["gabinete"]["email"])) > 0
-            ):
-                manager_email = ultimo_status["gabinete"]["email"]
-
-            if (
-                "telefone" in ultimo_status["gabinete"]
-                and ultimo_status["gabinete"]["telefone"] is not None
-                and len(str(ultimo_status["gabinete"]["telefone"])) > 0
-            ):
-                manager_phone = ultimo_status["gabinete"]["telefone"]
-
-        data = {
-            "campaign_name": ultimo_status["nomeEleitoral"],
-            "cpf": data["dados"]["cpf"],
-            "birth_date": data["dados"]["dataNascimento"],
-            "email": email,
-            "manager_name": ultimo_status["nomeEleitoral"],
-            "manager_email": manager_email,
-            "manager_phone": manager_phone,
-            "manager_site": self.DEFAULT_EMPTY["manager_site"],
-            "election_state": ultimo_status["siglaUf"],
-            "election_city": self.DEFAULT_EMPTY["election_city"],
-        }
-
-        if (
-            "siglaPartido" in ultimo_status
-            and ultimo_status["siglaPartido"] is not None
-            and len(ultimo_status["siglaPartido"]) > 0
-        ):
-            data["party"] = ultimo_status["siglaPartido"]
-
-        return data
-
-    def _get_candidate_data_senado(self, id_senador: int):
-        self.stdout.write(
-            f"\tCandidate {id_senador} from SENADO, fetch data from SENADO api"
+        data = self._prepare_data(
+            candidato, id_autor=deputado["id"], id_parlametria="1" + str(deputado["id"])
         )
-        data = fetch_senador_data(id_senador)
+        self._make_candidate(data)
 
-        parlamentar = data["DetalheParlamentar"]["Parlamentar"]
+    def _process_senador_candidate(
+        self, candidato: CandidatoTSE, senador_json: List[Any]
+    ):
+        senador = (
+            self._find_unique_senador(candidato, senador_json)
+            if len(senador_json) > 1
+            else senador_json[0]
+        )
+        if senador is None:
+            return
 
-        email = self.DEFAULT_EMPTY["email"]
-        if (
-            "EmailParlamentar" in parlamentar["IdentificacaoParlamentar"]
-            and parlamentar["IdentificacaoParlamentar"]["EmailParlamentar"] is not None
-            and len(parlamentar["IdentificacaoParlamentar"]["EmailParlamentar"]) > 0
-        ):
-            email = parlamentar["IdentificacaoParlamentar"]["EmailParlamentar"]
+        _id = senador["IdentificacaoParlamentar"]["CodigoParlamentar"]
+        found = CandidatePage.objects.filter(id_autor=_id).first()
+        if found is not None:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"\t[SENADO] Candidate {found.id_autor} already saved, skipping"
+                )
+            )
+            return
 
-        data = {
-            "campaign_name": parlamentar["IdentificacaoParlamentar"]["NomeParlamentar"],
-            "cpf": self.DEFAULT_EMPTY["cpf"],
-            "birth_date": parlamentar["DadosBasicosParlamentar"]["DataNascimento"],
-            "email": email,
-            "manager_name": parlamentar["IdentificacaoParlamentar"]["NomeParlamentar"],
+        data = self._prepare_data(
+            candidato, id_autor=_id, id_parlametria="2" + str(_id)
+        )
+        self._make_candidate(data)
+
+    def _remap_deputados_by_nome_urna(self, deputados_json) -> Dict[str, List[Any]]:
+        remap = dict()
+        for deputado in deputados_json["dados"]:
+            nome = deputado["nome"].upper()
+
+            if nome not in remap.keys():
+                remap[nome] = []
+
+            remap[nome].append(deputado)
+
+        return remap
+
+    def _remap_seadores_by_nome_urna(self, senadores_json) -> Dict[str, List[Any]]:
+        remap = dict()
+        parlamentares = senadores_json["ListaParlamentarEmExercicio"]["Parlamentares"]
+        for senador in parlamentares["Parlamentar"]:
+            nome = senador["IdentificacaoParlamentar"]["NomeParlamentar"].upper()
+
+            if nome not in remap.keys():
+                remap[nome] = []
+
+            remap[nome].append(senador)
+
+        return remap
+
+    def _find_unique_deputado(self, cpf, deputados: List):
+        for dep in deputados:
+            json = fetch_deputado_data(dep["id"])
+
+            if cpf == json["dados"]["cpf"]:
+                return dep
+
+        return None
+
+    def _find_unique_senador(self, candidato: CandidatoTSE, senadores: List):
+        for sen in senadores:
+            nome_urna = sen["IdentificacaoParlamentar"]["NomeParlamentar"]
+            nome_completo = sen["IdentificacaoParlamentar"]["NomeCompletoParlamentar"]
+
+            if candidato.nome_urna == nome_urna and candidato.nome == nome_completo:
+                return sen
+
+        return None
+
+    def _prepare_data(
+        self, candidato: CandidatoTSE, id_autor: int, id_parlametria: str
+    ):
+        slug = slugify(" ".join([candidato.nome_urna.capitalize(), str(id_autor)]))
+
+        gender = (
+            GenderChoices.MASCULINE.value
+            if candidato.genero == GenderChoices.MASCULINE.label
+            else GenderChoices.FEMININE.value
+        )
+
+        return {
+            "id_autor": id_autor,
+            "id_parlametria": id_parlametria,
+            "id_serenata": None,
+            "name": candidato.nome.capitalize(),
+            "title": candidato.nome_urna.capitalize(),
+            "party": candidato.partido_sigla,
+            "slug": slug,
+            "charge": self._get_charge(candidato),
+            "social_media": None,
+            # "opinions": [("opinions", self._get_default_options())],
+            "opinions": [],
+            "picture": None,
+            "campaign_name": candidato.nome_urna,
+            "cpf": candidato.cpf,
+            "birth_date": candidato.data_nascimento,
+            "email": candidato.email,
+            "manager_name": self.DEFAULT_EMPTY["manager_name"],
             "manager_email": self.DEFAULT_EMPTY["manager_email"],
             "manager_phone": self.DEFAULT_EMPTY["manager_phone"],
             "manager_site": self.DEFAULT_EMPTY["manager_site"],
-            "election_city": self.DEFAULT_EMPTY["election_city"],
-            "election_state": self.DEFAULT_EMPTY["election_state"],
+            "election_state": candidato.estado_nome.capitalize(),
+            "election_city": candidato.estado_sigla,
+            "gender": gender,
+            "tse_image_code": candidato.codigo_imagem,
         }
 
-        if (
-            "SiglaPartidoParlamentar" in parlamentar["IdentificacaoParlamentar"]
-            and parlamentar["IdentificacaoParlamentar"]["SiglaPartidoParlamentar"]
-            is not None
-            and len(parlamentar["IdentificacaoParlamentar"]["SiglaPartidoParlamentar"])
-            > 0
-        ):
-            data["party"] = parlamentar["IdentificacaoParlamentar"][
-                "SiglaPartidoParlamentar"
-            ]
+    def _get_charge(self, candidato: CandidatoTSE):
+        if candidato.is_senador:
+            return CandidatePage.SENADOR_CHARGE_TEXT
 
-        return data
-
-    def _get_charge(self, casa: str):
-        return (
-            CandidatePage.DEPUTADO_CHARGE_TEXT
-            if casa == "camara"
-            else CandidatePage.SENADOR_CHARGE_TEXT
-        )
+        return CandidatePage.DEPUTADO_CHARGE_TEXT
 
     def _get_default_options(self):
         default_text = "Prefiro não responder / Não sei"
@@ -212,7 +232,7 @@ class CandidateFetcher(ApiFetcher):
         self.stdout.write(f"\tCreating candidate {data['slug']}")
 
         candidate = CandidatePage(
-            live=False,
+            live=True,
             title=data["title"],
             slug=data["slug"],
             id_autor=data["id_autor"],
