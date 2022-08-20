@@ -170,4 +170,7 @@ function removeError(element) {
   element.classList.remove('error');
   element.removeChild(errorDiv);
 }
-
+document.getElementById('id_twitter').placeholder="https://twitter.com/SEU_USUARIO";
+document.getElementById('id_facebook').placeholder="https://www.facebook.com/SEU_USUARIO";
+document.getElementById('id_instagram').placeholder="https://www.instagram.com/SEU_USUARIO";
+document.getElementById('id_youtube').placeholder="https://www.youtube.com/channel/ID_DO_CANAL";
