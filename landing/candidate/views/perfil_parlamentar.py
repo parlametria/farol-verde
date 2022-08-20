@@ -149,11 +149,16 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
                 ]
             }
         },
+        "sort": { 
+            "social-data.data criado" : {
+                "order" : "desc"
+            }
+        },
         "fields": [ "_source.social-data.*" ]
     }
     if len(keyword) > 0:
         keyword = unquote(keyword)
-        value = {"wildcard": { "social-data.tags": { "value": f"*{keyword}*", "case_insensitive": True },}}
+        value = {"wildcard": { "social-data.texto": { "value": f"*{keyword}*", "case_insensitive": True },}}
         query["query"]["bool"]["must"].append(value)
     response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
     return JsonResponse(response.json())

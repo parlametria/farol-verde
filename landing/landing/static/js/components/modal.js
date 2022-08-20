@@ -1,5 +1,6 @@
 function setToggle() {
   const modal = document.querySelector('.modal');
+  if (!modal) return;
   document.querySelector('.modal__toggle').addEventListener('click',() => {
     modal.classList.add('open');
     const openEvent = new Event('modal__open', {
