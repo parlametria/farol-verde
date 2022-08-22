@@ -28,7 +28,9 @@ class CandidatoTSE:
     def from_list(data: List[str]):
         split = data[7].split("/")
         # YYYY-MM-DD
-        data_nascimento = "-".join([split[2], split[1], split[0]])
+        data_nascimento = (
+            "-".join([split[2], split[1], split[0]]) if data[7] != "nan" else ""
+        )
 
         return CandidatoTSE(
             data[0],
@@ -55,6 +57,19 @@ class CandidatoTSE:
     @property
     def is_senador(self):
         return self.cargo == "SENADOR"
+
+    @property
+    def has_dados_invalidos(self):
+        if self.data_nascimento == "":
+            return True
+
+        if int(self.cpf) <= 0:
+            return True
+
+        if self.genero == "NÃO DIVULGÁVEL":
+            return True
+
+        return False
 
 
 class Command(BaseCommand):
@@ -94,6 +109,9 @@ class TseProcessor:
         for candidato in self._tse_csv_iterator():
             is_deputado_or_senador = candidato.is_deputado or candidato.is_senador
             if not is_deputado_or_senador:
+                continue
+
+            if candidato.has_dados_invalidos:
                 continue
 
             found = self._find_candidate(candidato)
