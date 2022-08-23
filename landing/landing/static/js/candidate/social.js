@@ -187,6 +187,10 @@ function getSocialData(socialApp, keyword) {
                 var clone = postTpl.content.cloneNode(true);
                 if (post.termo_filtro) {
                     var keywords = post.termo_filtro.split('|');
+                    post.texto = post.texto.replaceAll(/\&#\d*;/g, emojiCode => {
+                        emojiCode = parseInt(texto.slice(2,-1))
+                        return String.fromCodePoint(emojiCode)
+                    })
                     keywords = keywords.map(keyword => {
                         var keywordItem = document.createElement('div');
                         if(keyword == markedKeyword) {
