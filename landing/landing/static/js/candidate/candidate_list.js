@@ -1,5 +1,6 @@
 const candidatesList = document.getElementById('candidates__container');
-const inputs = document.querySelectorAll('form :is(input, select)');
+const inputs = document.querySelectorAll('form :is(input, select):not(.subject__input)');
+const subjectsInputs = document.querySelectorAll('form .subject__input');
 const nameInput = document.getElementById('query__input');
 const subjects = document.querySelector('.query__subjects');
 const pagination = document.querySelector('#page');
@@ -24,7 +25,7 @@ $('#form').ajaxForm( result => {
 
 function getCandidatesList(page) {
     if (page) {
-       window.history.pushState('', 'Candidatos - Farol Verde', `/candidatos/?page=${page}`);
+        window.history.pushState('', 'Candidatos - Farol Verde', `/candidatos/?page=${page}`);
     }
     pagination.value = page ?? 1;
 
@@ -76,7 +77,18 @@ if (localStorage.getItem('toggleStatus') == 'true') {
     toggleSubjects();
 }
 
-inputs.forEach(obj => obj.addEventListener('change', () => getCandidatesList()));
+subjectsInputs.forEach(obj => obj.addEventListener('click', (e) => {
+    if (e.target.checked) {
+        subjectsInputs.forEach(input => input.checked = false);
+        e.target.checked = true;
+    }
+    getCandidatesList();
+}))
+
+inputs.forEach(obj => obj.addEventListener('change', (e) => {
+    getCandidatesList();
+}));
+
 nameInput.addEventListener('keypress', () => getCandidatesList());
 
 states.forEach(state => state.addEventListener('click', () => {

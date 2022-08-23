@@ -125,7 +125,8 @@ input::placeholder {color: var(--dark-blue);}
 .query__subjects.closed {display: none;}
 
 .query__subjects .btn-toggle {
-    flex: unset;
+    flex: auto;
+    text-align: center;
     cursor: pointer;
     overflow: hidden;
 }
