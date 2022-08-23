@@ -49,7 +49,7 @@ class CandidateFetcher(ApiFetcher):
         self._get_autors()
 
     def _as_key(self, nome_urna: str):
-        return unidecode(nome_urna.upper())
+        return slugify(nome_urna)
 
     def _get_autors(self):
         self.stdout.write("Fetching all deputados")
