@@ -59,3 +59,11 @@
     color: var(--primary-color);
     cursor: pointer;
 }
+
+.activity__alert {
+    padding: 1rem;
+    border-radius: .5rem;
+    background: var(--yellow-alert);
+}
+
+.activity__alert h5:nth-child(2) {font-weight: 700;}

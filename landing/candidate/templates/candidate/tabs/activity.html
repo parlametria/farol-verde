@@ -1,62 +1,69 @@
 {% load static %}
 
-<div class="adhesion">
-    <div class="adhesion__data">
-        <h3>Índice de Convergência Ambiental total (ICAt)</h3>
-        <div class="progress">
-            <h4></h4>
-            <div class="progress__bar">
-                <div class="progress__inner"></div>
+{% if page.campaign_name == "Arthur Lira" %}
+    <div class="activity__alert">
+        <h5>Em função do Art. 17 do regimento interno da Câmara, que impede a votação do presidente da Casa, não há registros de votação para cálculo do ICA</h5>
+        <h5>Art. 17, § 1º: O Presidente não poderá, senão na qualidade de membro da Mesa, oferecer proposição, nem votar, em Plenário, exceto no caso de escrutínio secreto ou para desempatar o resultado de votação ostensiva.</h5>
+    </div>
+{% else %}
+    <div class="adhesion">
+        <div class="adhesion__data">
+            <h3>Índice de Convergência Ambiental total (ICAt)</h3>
+            <div class="progress">
+                <h4></h4>
+                <div class="progress__bar">
+                    <div class="progress__inner"></div>
+                </div>
+            </div>
+        </div>
+        <div class="adhesion__definition">
+            <h4>Como foi calculado o ICAt?</h4>
+            <p> Índice que afere o percentual de convergência do voto do candidato na legislatura atual, em relação ao voto do então Líder da Frente Parlamentar Ambientalista. </p>
+            <p onclick="openModal()" class="know-more">Saiba mais</p>
+        </div>
+    </div>
+
+    <div class="modal">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2>Como foi calculado o ICAt </h2>
+            </div>
+            
+            <div class="modal__all">
+                <div class="modal__body">
+                    <p>A coordenação do Farol Verde selecionou as principais votações nominais sobre matérias socioambientais ocorridas na Câmara Federal e no Senado, durante a 56a legislatura até o início das eleições, entre 2019 e 2022. Foram consideradas, além da aprovação ou rejeição das matérias, também os requerimentos incidentais (inclusão ou retirada de pauta, urgência e destaques ou emendas).</p>
+                    <p>Para cada matéria (Projeto de Lei, Proposta de Emenda Constitucional ou Medida Provisória) foi calculado um índice de convergência ambiental por matéria (ICAm). Utilizamos como referência para o cálculo da convergência ambiental por matéria a votação do(a) Líder da bancada ambientalista, coordenador(a) da Frente Parlamentar Ambientalista, na Câmara e no Senado. Na eventual ausência de votação do líder, foram considerados os líderes da Frente Parlamentar de Direitos Indígenas e/ou dos Objetivos de Desenvolvimento Sustentável (ODS).</p>
+                    <p>A convergência é computada (em percentual) se o parlamentar vota em concordância com o voto do líder da frente ambientalista. Se o(a) parlamentar votou divergente, ou não votou naquela matéria/requeriment/destaque, ele deixa de pontuar para aquela votação específica (inclusive nos destaques) para o Índice de Convergência Ambiental por matéria (ICAm).O cálculo do Índice de Convergência Ambiental "total" (ICAt) é resultado da média dos Índices de Convergência Ambiental por matéria (ICAm).</p>
+                </div>
+            </div>
+
+            <div class="modal__footer">
+                <button class="modal__close modal__toggle">Ok</button>
             </div>
         </div>
     </div>
-    <div class="adhesion__definition">
-        <h4>Como foi calculado o ICAt?</h4>
-        <p> Índice que afere o percentual de convergência do voto do candidato na legislatura atual, em relação ao voto do então Líder da Frente Parlamentar Ambientalista. </p>
-        <p onclick="openModal()" class="know-more">Saiba mais</p>
-    </div>
-</div>
 
-<div class="modal">
-    <div class="modal__backdrop"></div>
-    <div class="modal__content">
-        <div class="modal__header">
-            <h2>Como foi calculado o ICAt </h2>
-        </div>
-        
-        <div class="modal__all">
-            <div class="modal__body">
-                <p>A coordenação do Farol Verde selecionou as principais votações nominais sobre matérias socioambientais ocorridas na Câmara Federal e no Senado, durante a 56a legislatura até o início das eleições, entre 2019 e 2022. Foram consideradas, além da aprovação ou rejeição das matérias, também os requerimentos incidentais (inclusão ou retirada de pauta, urgência e destaques ou emendas).</p>
-                <p>Para cada matéria (Projeto de Lei, Proposta de Emenda Constitucional ou Medida Provisória) foi calculado um índice de convergência ambiental por matéria (ICAm). Utilizamos como referência para o cálculo da convergência ambiental por matéria a votação do(a) Líder da bancada ambientalista, coordenador(a) da Frente Parlamentar Ambientalista, na Câmara e no Senado. Na eventual ausência de votação do líder, foram considerados os líderes da Frente Parlamentar de Direitos Indígenas e/ou dos Objetivos de Desenvolvimento Sustentável (ODS).</p>
-                <p>A convergência é computada (em percentual) se o parlamentar vota em concordância com o voto do líder da frente ambientalista. Se o(a) parlamentar votou divergente, ou não votou naquela matéria/requeriment/destaque, ele deixa de pontuar para aquela votação específica (inclusive nos destaques) para o Índice de Convergência Ambiental por matéria (ICAm).O cálculo do Índice de Convergência Ambiental "total" (ICAt) é resultado da média dos Índices de Convergência Ambiental por matéria (ICAm).</p>
+    <template id="voting__proposition--tpl">
+        <div class="voting__proposition fade-up">
+            <h4>{{ proposition.proposition_name }}</h4>
+            <h4 class="proposition__number">{{ proposition.proposition_number }}</h4>
+            <div class="progress">
+                <h4></h4>
+                <div class="progress__bar">
+                    <div class="progress__inner"></div>
+                </div>
             </div>
         </div>
+    </template>
 
-        <div class="modal__footer">
-            <button class="modal__close modal__toggle">Ok</button>
+    <div class="voting">
+        <h3>Votação - Índice de Convergência Ambiental por matéria (ICAm)</h3>
+        <div class="voting__propositions hide"></div>
+        <div class="voting__empty hide">
+            <img src="{% static 'img/sad-progress.svg' %}">
+            <h2>Dados indisponíveis</h2>
+            <p>Ops! Que tal <a href="/candidatos">pesquisar outro candidato</a>?</p>
         </div>
     </div>
-</div>
-
-<template id="voting__proposition--tpl">
-    <div class="voting__proposition fade-up">
-        <h4>{{ proposition.proposition_name }}</h4>
-        <h4 class="proposition__number">{{ proposition.proposition_number }}</h4>
-        <div class="progress">
-            <h4></h4>
-            <div class="progress__bar">
-                <div class="progress__inner"></div>
-            </div>
-        </div>
-    </div>
-</template>
-
-<div class="voting">
-    <h3>Votação - Índice de Convergência Ambiental por matéria (ICAm)</h3>
-    <div class="voting__propositions hide"></div>
-    <div class="voting__empty hide">
-        <img src="{% static 'img/sad-progress.svg' %}">
-        <h2>Dados indisponíveis</h2>
-        <p>Ops! Que tal <a href="/candidatos">pesquisar outro candidato</a>?</p>
-    </div>
-</div>
+{% endif %}
