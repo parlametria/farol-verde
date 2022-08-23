@@ -200,3 +200,11 @@ def fetch_dados_materia(id_materia: int):
     headers = {"Content-type": "application/json"}
     response = requests.get(url, headers=headers)
     return response.json()
+
+
+def fetch_senadores():
+    # https://legis.senado.leg.br/dadosabertos/senador/lista/atual.json
+    url = f"{SENADO_API}/senador/lista/atual.json"
+    headers = {"Content-type": "application/json"}
+    response = requests.get(url, headers=headers)
+    return response.json()

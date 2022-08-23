@@ -22,6 +22,7 @@ from candidate.factories import SurveyCandidateFactory
 class GenderChoices(models.TextChoices):
     MASCULINE = "M", "MASCULINO"
     FEMININE = "F", "FEMININO"
+    NOT_DISCLOSURE = "N", "NÃO DIVULGÁVEL"
 
 
 class CandidatePage(MetadataPageMixin, Page):

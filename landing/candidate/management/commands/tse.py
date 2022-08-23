@@ -1,60 +1,13 @@
 import csv
 
 from os.path import abspath
-from dataclasses import dataclass
-from typing import Optional, List, Tuple
+from typing import Optional
 
-from django.core.management.base import BaseCommand, CommandError, OutputWrapper
+from django.core.management.base import BaseCommand, OutputWrapper
 from django.core.management.color import Style
 
+from candidate.util import CandidatoTSE, csv_row_iterator
 from candidate.models import CandidatePage, GenderChoices
-
-
-@dataclass
-class CandidatoTSE:
-    cpf: str
-    estado_sigla: str
-    estado_nome: str
-    nome: str
-    nome_urna: str
-    email: str
-    partido_sigla: str
-    data_nascimento: str
-    genero: str
-    cargo: str
-    codigo_imagem: str
-
-    @staticmethod
-    def from_list(data: List[str]):
-        split = data[7].split("/")
-        # YYYY-MM-DD
-        data_nascimento = "-".join([split[2], split[1], split[0]])
-
-        return CandidatoTSE(
-            data[0],
-            data[1],
-            data[2],
-            data[3],
-            data[4],
-            data[5],
-            data[6],
-            data_nascimento,
-            data[8],
-            data[9],
-            data[10],
-        )
-
-    @property
-    def is_deputado(self):
-        return self.cargo in [
-            "DEPUTADO ESTADUAL",
-            "DEPUTADO FEDERAL",
-            "DEPUTADO DISTRITAL",
-        ]
-
-    @property
-    def is_senador(self):
-        return self.cargo == "SENADOR"
 
 
 class Command(BaseCommand):
@@ -96,6 +49,9 @@ class TseProcessor:
             if not is_deputado_or_senador:
                 continue
 
+            if candidato.has_dados_invalidos:
+                continue
+
             found = self._find_candidate(candidato)
 
             if found is None:  # candidate not in database, skip
@@ -112,11 +68,12 @@ class TseProcessor:
                 if found.id_autor is not None:
                     continue
 
-            gender = (
-                GenderChoices.MASCULINE.value
-                if candidato.genero == GenderChoices.MASCULINE.label
-                else GenderChoices.FEMININE.value
-            )
+            gender = GenderChoices.NOT_DISCLOSURE.value
+            if candidato.genero == GenderChoices.MASCULINE.label:
+                gender = GenderChoices.MASCULINE.value
+            elif candidato.genero == GenderChoices.FEMININE.value:
+                gender = GenderChoices.FEMININE.value
+
             found.gender = gender
             found.party = candidato.partido_sigla
             found.cpf = candidato.cpf  # set CPF for senadores
@@ -143,17 +100,8 @@ class TseProcessor:
             )
 
     def _tse_csv_iterator(self):
-        filepath = "".join([abspath(""), "/candidate/csv/", "candidatos_tse_2022.csv"])
-        csvfile = open(filepath, "r")
-        reader = csv.reader(csvfile, delimiter=";")
-
-        # skip header
-        next(reader)
-
-        for row in reader:
+        for row in csv_row_iterator("candidatos_tse_2022"):
             yield CandidatoTSE.from_list(row)
-
-        csvfile.close()
 
     def _find_candidate(self, candidate: CandidatoTSE) -> Optional[CandidatePage]:
         found = CandidatePage.objects.filter(cpf=candidate.cpf).first()
