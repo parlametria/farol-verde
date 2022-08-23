@@ -96,10 +96,10 @@ class CandidateFetcher(ApiFetcher):
         if found is not None:
             self.stdout.write(
                 self.style.WARNING(
-                    f"\t[CAMARA] Candidate {found.id_autor} already saved, skipping"
+                    f"\t[CAMARA] Candidate {found.id_autor} already saved, updating with TSE data"
                 )
             )
-            return
+            return self._update_candidate_data(found, candidato)
 
         data = self._prepare_data(
             candidato, id_autor=deputado["id"], id_parlametria="1" + str(deputado["id"])
@@ -123,10 +123,10 @@ class CandidateFetcher(ApiFetcher):
         if found is not None:
             self.stdout.write(
                 self.style.WARNING(
-                    f"\t[SENADO] Candidate {found.id_autor} already saved, skipping"
+                    f"\t[SENADO] Candidate {found.id_autor} already saved, updating with TSE data"
                 )
             )
-            return
+            return self._update_candidate_data(found, candidato)
 
         data = self._prepare_data(
             candidato, id_autor=_id, id_parlametria="2" + str(_id)
@@ -188,12 +188,6 @@ class CandidateFetcher(ApiFetcher):
     ):
         slug = slugify(" ".join([candidato.nome_urna, str(id_autor)]))
 
-        gender = GenderChoices.NOT_DISCLOSURE.value
-        if candidato.genero == GenderChoices.MASCULINE.label:
-            gender = GenderChoices.MASCULINE.value
-        elif candidato.genero == GenderChoices.FEMININE.value:
-            gender = GenderChoices.FEMININE.value
-
         return {
             "id_autor": id_autor,
             "id_parlametria": id_parlametria,
@@ -207,7 +201,7 @@ class CandidateFetcher(ApiFetcher):
             # "opinions": [("opinions", self._get_default_options())],
             "opinions": [],
             "picture": None,
-            "campaign_name": candidato.nome_urna,
+            "campaign_name": candidato.nome_urna.title(),
             "cpf": candidato.cpf,
             "birth_date": candidato.data_nascimento,
             "email": candidato.email,
@@ -217,7 +211,7 @@ class CandidateFetcher(ApiFetcher):
             "manager_site": self.DEFAULT_EMPTY["manager_site"],
             "election_state": candidato.estado_nome.title(),
             "election_city": candidato.estado_sigla,
-            "gender": gender,
+            "gender": self._get_gender(candidato),
             "tse_image_code": candidato.codigo_imagem,
         }
 
@@ -226,6 +220,16 @@ class CandidateFetcher(ApiFetcher):
             return CandidatePage.SENADOR_CHARGE_TEXT
 
         return CandidatePage.DEPUTADO_CHARGE_TEXT
+
+    def _get_gender(self, candidato: CandidatoTSE):
+        gender = GenderChoices.NOT_DISCLOSURE.value
+
+        if candidato.genero == GenderChoices.MASCULINE.label:
+            gender = GenderChoices.MASCULINE.value
+        elif candidato.genero == GenderChoices.FEMININE.value:
+            gender = GenderChoices.FEMININE.value
+
+        return gender
 
     def _get_default_options(self):
         default_text = "Prefiro não responder / Não sei"
@@ -275,3 +279,16 @@ class CandidateFetcher(ApiFetcher):
         self.candidates_index.save()
 
         return candidate
+
+    def _update_candidate_data(self, found: CandidatePage, candidato: CandidatoTSE):
+        found.cpf = candidato.cpf
+        found.name = candidato.nome.title()
+        found.party = candidato.partido_sigla
+        found.campaign_name = candidato.nome_urna.title()
+        found.birth_date = candidato.data_nascimento
+        found.email = candidato.email
+        found.election_state = candidato.estado_nome.title()
+        found.election_city = candidato.estado_sigla
+        found.gender = self._get_gender(candidato)
+        found.tse_image_code = candidato.codigo_imagem
+        found.save()
