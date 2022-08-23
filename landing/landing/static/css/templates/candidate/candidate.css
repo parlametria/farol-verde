@@ -9,6 +9,8 @@
 .candidate__picture {
     position: relative;
     border-radius: 100vmax;
+    background: var(--gray);
+    outline: 1px solid var(--gray);
     object-fit: cover;
     object-position: top;
     width: 120px;
