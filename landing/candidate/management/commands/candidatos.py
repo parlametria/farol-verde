@@ -186,7 +186,7 @@ class CandidateFetcher(ApiFetcher):
     def _prepare_data(
         self, candidato: CandidatoTSE, id_autor: int, id_parlametria: str
     ):
-        slug = slugify(" ".join([candidato.nome_urna.capitalize(), str(id_autor)]))
+        slug = slugify(" ".join([candidato.nome_urna, str(id_autor)]))
 
         gender = (
             GenderChoices.MASCULINE.value
@@ -198,8 +198,8 @@ class CandidateFetcher(ApiFetcher):
             "id_autor": id_autor,
             "id_parlametria": id_parlametria,
             "id_serenata": None,
-            "name": candidato.nome.capitalize(),
-            "title": candidato.nome_urna.capitalize(),
+            "name": candidato.nome.title(),
+            "title": candidato.nome_urna.title(),
             "party": candidato.partido_sigla,
             "slug": slug,
             "charge": self._get_charge(candidato),
@@ -215,7 +215,7 @@ class CandidateFetcher(ApiFetcher):
             "manager_email": self.DEFAULT_EMPTY["manager_email"],
             "manager_phone": self.DEFAULT_EMPTY["manager_phone"],
             "manager_site": self.DEFAULT_EMPTY["manager_site"],
-            "election_state": candidato.estado_nome.capitalize(),
+            "election_state": candidato.estado_nome.title(),
             "election_city": candidato.estado_sigla,
             "gender": gender,
             "tse_image_code": candidato.codigo_imagem,
