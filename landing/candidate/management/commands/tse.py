@@ -33,7 +33,8 @@ class CandidatoTSE:
         )
 
         return CandidatoTSE(
-            data[0],
+            # some CPFs have less than 11 chars, left pad with '0' until 11 chars
+            str(data[0]).zfill(11),
             data[1],
             data[2],
             data[3],
