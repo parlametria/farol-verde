@@ -40,11 +40,15 @@ const keywordsPage = {
     }
 };
 
-function openSocial(socialName) {
+function openSocialTab(socialName) {
     const socialBtn = document.querySelector(`.social__btn.${socialName}`);
     const socialContent = document.querySelector(`.social__frame.${socialName}`);
 
-    getSocialMedia(socialName);
+    getSocialData(socialName);
+
+    document.querySelectorAll('.keyword__item.marked').forEach(keywordItem => {
+        keywordItem.classList.remove('marked')
+    })
 
     socialBtns.forEach(social => social.classList.remove('open'));
     socialContents.forEach(content => content.classList.add('hide'));
@@ -97,21 +101,19 @@ function getKeywords() {
         .done((keywords) => {
             keywords = keywords.map(word => {
                 const item = document.createElement('div');
-                if (word.length == 1) {
-                    item.className = 'keyword__category overline'
-                } else {
-                    item.addEventListener('click', (e) => {
-                        if(!item.classList.contains('marked')) {
-                            item.classList.add('marked');
-                            getSocialMedia(null, word);
-                            getKeywords();
-                        } else {
-                            getSocialMedia(null, null);
-                            getKeywords();
-                        }
-                    });
-                    item.className = 'keyword__item button-text';
-                }
+                if (word.length === 1) item.className = 'keyword__item button-text';
+                else item.className = 'keyword__category overline'
+
+                item.addEventListener('click', (e) => {
+                    let keyword = null;
+                    if(!item.classList.contains('marked')) {
+                        item.classList.add('marked');
+                        keyword = word;
+                    }
+                    getSocialData(null, keyword);
+                    getKeywords();
+                });
+                item.className = 'keyword__item button-text';
                 if (word == markedKeyword) {
                     item.classList.add('marked');
                 } else {
@@ -149,7 +151,7 @@ getKeywords();
 
 let socialMediaRequest;
 
-function getSocialMedia(socialApp, keyword) {
+function getSocialData(socialApp, keyword) {
     socialApp ??= 'twitter';
     socialApp = socialApp.toLowerCase();
     let url = './api/social-media/' + socialApp;
@@ -191,7 +193,7 @@ function getSocialMedia(socialApp, keyword) {
                             keywordItem.classList.add('marked');
                         }
                         keywordItem.classList.add('keyword__item', 'button-text');
-                        keywordItem.addEventListener('click', () => getSocialMedia(keyword));
+                        keywordItem.addEventListener('click', () => getSocialData(keyword));
                         keywordItem.innerText = keyword;
                         return keywordItem;
                     })
@@ -214,4 +216,4 @@ function getSocialMedia(socialApp, keyword) {
         .fail(setEmpty);
 }
 
-getSocialMedia();
+getSocialData();
