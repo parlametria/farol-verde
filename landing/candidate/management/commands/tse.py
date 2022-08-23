@@ -63,10 +63,7 @@ class CandidatoTSE:
         if self.data_nascimento == "":
             return True
 
-        if int(self.cpf) <= 0:
-            return True
-
-        if self.genero == "NÃO DIVULGÁVEL":
+        if int(self.cpf) < 0:
             return True
 
         return False
@@ -130,11 +127,12 @@ class TseProcessor:
                 if found.id_autor is not None:
                     continue
 
-            gender = (
-                GenderChoices.MASCULINE.value
-                if candidato.genero == GenderChoices.MASCULINE.label
-                else GenderChoices.FEMININE.value
-            )
+            gender = GenderChoices.NOT_DISCLOSURE.value
+            if candidato.genero == GenderChoices.MASCULINE.label:
+                gender = GenderChoices.MASCULINE.value
+            elif candidato.genero == GenderChoices.FEMININE.value:
+                gender = GenderChoices.FEMININE.value
+
             found.gender = gender
             found.party = candidato.partido_sigla
             found.cpf = candidato.cpf  # set CPF for senadores
