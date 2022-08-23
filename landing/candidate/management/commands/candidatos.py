@@ -188,11 +188,11 @@ class CandidateFetcher(ApiFetcher):
     ):
         slug = slugify(" ".join([candidato.nome_urna, str(id_autor)]))
 
-        gender = (
-            GenderChoices.MASCULINE.value
-            if candidato.genero == GenderChoices.MASCULINE.label
-            else GenderChoices.FEMININE.value
-        )
+        gender = GenderChoices.NOT_DISCLOSURE.value
+        if candidato.genero == GenderChoices.MASCULINE.label:
+            gender = GenderChoices.MASCULINE.value
+        elif candidato.genero == GenderChoices.FEMININE.value:
+            gender = GenderChoices.FEMININE.value
 
         return {
             "id_autor": id_autor,
