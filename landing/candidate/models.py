@@ -75,6 +75,7 @@ class CandidatePage(MetadataPageMixin, Page):
         choices=GenderChoices.choices,
     )
     tse_image_code = CharField(null=True, blank=True, max_length=60)
+    tse_urn_code = CharField(null=True, blank=True, max_length=6)
 
     global make_block
 
