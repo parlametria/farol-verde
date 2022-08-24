@@ -278,7 +278,10 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         except EmptyPage:
             candidates_list = paginator.page(paginator.num_pages)
 
+        page = int(page)
+
         context["candidates_list"] = candidates_list
+        context["pagination_range"] = [x for x in range(page-2, page+3) if x > 0 and x <= paginator.num_pages]
         context["subjects"] = list(subject_dict.keys())
         context["uf_list"] = uf_list
         context["party_list"] = party_list

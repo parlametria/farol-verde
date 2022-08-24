@@ -41,10 +41,14 @@
 
 {% if candidates_list.paginator.num_pages > 1 %}
     <div class="pagination">
-        <button class="page-prev" onclick="getCandidatesPrev()">&#x3c;</button>
-        {% for page_num in candidates_list.paginator.page_range %}
-            <button class="page-{{ page_num }}" onclick="getCandidatesList({{ page_num }})">{{ page_num }}</button>
+        {% if candidates_list.number > 1 %}
+            <button class="page-prev" onclick="getCandidatesList({{candidates_list.previous_page_number}})">&#x3c;</button>
+        {% endif %}
+        {% for page_num in pagination_range %}
+            <button class="page-num page-{{ page_num }} {% if page_num == candidates_list.number %}active{% endif %}" onclick="getCandidatesList({{ page_num }})">{{ page_num }}</button>
         {% endfor %}
-        <button class="page-prev" onclick="getCandidatesNext()">&#x3e;</button>
+        {% if candidates_list.number != candidates_list.paginator.num_pages %}
+            <button class="page-next" onclick="getCandidatesList({{candidates_list.next_page_number}})">&#x3e;</button>
+        {% endif %}
     </div>
 {% endif %}
