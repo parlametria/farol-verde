@@ -6,6 +6,8 @@ from typing import Optional
 from django.core.management.base import BaseCommand, OutputWrapper
 from django.core.management.color import Style
 
+from wagtailstreamforms.models import FormSubmission
+
 from candidate.util import CandidatoTSE, csv_row_iterator
 from candidate.models import CandidatePage, GenderChoices
 
@@ -93,12 +95,33 @@ class TseProcessor:
                 found.charge_changed = True
                 found.charge = self._charge_change(found, candidato)
 
-            found.live = True
+            found = self._check_publish_candidate(found)
             found.save()
 
             self.stdout.write(
                 f"Found candidate with CPF={candidato.cpf}, id_autor={found.id_autor} and published"
             )
+
+    def _check_candidate_filled_the_poll(self, candidate: CandidatePage) -> bool:
+        form_id = candidate.slug.split("-")[-1]
+        candidate_form = FormSubmission.objects.filter(id=form_id).first()
+        nome_de_campanha = candidate_form.get_data()["nome-de-campanha"].upper()
+
+        return nome_de_campanha == candidate.campaign_name.upper()
+
+    def _check_publish_candidate(self, candidate: CandidatePage) -> CandidatePage:
+        change_live_status = True
+
+        if candidate.id_autor is None and self._check_candidate_filled_the_poll(candidate):
+            # Candidatos que preencheram o formulário devem ser
+            # publicados manualmente via painel admin
+            change_live_status = False
+
+        if change_live_status:
+            candidate.live = True
+
+        return candidate
+
 
     def _tse_csv_iterator(self):
         for row in csv_row_iterator("candidatos_tse_2022"):
