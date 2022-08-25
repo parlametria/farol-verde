@@ -75,6 +75,7 @@ class CandidatePage(MetadataPageMixin, Page):
         choices=GenderChoices.choices,
     )
     tse_image_code = CharField(null=True, blank=True, max_length=60)
+    tse_urn_code = CharField(null=True, blank=True, max_length=6)
 
     global make_block
 
@@ -172,6 +173,7 @@ class CandidatePage(MetadataPageMixin, Page):
         FieldPanel('charge'),
         FieldPanel('gender'),
         FieldPanel('tse_image_code'),
+        FieldPanel('tse_urn_code'),
         StreamFieldPanel('social_media'),
         FieldPanel('manager_name'),
         FieldPanel('manager_email'),

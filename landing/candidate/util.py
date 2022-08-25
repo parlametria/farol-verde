@@ -41,6 +41,7 @@ class CandidatoTSE:
     genero: str
     cargo: str
     codigo_imagem: str
+    codigo_urna: str
 
     @staticmethod
     def from_list(data: List[str]):
@@ -63,6 +64,7 @@ class CandidatoTSE:
             data[8],
             data[9],
             data[10],
+            data[11],
         )
 
     @property

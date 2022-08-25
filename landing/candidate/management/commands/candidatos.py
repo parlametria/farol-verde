@@ -213,6 +213,7 @@ class CandidateFetcher(ApiFetcher):
             "election_city": candidato.estado_sigla,
             "gender": self._get_gender(candidato),
             "tse_image_code": candidato.codigo_imagem,
+            "tse_urn_code": candidato.codigo_urna,
         }
 
     def _get_charge(self, candidato: CandidatoTSE):
@@ -291,4 +292,5 @@ class CandidateFetcher(ApiFetcher):
         found.election_city = candidato.estado_sigla
         found.gender = self._get_gender(candidato)
         found.tse_image_code = candidato.codigo_imagem
+        found.tse_urn_code = candidato.codigo_urna
         found.save()
