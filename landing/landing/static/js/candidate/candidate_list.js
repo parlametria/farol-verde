@@ -1,5 +1,6 @@
 const candidatesList = document.getElementById('candidates__container');
-const inputs = document.querySelectorAll('form :is(input, select)');
+const inputs = document.querySelectorAll('form :is(input, select):not(.subject__input)');
+const subjectsInputs = document.querySelectorAll('form .subject__input');
 const nameInput = document.getElementById('query__input');
 const subjects = document.querySelector('.query__subjects');
 const pagination = document.querySelector('#page');
@@ -24,14 +25,11 @@ $('#form').ajaxForm( result => {
 
 function getCandidatesList(page) {
     if (page) {
-       window.history.pushState('', 'Candidatos - Farol Verde', `/candidatos/?page=${page}`);
+        window.history.pushState('', 'Candidatos - Farol Verde', `/candidatos/?page=${page}`);
     }
     pagination.value = page ?? 1;
 
-    $('#form').ajaxSubmit( result => {
-        candidatesList.innerHTML = result;
-        initPagination();
-    });
+    $('#form').ajaxSubmit( result => candidatesList.innerHTML = result);
 }
 
 function toggleCountriesModal() {
@@ -76,7 +74,18 @@ if (localStorage.getItem('toggleStatus') == 'true') {
     toggleSubjects();
 }
 
-inputs.forEach(obj => obj.addEventListener('change', () => getCandidatesList()));
+subjectsInputs.forEach(obj => obj.addEventListener('click', (e) => {
+    if (e.target.checked) {
+        subjectsInputs.forEach(input => input.checked = false);
+        e.target.checked = true;
+    }
+    getCandidatesList();
+}))
+
+inputs.forEach(obj => obj.addEventListener('change', (e) => {
+    getCandidatesList();
+}));
+
 nameInput.addEventListener('keypress', () => getCandidatesList());
 
 states.forEach(state => state.addEventListener('click', () => {
@@ -111,26 +120,3 @@ document.addEventListener('click', e => {
     if (comp != partyBoard && comp != partyButton) partyBoard.classList.remove('open');
     if (comp != ufBoard && comp != ufButton) ufBoard.classList.remove('open');
 })
-
-function initPagination() {
-    params = location.search.slice(1).split('&').reduce((acc, s) => {
-          const [k, v] = s.split('=')
-          return Object.assign(acc, {[k]: v})
-    }, {});
-    pages = document.querySelectorAll('.pagination button:not(.page-prev)');
-    const page = params.page ?? 1;
-    const visiblePages = document.querySelectorAll(`.pagination .page-prev, .pagination .page-${page}, .pagination .page-${Number(page)-1}, .pagination .page-${Number(page)+1}`);
-    visiblePages.forEach((e) => {
-        if (e.classList.contains(`page-${page}`)) {
-              e.classList.add('active');
-        }
-        e.style.display = 'inline-block';
-    });
-}
-
-function getCandidatesPrev() {
-    if (params.page > 1) getCandidatesList(Number(params.page) - 1);
-}
-function getCandidatesNext() {
-    if (params.page < pages.length) getCandidatesList(Number(params.page) + 1);
-}
