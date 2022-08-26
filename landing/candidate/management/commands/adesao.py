@@ -37,8 +37,8 @@ class Command(BaseCommand):
 
 class AdhesionCSV:
     TSE_CSV_FILENAME = "candidatos_tse_2022"
-    ALL_CANDIDATES_ADHESION_FILENAME = "candidates_adhesion_csv"
-    RE_ELECTION_CANDIDATES_ADHESION_FILENAME = "re_election_candidates_adhesion_csv"
+    ALL_CANDIDATES_ADHESION_FILENAME = "candidates_adhesion"
+    RE_ELECTION_CANDIDATES_ADHESION_FILENAME = "re_election_candidates_adhesion"
 
     def __init__(self, stdout: OutputWrapper, style: Style):
         self.stdout = stdout
@@ -103,5 +103,5 @@ class AdhesionCSV:
             candidato = CandidatoTSE.from_list(tse_row)
             found: CandidatePage = CandidatePage.objects.filter(cpf=candidato.cpf).first()
 
-            if found is not None and found.id_autor is not None:
+            if found is not None and found.id_autor is not None and found.live:
                 yield found
