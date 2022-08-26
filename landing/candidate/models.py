@@ -213,7 +213,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
 
         charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
         charges = []
-        gender_dict = {'men': 'M', 'women': 'F'}
+        gender_dict = {'men': 'M', 'women': 'F', 'others': 'N'}
         genders = []
         election_dict = {'reelection': False, 'no_reelection': True }
         reelections = []
