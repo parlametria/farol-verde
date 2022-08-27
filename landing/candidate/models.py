@@ -252,7 +252,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         search_results = self.search_results(request)
         search_results = search_results.filter(live=True) # do not display draft pages
         subject = request.GET.get('subject', None)
-        print(subject)
+        
         candidates_opinions = [''] * len(search_results)
 
         if subject:
