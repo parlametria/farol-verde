@@ -103,7 +103,7 @@
 }
 
 .pagination button {
-  display: none;
+  display: inline-block;
   background: var(--blue);
   aspect-ratio: 1;
   width: 2.5rem;
@@ -112,5 +112,5 @@
 .pagination button.active {
   background: white;
   color: var(--dark-blue);
-  border: 1px solid var(--dark-blue);
+  outline: 1px solid var(--dark-blue);
 }

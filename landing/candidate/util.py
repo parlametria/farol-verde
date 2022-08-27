@@ -28,6 +28,78 @@ class Senador:
     uf: str
 
 
+@dataclass
+class CandidatoTSE:
+    cpf: str
+    estado_sigla: str
+    estado_nome: str
+    nome: str
+    nome_urna: str
+    email: str
+    partido_sigla: str
+    data_nascimento: str
+    genero: str
+    cargo: str
+    codigo_imagem: str
+    codigo_urna: str
+
+    @staticmethod
+    def from_list(data: List[str]):
+        split = data[7].split("/")
+        # YYYY-MM-DD
+        data_nascimento = (
+            "-".join([split[2], split[1], split[0]]) if data[7] != "nan" else ""
+        )
+
+        return CandidatoTSE(
+            # some CPFs have less than 11 chars, left pad with '0' until 11 chars
+            str(data[0]).zfill(11),
+            data[1],
+            data[2],
+            data[3],
+            data[4],
+            data[5],
+            data[6],
+            data_nascimento,
+            data[8],
+            data[9],
+            data[10],
+            data[11],
+        )
+
+    @property
+    def is_deputado(self):
+        return self.cargo in [
+            "DEPUTADO ESTADUAL",
+            "DEPUTADO FEDERAL",
+            "DEPUTADO DISTRITAL",
+        ]
+
+    @property
+    def is_senador(self):
+        return self.cargo == "SENADOR"
+
+    @property
+    def has_dados_invalidos(self):
+        if self.data_nascimento == "":
+            return True
+
+        if int(self.cpf) < 0:
+            return True
+
+        return False
+
+
+def csv_row_iterator(csv_filename: str):
+    filepath = "".join([abspath(""), "/candidate/csv/", csv_filename, ".csv"])
+    csvfile = open(filepath, "r")
+    reader = csv.reader(csvfile, delimiter=";")
+
+    # skip header
+    next(reader)
+    yield from reader
+    csvfile.close()
+
 # https://stackoverflow.com/questions/31771286/python-in-memory-cache-with-time-to-live
 def lru_cache_time(seconds, maxsize=None):
     """

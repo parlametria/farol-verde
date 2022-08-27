@@ -22,6 +22,7 @@ from candidate.factories import SurveyCandidateFactory
 class GenderChoices(models.TextChoices):
     MASCULINE = "M", "MASCULINO"
     FEMININE = "F", "FEMININO"
+    NOT_DISCLOSURE = "N", "NÃO DIVULGÁVEL"
 
 
 class CandidatePage(MetadataPageMixin, Page):
@@ -74,6 +75,7 @@ class CandidatePage(MetadataPageMixin, Page):
         choices=GenderChoices.choices,
     )
     tse_image_code = CharField(null=True, blank=True, max_length=60)
+    tse_urn_code = CharField(null=True, blank=True, max_length=6)
 
     global make_block
 
@@ -171,6 +173,7 @@ class CandidatePage(MetadataPageMixin, Page):
         FieldPanel('charge'),
         FieldPanel('gender'),
         FieldPanel('tse_image_code'),
+        FieldPanel('tse_urn_code'),
         StreamFieldPanel('social_media'),
         FieldPanel('manager_name'),
         FieldPanel('manager_email'),
@@ -249,6 +252,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         search_results = self.search_results(request)
         search_results = search_results.filter(live=True) # do not display draft pages
         subject = request.GET.get('subject', None)
+        print(subject)
         candidates_opinions = [''] * len(search_results)
 
         if subject:
@@ -276,7 +280,10 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         except EmptyPage:
             candidates_list = paginator.page(paginator.num_pages)
 
+        page = int(page)
+
         context["candidates_list"] = candidates_list
+        context["pagination_range"] = [x for x in range(page-2, page+3) if x > 0 and x <= paginator.num_pages]
         context["subjects"] = list(subject_dict.keys())
         context["uf_list"] = uf_list
         context["party_list"] = party_list

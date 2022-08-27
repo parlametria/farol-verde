@@ -37,7 +37,7 @@
         <input type="hidden" id='page' name='page' value="1">
         <div class="query__select">
             <div id='uf' class="input-board">
-              <button>UF <i class="fas fa-caret-down"></i></button>
+                <button>UF <i class="fas fa-caret-down"></i></button>
                 <div class="input-board__selector">
                     <p>Mostrar candidatos do(s) estado(s):</p>
                     <div class="input-board__content">
@@ -116,7 +116,7 @@
         <div class="query__subjects">
             {% for subject in subjects %}
                 <label class="btn-toggle">
-                    <input type='radio' value="{{subject}}" id='subject-{{subject}}' name='subject'>
+                    <input type='checkbox' class="subject__input" value="{{subject}}" id='subject-{{subject}}' name='subject'>
                     <span>{{subject|lower}}</span>
                 </label>
             {% endfor %}
