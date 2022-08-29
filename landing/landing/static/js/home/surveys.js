@@ -172,11 +172,12 @@ function setDateInputs() {
 
 function addError(element, text) {
   if(element.classList.contains('error')) return;
+  element.classList.add('error');
+  if(element.classList.contains('social')) return;
   label = `<label class="error">${text}</label>`;
   errorDiv = document.createElement('div');
   errorDiv.classList.add('requided_error');
   errorDiv.innerHTML = label;
-  element.classList.add('error');
   element.appendChild(errorDiv);
 }
 

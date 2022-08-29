@@ -2,11 +2,12 @@ from django.db import migrations, models
 from wagtailstreamforms.models.form import Form
 
 get_field_data = lambda field, data: field.__dict__['value'].get(data)
+selected_fields = ['Link para o site da campanha', 'Twitter', 'Facebook', 'Instagram', 'Youtube']
 
 def set_url_fields(apps, schema_editor):
     form = Form.objects.get(title='Enquete')
     fields = [field for field in form.fields
-        if get_field_data(field, 'label') == 'Link para o site da campanha']
+        if get_field_data(field, 'label') in selected_fields]
     for field in fields:
         help_text = get_field_data(field, 'help_text')
         if 'phone' in help_text:
@@ -17,7 +18,7 @@ def set_url_fields(apps, schema_editor):
 def update_set_url_fields(apps, schema_editor):
     form = Form.objects.get(title='Enquete')
     fields = [field for field in form.fields
-        if get_field_data(field, 'label') == 'Link para o site da campanha']
+        if get_field_data(field, 'label') in selected_fields]
     for field in fields:
         help_text = get_field_data(field, 'help_text')
         help_text.replace('url-field', '')
