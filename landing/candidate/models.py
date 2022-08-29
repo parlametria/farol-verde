@@ -213,7 +213,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
 
         charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
         charges = []
-        gender_dict = {'men': 'M', 'women': 'F'}
+        gender_dict = {'men': 'M', 'women': 'F', 'others': 'N'}
         genders = []
         election_dict = {'reelection': False, 'no_reelection': True }
         reelections = []
@@ -252,7 +252,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         search_results = self.search_results(request)
         search_results = search_results.filter(live=True) # do not display draft pages
         subject = request.GET.get('subject', None)
-        print(subject)
+        
         candidates_opinions = [''] * len(search_results)
 
         if subject:
