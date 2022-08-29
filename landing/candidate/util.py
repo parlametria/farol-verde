@@ -1,12 +1,13 @@
 import csv
 import requests
 import time
+import urllib.parse
 
 
 from functools import lru_cache, partial, update_wrapper
 from os.path import abspath
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import Optional, List, Generator
 
 from django.utils.functional import lazy
 
@@ -216,6 +217,17 @@ def check_senador(nome: str, nome_completo: str, uf: str) -> Optional[Senador]:
             break
 
     return found
+
+
+def get_google_sheet_csv_url(sheet_id: str, sheet_name: str) -> str:
+    sheet_name_url = urllib.parse.quote_plus(sheet_name)
+    return f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name_url}"
+
+
+def url_to_row_iterator(url: str) -> Generator[str, None, None]:
+        headers = {"Content-type": "text/csv"}
+        response = requests.get(url, headers=headers)
+        return (it.decode("utf-8") for it in response.iter_lines())
 
 
 uf_list = [
