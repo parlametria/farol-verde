@@ -154,14 +154,17 @@ function setUrlValidations() {
   const urlInputs = document.querySelectorAll('.url-field input');
 
   urlInputs.forEach ( input => {
-    let {value} = input;
-    if(value.length === 0) return;
-    
-    try { 
-      let isValid = new URL(value);
-    } catch(e) {
-      addError(input.parentElement,'URL inválido');
-    }
+    input.addEventListener('input', () => {
+      let {value} = input;
+      if(value.length === 0) return;
+      try { 
+        let isValid = new URL(value);
+        if (isValid) return;
+        removeError(input.parentElement);
+      } catch(e) {
+        addError(input.parentElement,'URL inválido');
+      }
+    })
   } )
 }
 
