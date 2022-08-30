@@ -227,7 +227,7 @@ class CandidateFetcher(ApiFetcher):
 
         if candidato.genero == GenderChoices.MASCULINE.label:
             gender = GenderChoices.MASCULINE.value
-        elif candidato.genero == GenderChoices.FEMININE.value:
+        elif candidato.genero == GenderChoices.FEMININE.label:
             gender = GenderChoices.FEMININE.value
 
         return gender
