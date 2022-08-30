@@ -51,17 +51,25 @@ class CandidateAdhesion(ABC):
         self.use_vetos = use_vetos
 
     def _get_leader_votes(
-        self, votacao_queryset: QuerySet, votacao_date: date
+        self, votacao_queryset: QuerySet,
+        votacao_date: date,
+        specific_leader=None
     ) -> Optional[QuerySet]:
         date_check = datetime.strptime("2022-02-02", "%Y-%m-%d").date()
         ids_lideres: List[int] = []
         date_filter: QuerySet = None
 
+        if specific_leader is not None:
+            ids_lideres = [specific_leader]
+        else:
+            if votacao_date < date_check:
+                ids_lideres = self._get_ids_lideres()["antes-02-02-2022"]
+            else:
+                ids_lideres = self._get_ids_lideres()["apos-02-02-2022"]
+
         if votacao_date < date_check:
-            ids_lideres = self._get_ids_lideres()["antes-02-02-2022"]
             date_filter = votacao_queryset.filter(data__lt="2022-02-02")
         else:
-            ids_lideres = self._get_ids_lideres()["apos-02-02-2022"]
             date_filter = votacao_queryset.filter(data__gte="2022-02-02")
 
         for id_lider in ids_lideres:
@@ -94,7 +102,8 @@ class CandidateAdhesion(ABC):
         self, id_parlamentar: int, proposicao: Proposicao
     ):
         # desconsiderar votações anteriores a 01/01/2019
-        votacoes = proposicao.votacoes.filter(data__gte="2019-01-01")
+        # Issue 147 usa PEC 04/2018, logo vai ter que usar 2018 agora
+        votacoes = proposicao.votacoes.filter(data__gte="2018-01-01")
         total_votacoes = votacoes.count()
 
         if total_votacoes == 0:
@@ -118,6 +127,8 @@ class CandidateAdhesion(ABC):
             return adesao
 
         voto_art_17 = VotacaoParlamentar.TIPOS_VOTO["camara"]["artigo_17"]
+        # https://github.com/parlametria/farol-verde/issues/147
+        specific_leader = self._get_specific_leader_for_proposition(proposicao)
 
         total_calculadas = 0
         for votacao in votacoes.all():
@@ -125,7 +136,7 @@ class CandidateAdhesion(ABC):
                 continue
 
             votos_lider = self._get_leader_votes(
-                votacao.votacoes_parlamentares, votacao.data
+                votacao.votacoes_parlamentares, votacao.data, specific_leader
             )
 
             votos_parlamentar = votacao.votacoes_parlamentares.filter(
@@ -174,6 +185,20 @@ class CandidateAdhesion(ABC):
         )
 
         return adesao
+
+    def _get_specific_leader_for_proposition(self, proposition: Proposicao):
+        if proposition.casa == str(CasaChoices.CAMARA):
+            return None
+
+        propstr = str(proposition)
+
+        if propstr == "PLP 275/2019":
+            return CandidateAdhesionSenado.ELIZIANE
+
+        if propstr == "PL 4348/2019" or propstr == "PEC 4/2018":
+            return CandidateAdhesionSenado.FABIANO
+
+        return None
 
     def _get_propositions(self) -> QuerySet[Proposicao]:
         check = _check_camara_or_senado(self.candidate)
@@ -247,24 +272,30 @@ class CandidateAdhesion(ABC):
 
 
 class CandidateAdhesionCamara(CandidateAdhesion):
+    RODRIGO = 204530
+    ALESSANDRO = 160511
+    NILTO = 178986
 
     IDS_LIDERES_CAMARA = {
         # 1.º: Dep. Rodrigo Agostinho, 2º: Dep. Alessandro Molon, 3º: Dep. Nilto Tatto
-        "antes-02-02-2022": [204530, 160511, 178986],
+        "antes-02-02-2022": [RODRIGO, ALESSANDRO, ALESSANDRO],
         # 1.º: Dep. Alessandro Molon, 2º: Dep. Rodrigo Agostinho , 3º: Dep. Nilto Tatto
-        "apos-02-02-2022": [160511, 204530, 178986],  # Dep. Alessandro Molon
+        "apos-02-02-2022": [ALESSANDRO, RODRIGO, ALESSANDRO],  # Dep. Alessandro Molon
     }
 
     def _get_ids_lideres(self):
         return self.IDS_LIDERES_CAMARA
 
 class CandidateAdhesionSenado(CandidateAdhesion):
+    FABIANO = 5953
+    ELIZIANE = 5718
+    RANDOLFE = 5012
 
     IDS_LIDERES_SENADO = {
         # 1º: Sen. Fabiano Contarato, 2º: Sen. Eliziane Gama, 3º: Sen. Randolfe Rodrigues
-        "antes-02-02-2022": [5953, 5718, 5012],  # Sen. Fabiano Contarato
+        "antes-02-02-2022": [FABIANO, ELIZIANE, RANDOLFE],  # Sen. Fabiano Contarato
         # 1º: Sen. Eliziane Gama, 2º: Sen. Fabiano Contarato, 3º: Sen. Randolfe Rodrigues
-        "apos-02-02-2022": [5718, 5953, 5012],  # Sen. Eliziane Gama
+        "apos-02-02-2022": [ELIZIANE, FABIANO, RANDOLFE],  # Sen. Eliziane Gama
     }
 
     def _get_ids_lideres(self):
