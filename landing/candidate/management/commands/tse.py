@@ -32,7 +32,7 @@ class TseProcessor:
         self.style = style
 
     def process(self):
-        self._unpublish_all_candidates()
+        # self._unpublish_all_candidates()
         self._publish_reelection_candidates()
         self._publish_no_reelection_candidates()
 
