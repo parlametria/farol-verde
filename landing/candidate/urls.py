@@ -9,9 +9,7 @@ urlpatterns = [
     path("<slug:slug>/api/adesao", adesao_parlamentar_view),
     path("<slug:slug>/api/autoria", proposicoes_onde_parlamentar_e_autor_view),
 
-    path("<slug:slug>/api/social-media/<slug:social_app>/<str:keyword>", social_media_view),
-    path("<slug:slug>/api/social-media/<slug:social_app>", social_media_view),
-
+    path("<slug:slug>/api/social-media/<slug:social_app>/<str:keyword>/<str:page>", social_media_view),
     path("<slug:slug>/api/keywords/<int:page>/<str:search>", keywords_view),
     path("<slug:slug>/api/keywords/<int:page>", keywords_view),
 

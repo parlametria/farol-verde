@@ -9,6 +9,8 @@
 .candidate__picture {
     position: relative;
     border-radius: 100vmax;
+    background: var(--gray);
+    outline: 1px solid var(--gray);
     object-fit: cover;
     object-position: top;
     width: 120px;
@@ -103,4 +105,30 @@
 }
 .answer.nao_sei:before {
     content: "NÃO SEI";
+}
+.social #pages {
+    visibility: hidden;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: end;
+    align-items: baseline;
+    padding: 15px 0;
+}
+.social #pages .page-item:not(.paginate) { display: none; }
+.social #pages .page-prev,
+.social #pages .page-next,
+.social #pages .page-item { 
+    width: 45px;
+    height: 45px; 
+}
+.social #pages .page-item.active { 
+    background: white;
+    color: var(--dark-blue);
+    border: 1px solid var(--dark-blue);
+}
+.social #pages .page-prev:disabled,
+.social #pages .page-next:disabled {  opacity: .5; }
+.social #pages .total {
+    flex-grow: 1;
+    font-weight: bold;
 }
