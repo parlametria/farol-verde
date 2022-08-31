@@ -172,13 +172,15 @@ class VetosSenatoresSheet:
     def _process_voto_sheet_tab(self, tab: str):
         global SHEET_ID
         proposition = self._get_proposition_from_tab(tab)
-        votacoes = proposition.votacoes.all()
 
         if proposition is None:
             self.stdout.write(
                 self.style.ERROR(f"Proposition {tab} not found in databse")
             )
             return
+
+        self._rename_proposition(proposition)
+        votacoes = proposition.votacoes.all()
 
         self.stdout.write(f"Fetching votos sheet tab {tab}")
 
@@ -229,6 +231,7 @@ class VetosSenatoresSheet:
             )
             return
 
+        self._rename_proposition(proposition)
         self.stdout.write(f"Fetching votos sheet tab {tab}")
 
         sheet_csv_url = get_google_sheet_csv_url(SHEET_ID, tab)
@@ -299,3 +302,10 @@ class VetosSenatoresSheet:
         codes = tabname.split(" ")[1]
         [numero, ano] = codes.split("/")
         return Proposicao.objects.filter(numero=numero, ano=ano).first()
+
+    def _rename_proposition(self, proposition: Proposicao):
+        # rename proposition, ex:
+        # Linhas de transmissão em terras indígenas --> Linhas de transmissão em terras indígenas (PLP 275/2019)
+        if str(proposition) not in proposition.sobre:
+            proposition.sobre = "".join([proposition.sobre, " (", str(proposition), ")"])
+            proposition.save()
