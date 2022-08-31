@@ -49,6 +49,14 @@ class CandidateAdhesion(ABC):
         self.id_parlamentar = candidate.id_autor
         self.candidate = candidate
         self.use_vetos = use_vetos
+        self.skip_session_cases = {
+            VotacaoParlamentar.TIPOS_VOTO["camara"]["artigo_17"],
+            VotacaoParlamentar.TIPOS_VOTO["senado"]["presidente_art_51"],
+            VotacaoParlamentar.TIPOS_VOTO["senado"]["ap"],
+            VotacaoParlamentar.TIPOS_VOTO["senado"]["mis"],
+            VotacaoParlamentar.TIPOS_VOTO["senado"]["lp"],
+            VotacaoParlamentar.TIPOS_VOTO["senado"]["ls"],
+        }
 
     def _get_leader_votes(
         self, votacao_queryset: QuerySet,
@@ -126,7 +134,6 @@ class CandidateAdhesion(ABC):
             adesao["total_com_votos"] = 0
             return adesao
 
-        voto_art_17 = VotacaoParlamentar.TIPOS_VOTO["camara"]["artigo_17"]
         # https://github.com/parlametria/farol-verde/issues/147
         specific_leader = self._get_specific_leader_for_proposition(proposicao)
 
@@ -148,7 +155,7 @@ class CandidateAdhesion(ABC):
                 continue
 
             # Voto artigo 17 deve-se descartar a votação do candidato
-            if votos_parlamentar is not None and votos_parlamentar.tipo_voto == voto_art_17:
+            if votos_parlamentar is not None and votos_parlamentar.tipo_voto in self.skip_session_cases:
                 continue
 
             voto = self._compare_votes(votos_parlamentar, votos_lider)
@@ -227,6 +234,9 @@ class CandidateAdhesion(ABC):
 
         if votacao_parlamentar is None:
             return self.VOTE_DIFFERENT
+
+        if votacao_parlamentar.tipo_voto in self.skip_session_cases:
+            return self.IGNORE_VOTE
 
         votacao_lider = self._get_votacao_dispositivo_lider(sessao)
 
