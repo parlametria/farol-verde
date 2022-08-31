@@ -32,7 +32,7 @@ class TseProcessor:
         self.style = style
 
     def process(self):
-        self._unpublish_all_candidates()
+        # self._unpublish_all_candidates()
         self._publish_reelection_candidates()
         self._publish_no_reelection_candidates()
 
@@ -73,7 +73,7 @@ class TseProcessor:
             gender = GenderChoices.NOT_DISCLOSURE.value
             if candidato.genero == GenderChoices.MASCULINE.label:
                 gender = GenderChoices.MASCULINE.value
-            elif candidato.genero == GenderChoices.FEMININE.value:
+            elif candidato.genero == GenderChoices.FEMININE.label:
                 gender = GenderChoices.FEMININE.value
 
             found.gender = gender

@@ -9,6 +9,7 @@ from candidate.models import CandidatePage, AutorProposicao
 from candidate.util import lru_cache_time, keywords
 
 API_PERFIIL = "https://perfil.parlametria.org.br/api"
+SOCIAL_PAGE_SIZE = 20
 
 # cache proposicoes for 1h = 60s*60m = 3600s
 @lru_cache_time(seconds=3600, maxsize=2)
@@ -127,12 +128,14 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
 
     return JsonResponse(candidate_votes)
 
-def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword: str = ''):
+def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword: str = '', page: str = 0):
     candidate = CandidatePage.objects.filter(slug=slug).first()
     url = os.environ.get("ELASTIC_URL")
     login = os.environ.get("ELASTIC_USER")
     password = os.environ.get("ELASTIC_PASSWORD")
-    query = { 
+    query = {
+        "from": int(page)*SOCIAL_PAGE_SIZE,
+        "size": SOCIAL_PAGE_SIZE,
         "query": {
             "bool":{
                 "must": [
@@ -156,7 +159,7 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
         },
         "fields": [ "_source.social-data.*" ]
     }
-    if len(keyword) > 0:
+    if len(keyword) > 1:
         keyword = unquote(keyword)
         value = {"wildcard": { "social-data.texto": { "value": f"*{keyword}*", "case_insensitive": True },}}
         query["query"]["bool"]["must"].append(value)

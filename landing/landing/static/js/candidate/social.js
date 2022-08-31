@@ -20,6 +20,12 @@ const emptyFrame = document.querySelector('#social__empty--tpl');
 
 const postTpl = document.querySelector('#social__post--tpl');
 
+const socialPagination = document.querySelector('.pagination#pages');
+const socialPageBtn = document.querySelector('.pagination#pages .page-item');
+const socialPagePrev = document.querySelector('.pagination#pages .page-prev');
+const socialPageNext = document.querySelector('.pagination#pages .page-next');
+const socialPageTotal = document.querySelector('.pagination#pages .total');
+
 const keywordsPage = {
     page: 0,
     limit: 1000,
@@ -40,11 +46,132 @@ const keywordsPage = {
     }
 };
 
-function openSocial(socialName) {
+const socialSearch = {
+    size: 20,
+    page: 0,
+    media: 'twitter',
+    medias: [],
+    keyword: '',
+    total: 0,
+    maxPage: 0,
+    next: () => {
+        socialSearch.page = socialSearch.page < socialSearch.maxPage ? socialSearch.page+1 : socialSearch.maxPage;
+        getSocialData(socialSearch.media, socialSearch.keyword, socialSearch.page);
+    },
+    prev: () => {
+        socialSearch.page = socialSearch.page > 0 ? socialSearch.page-1 : 0;
+        getSocialData(socialSearch.media, socialSearch.keyword, socialSearch.page);
+    },
+    setPage: (page) => {
+        socialSearch.page = Number(page);
+        getSocialData(socialSearch.media, socialSearch.keyword, socialSearch.page);
+    },
+    setEmpty: () => {
+        let clone = emptyFrame.content.cloneNode(true);
+        let frame = socialSearch.getMediaFrame();
+        frame.innerHTML = '';
+        frame.append(clone);
+    },
+    getMediaFrame: () => {
+        return socialSearch.medias[socialSearch.media];
+    },
+    getUrl: () => {
+        let url = './api/social-media/' + socialSearch.media + '/';
+        if (socialSearch.keyword) {
+            url += socialSearch.keyword + '/';
+        } else {
+            url += '-/';
+        }
+        url += socialSearch.page;
+        return url;
+    },
+    renderResults: (hits, frame) => {
+        if (hits.length == 0) return socialSearch.setEmpty();
+
+        hits = hits.map(hit => hit._source['social-data'])
+        hits = hits.map(post => {
+            var clone = postTpl.content.cloneNode(true);
+            post.texto = post.texto.replaceAll(/\&#\d*;/g, emojiCode => {
+                emojiCode = parseInt(emojiCode.slice(2,-1))
+                return String.fromCodePoint(emojiCode)
+            })
+            if (post.termo_filtro) {
+                var keywords = post.termo_filtro.split('|');
+                keywords = keywords.map(keyword => {
+                    var keywordItem = document.createElement('div');
+                    if(keyword == socialSearch.keyword) {
+                        keywordItem.classList.add('marked');
+                    }
+                    keywordItem.classList.add('keyword__item', 'button-text');
+                    keywordItem.addEventListener('click', () => {
+                        let _keyword = '';
+                        if(!keywordItem.classList.contains('marked')) {
+                            keywordItem.classList.add('marked');
+                            _keyword = keyword;
+                        }
+                        getSocialData(null, _keyword);
+                        getKeywords();
+                    });
+                    keywordItem.innerText = keyword;
+                    return keywordItem;
+                })
+
+                keywords.forEach(keyword => {
+                    clone.querySelector('.post__keywords').appendChild(keyword)
+                });
+            }
+            clone.querySelector('.post__content').innerText = post.texto;
+            let postDate = formatDate(post['data criado']);
+            clone.querySelector('.post__date').innerText = postDate;
+            var postLink = clone.querySelector('.post__link a');
+            postLink.href = post.link;
+            postLink.innerText = `abrir no ${post.rede}`;
+            return clone;
+        });
+        frame.innerHTML = '';
+        frame.append(...hits);
+    },
+    renderPagination: (total) => {
+        socialSearch.total = total;
+        socialSearch.maxPage = Math.ceil(total/socialSearch.size)-1;
+        socialPagination.querySelectorAll('.page-item.paginate').forEach(b => b.remove());
+        for (i=0; i<=socialSearch.maxPage; i++) {
+          if (i < socialSearch.page - 2 || i > socialSearch.page + 2) continue;
+          const pageBtn = socialPageBtn.cloneNode(true);
+          pageBtn.innerHTML = i+1;
+          pageBtn.classList.add('paginate');
+          if (i == socialSearch.page) {
+              pageBtn.classList.add('active');
+          }
+          if (socialSearch.page == 0) {
+              socialPagePrev.disabled = true;
+          } else {
+              socialPagePrev.disabled = false;
+          }
+          if (socialSearch.page == socialSearch.maxPage) {
+              socialPageNext.disabled = true;
+          } else {
+              socialPageNext.disabled = false;
+          }
+          socialPagination.insertBefore(pageBtn,socialPageBtn);
+          pageBtn.addEventListener('click', () => socialSearch.setPage(Number(pageBtn.innerHTML)-1));
+        }
+        const begin = socialSearch.page * socialSearch.size;
+        const end = begin + socialSearch.size < socialSearch.total ? begin + socialSearch.size : socialSearch.total;
+        socialPageTotal.innerHTML = `Mostrando ${ begin } a ${ end } de ${socialSearch.total}.`;
+        socialPagination.style.visibility = 'visible';
+    }
+}
+
+function openSocialTab(socialName) {
     const socialBtn = document.querySelector(`.social__btn.${socialName}`);
     const socialContent = document.querySelector(`.social__frame.${socialName}`);
 
-    getSocialMedia(socialName);
+    getSocialData(socialName);
+
+    document.querySelectorAll('.keyword__item.marked').forEach(keywordItem => {
+        keywordItem.classList.remove('marked')
+    })
 
     socialBtns.forEach(social => social.classList.remove('open'));
     socialContents.forEach(content => content.classList.add('hide'));
@@ -55,7 +182,6 @@ function openSocial(socialName) {
 
 let sectionRequest;
 let searchValue = '';
-let markedKeyword = '';
 
 function setSearchValue(value) {
     searchValue = value == searchValue ? '' : value;
@@ -97,22 +223,20 @@ function getKeywords() {
         .done((keywords) => {
             keywords = keywords.map(word => {
                 const item = document.createElement('div');
-                if (word.length == 1) {
-                    item.className = 'keyword__category overline'
-                } else {
-                    item.addEventListener('click', (e) => {
-                        if(!item.classList.contains('marked')) {
-                            item.classList.add('marked');
-                            getSocialMedia(null, word);
-                            getKeywords();
-                        } else {
-                            getSocialMedia(null, null);
-                            getKeywords();
-                        }
-                    });
-                    item.className = 'keyword__item button-text';
-                }
-                if (word == markedKeyword) {
+                if (word.length === 1) item.className = 'keyword__item button-text';
+                else item.className = 'keyword__category overline'
+
+                item.addEventListener('click', (e) => {
+                    let keyword = '';
+                    if(!item.classList.contains('marked')) {
+                        item.classList.add('marked');
+                        keyword = word;
+                    }
+                    getSocialData(null, keyword);
+                    getKeywords();
+                });
+                item.className = 'keyword__item button-text';
+                if (word == socialSearch.keyword) {
                     item.classList.add('marked');
                 } else {
                     item.classList.remove('marked');
@@ -149,69 +273,32 @@ getKeywords();
 
 let socialMediaRequest;
 
-function getSocialMedia(socialApp, keyword) {
-    socialApp ??= 'twitter';
-    socialApp = socialApp.toLowerCase();
-    let url = './api/social-media/' + socialApp;
-    markedKeyword = keyword;
-    if (keyword) {
-        url += '/' + keyword;
-    }
-
+function getSocialData(socialApp, keyword, page) {
     if(socialMediaRequest) socialMediaRequest.abort();
 
-    const socialApps = {facebook: facebookFrame, twitter: twitterFrame, instagram: instagramFrame,}
-    let socialFrame = socialApps[socialApp];
 
-    const setEmpty = () => {
-        let clone = emptyFrame.content.cloneNode(true);
-        socialFrame.innerHTML = '';
-        socialFrame.append(clone);
+    let { frame, url } = getSocialSearch(socialApp, keyword, page);
+
+    const setLoading = () => {
+        frame.innerHTML = '<div class="spinning-load"><i class="spin fa fa-2x fa-spinner"></i></div>';
     }
 
-    let children = socialFrame.childNodes
-    if (children.length == 1 && children[0].classList.contains('empty')) return setEmpty();
-
+    setLoading();
     socialMediaRequest = $.ajax({url})
         .done((data) => {
-            let {hits} = data;
-            hits = hits.hits;
-
-            if (hits.length == 0) return setEmpty();
-
-            hits = hits.map(hit => hit._source['social-data'])
-            Object.values(socialApps).forEach(app => app.innerHTML = '');
-            hits = hits.map(post => {
-                var clone = postTpl.content.cloneNode(true);
-                if (post.termo_filtro) {
-                    var keywords = post.termo_filtro.split('|');
-                    keywords = keywords.map(keyword => {
-                        var keywordItem = document.createElement('div');
-                        if(keyword == markedKeyword) {
-                            keywordItem.classList.add('marked');
-                        }
-                        keywordItem.classList.add('keyword__item', 'button-text');
-                        keywordItem.addEventListener('click', () => getSocialMedia(keyword));
-                        keywordItem.innerText = keyword;
-                        return keywordItem;
-                    })
-
-                    keywords.forEach(keyword => {
-                        clone.querySelector('.post__keywords').appendChild(keyword)
-                    });
-                }
-                clone.querySelector('.post__content').innerText = post.texto;
-                let postDate = formatDate(post['data criado']);
-                clone.querySelector('.post__date').innerText = postDate;
-                var postLink = clone.querySelector('.post__link a');
-                postLink.href = post.link;
-                postLink.innerText = `abrir no ${post.rede}`;
-                return clone;
-            });
-            socialFrame.innerHTML = '';
-            socialFrame.append(...hits);
+            let { hits, total } = data.hits;
+            socialSearch.renderResults(hits, frame);
+            socialSearch.renderPagination(total.value);
         })
-        .fail(setEmpty);
+        .fail(socialSearch.setEmpty);
 }
 
-getSocialMedia();
+function getSocialSearch(media, keyword, page) {
+    socialSearch.media = media ? media.toLowerCase() : socialSearch.media;
+    socialSearch.keyword = keyword == undefined ? socialSearch.keyword : keyword;
+    socialSearch.page = page || 0;
+    socialSearch.medias = { facebook: facebookFrame, twitter: twitterFrame, instagram: instagramFrame };
+    return {frame: socialSearch.getMediaFrame(), url: socialSearch.getUrl(), ...socialSearch };
+}
+
+getSocialData();

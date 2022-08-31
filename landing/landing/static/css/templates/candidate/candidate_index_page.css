@@ -85,18 +85,23 @@ input::placeholder {color: var(--dark-blue);}
 
 .query__show {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 0.5rem;
     color: var(--dark-blue);
     line-height: 2;
 }
-.query__show .divider {
-    background: var(--dark-gray);
-    width: 1px;
-}
-.query__show label {
+
+.query__section {
+    display: flex;
+    gap: 0.5rem;
+    border-right: 1px solid var(--gray);
+    padding-right: 0.5rem;
     filter: grayscale(1);
+}
+
+.query__section:last-child {
+    border-right: 0;
+    padding-right: 0;
 }
 
 .query__heading {

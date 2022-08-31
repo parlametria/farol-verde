@@ -179,7 +179,10 @@ main.container {
     padding: 15px;
     font-weight: 900;
     color: white;
+    margin-bottom: .5rem;
 }
+
+.messages li:last-child {margin-bottom: 0;}
 
 .field-row select {height: 3rem;}
 

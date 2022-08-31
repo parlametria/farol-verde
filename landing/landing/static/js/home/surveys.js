@@ -133,7 +133,8 @@ function setFormValidations() {
   setPhoneMask();
   setEmailConfirmation();
   setFormSubmit();
-  setDateValidations()
+  setDateValidations();
+  setUrlValidations();
 }
 
 function setDateValidations() {
@@ -149,6 +150,24 @@ function setDateValidations() {
   });
 }
 
+function setUrlValidations() {
+  const urlInputs = document.querySelectorAll('.url-field input');
+
+  urlInputs.forEach ( input => {
+    input.addEventListener('input', () => {
+      let {value} = input;
+      if(value.length === 0) return;
+      try { 
+        let isValid = new URL(value);
+        if (isValid) return;
+        removeError(input.parentElement);
+      } catch(e) {
+        addError(input.parentElement,'URL inválido');
+      }
+    })
+  } )
+}
+
 function setDateInputs() {
   const dateInputs = document.querySelectorAll('.date_field input');
   dateInputs.forEach(input => input.type = 'date');
@@ -156,11 +175,12 @@ function setDateInputs() {
 
 function addError(element, text) {
   if(element.classList.contains('error')) return;
+  element.classList.add('error');
+  if(element.classList.contains('social')) return;
   label = `<label class="error">${text}</label>`;
   errorDiv = document.createElement('div');
   errorDiv.classList.add('requided_error');
   errorDiv.innerHTML = label;
-  element.classList.add('error');
   element.appendChild(errorDiv);
 }
 
@@ -170,7 +190,8 @@ function removeError(element) {
   element.classList.remove('error');
   element.removeChild(errorDiv);
 }
-document.getElementById('id_twitter').placeholder="https://twitter.com/SEU_USUARIO";
-document.getElementById('id_facebook').placeholder="https://www.facebook.com/SEU_USUARIO";
-document.getElementById('id_instagram').placeholder="https://www.instagram.com/SEU_USUARIO";
-document.getElementById('id_youtube').placeholder="https://www.youtube.com/channel/ID_DO_CANAL";
+
+document.getElementById('id_twitter').placeholder = "https://twitter.com/SEU_USUARIO";
+document.getElementById('id_facebook').placeholder = "https://www.facebook.com/SEU_USUARIO";
+document.getElementById('id_instagram').placeholder = "https://www.instagram.com/SEU_USUARIO";
+document.getElementById('id_youtube').placeholder = "https://www.youtube.com/channel/ID_DO_CANAL";
