@@ -81,6 +81,7 @@ class TseProcessor:
             found.cpf = candidato.cpf  # set CPF for senadores
             found.tse_image_code = candidato.codigo_imagem
             found.tse_urn_code = candidato.codigo_urna
+            found.campaign_name = candidato.nome_urna
 
             if (found.is_deputado and candidato.is_senador) or (
                 found.is_senador and candidato.is_deputado
