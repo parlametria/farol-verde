@@ -10,6 +10,7 @@ from django.core.management.base import OutputWrapper
 from django.core.management.color import Style
 
 from candidate.models import Proposicao, SessaoVeto, VotacaoDispositivo, CasaChoices
+from candidate.util import get_google_sheet_csv_url, url_to_row_iterator
 
 # https://docs.google.com/spreadsheets/d/17v7I99WH0GcgrqpzP6Zk7E7mG_Mbr2rQx719Dmufigo
 SHEET_ID = "17v7I99WH0GcgrqpzP6Zk7E7mG_Mbr2rQx719Dmufigo"
@@ -58,8 +59,8 @@ class VetosSheet:
         if proposition is None:
             raise Exception(f"Proposition not found from tab: {tab}")
 
-        sheet_csv_url = self.get_google_sheet_csv_url(SHEET_ID, tab)
-        csv_iterator = self.url_to_row_iterator(sheet_csv_url)
+        sheet_csv_url = get_google_sheet_csv_url(SHEET_ID, tab)
+        csv_iterator = url_to_row_iterator(sheet_csv_url)
         reader = csv.reader(csv_iterator, delimiter=",")
         dispositivos = next(reader)[1:]
         sessoes: List[SessaoVeto] = []
@@ -81,15 +82,6 @@ class VetosSheet:
                 continue
 
             self._process_votacoes_dispositivo(nome_parlamentar, sessoes, votos, casa)
-
-    def get_google_sheet_csv_url(self, sheet_id: str, sheet_name: str) -> str:
-        sheet_name_url = urllib.parse.quote_plus(sheet_name)
-        return f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name_url}"
-
-    def url_to_row_iterator(self, url: str) -> Generator[str, None, None]:
-        headers = {"Content-type": "text/csv"}
-        response = requests.get(url, headers=headers)
-        return (it.decode("utf-8") for it in response.iter_lines())
 
     def _find_proposition(self, tab: str) -> Optional[Proposicao]:
         _id = tab.split(":")[0]
