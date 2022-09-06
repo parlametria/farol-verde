@@ -53,18 +53,18 @@ class CandidatoTSE:
 
         return CandidatoTSE(
             # some CPFs have less than 11 chars, left pad with '0' until 11 chars
-            str(data[0]).zfill(11),
-            data[1],
-            data[2],
-            data[3],
-            data[4],
-            data[5],
-            data[6],
-            data_nascimento,
-            data[8],
-            data[9],
-            data[10],
-            data[11],
+            cpf=str(data[0]).zfill(11),
+            estado_sigla=data[1],
+            estado_nome=data[2],
+            nome=data[3].title(),
+            nome_urna=data[4].title(),
+            email=data[5],
+            partido_sigla=data[6],
+            data_nascimento=data_nascimento,
+            genero=data[8],
+            cargo=data[9],
+            codigo_imagem=data[10],
+            codigo_urna=data[11],
         )
 
     @property

@@ -81,6 +81,7 @@ class TseProcessor:
             found.cpf = candidato.cpf  # set CPF for senadores
             found.tse_image_code = candidato.codigo_imagem
             found.tse_urn_code = candidato.codigo_urna
+            found.campaign_name = candidato.nome_urna
 
             if (found.is_deputado and candidato.is_senador) or (
                 found.is_senador and candidato.is_deputado
@@ -105,7 +106,16 @@ class TseProcessor:
     def _check_candidate_filled_the_poll(self, candidate: CandidatePage) -> bool:
         form_id = candidate.slug.split("-")[-1]
         candidate_form = FormSubmission.objects.filter(id=form_id).first()
-        nome_de_campanha = candidate_form.get_data()["nome-de-campanha"].upper()
+        if candidate_form is None:
+            return False
+
+        form_data = candidate_form.get_data()
+        nome_de_campanha = (
+            form_data["nome-de-campanha"]
+            if "nome-de-campanha" in form_data
+            else form_data["nome-na-urna"]
+        )
+        nome_de_campanha = nome_de_campanha.upper()
 
         return nome_de_campanha == candidate.campaign_name.upper()
 

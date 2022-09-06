@@ -55,7 +55,7 @@ class SurveyCandidateFactory:
         return check_deputado(cpf)
 
     def _find_senador(self) -> Optional[Senador]:
-        nome = self.form["nome-de-campanha"].strip()
+        nome = self.form["nome-na-urna"].strip()
         nome_completo = self.form["nome-completo"].strip()
         uf = self.form["uf"].strip()
 
@@ -80,7 +80,7 @@ class SurveyCandidateFactory:
         )
 
     def _add_candidate_page_without_parlametria(self):
-        nome = self.form["nome-de-campanha"]
+        nome = self.form["nome-na-urna"]
 
         slug = slugify(f"{nome} {self.form_id}")
         return self._make_candidate(slug, None, None)
@@ -102,7 +102,7 @@ class SurveyCandidateFactory:
             slug=slug,
             id_autor=id_autor,
             id_parlametria=id_parlametria,
-            campaign_name=self.form["nome-de-campanha"],
+            campaign_name=self.form["nome-na-urna"],
             cpf=self.form["cpf"],
             birth_date=self.form["data-de-nascimento"],
             email=self.form["e-mail"],
