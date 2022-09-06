@@ -366,12 +366,14 @@ class VotacaoParlamentar(models.Model):
         "senado": {
             "sim": "Sim",
             "nao": "Não",
-            "p_nrv": "P-NRV",
-            "ap": "AP",
-            "lp": "LP",
-            "mis": "MIS",
+            "p_nrv": "P-NRV", # Não registrou voto
+            "ap": "AP", # art. 13, caput - Atividade parlamentar
+            "lp": "LP", # art. 43, II - Licença particular
+            "ls": "LS", # art. 43, I - Licença saúde
             "abstencao": "Abstenção",
             "presidente_art_51": "Presidente (art. 51 RISF)",
+            "NCom": "NCom", # Não Compareceu
+            "mis": "MIS" # Presente (art. 40 - em Missão)
         },
     }
 
