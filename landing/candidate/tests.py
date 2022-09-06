@@ -8,7 +8,7 @@ from uuid import uuid1
 SAMPLE_FORM_DATA = {
     "informacoes-do-candidatoa": "",
     "nome-completo": "Fabio Paulino Garcia",
-    "nome-de-campanha": "Fabio Garcia",
+    "nome-na-urna": "Fabio Garcia",
     "cpf": "01234567891",
     "e-mail": "teste@email.br",
     "confirmacao-de-e-mail": "teste@email.br",
