@@ -24,6 +24,12 @@ class Command(BaseCommand):
             help="Update the date of registered propositions",
         )
 
+        parser.add_argument(
+            "--change-adhesion",
+            action="store_true",
+            help="Change Adhesion status of some propositions",
+        )
+
     def handle(self, *args, **options):
         if options["import"]:
             parla_fetcher = ProposicoesFetcher(self.stdout, self.style)
@@ -33,6 +39,9 @@ class Command(BaseCommand):
             parla_fetcher = ProposicoesFetcher(self.stdout, self.style)
             parla_fetcher.update_proposition_date()
 
+        if options["change_adhesion"]:
+            parla_fetcher = ProposicoesFetcher(self.stdout, self.style)
+            parla_fetcher.change_adhesion()
 
 class ProposicoesFetcher(ApiFetcher):
     def start_fetch(self):
@@ -56,6 +65,44 @@ class ProposicoesFetcher(ApiFetcher):
             prop.data = data
             prop.save()
 
+    def change_adhesion(self):
+        self._add_new_propositions()
+        self._rename_propositions()
+        self._remove_from_adhesion()
+
+    def _add_new_propositions(self):
+        new_propositions = [138725, 2224662]
+
+        for id_prop in new_propositions:
+            self._find_or_create_proposicao(id_prop, calculate_adhesion=True)
+
+    def _rename_propositions(self):
+        rename_propositions = [
+            [140256, "Linhas de Transmissão em Terras indígenas", "PLP 275/2019"],
+            [140554, "PL regularização fundiária em Terras da União", "PL 4348/2019"],
+            [132208, "Acesso Água Potável como Diraito Fundamental", "PEC 04/2018"],
+            [138725, "Pagamento por Serviços Ambientais", "derrubada de vetos PL 5028/19"],
+            [2224662, "Dia dos povos indigenas", "PL 5466/2019"],
+        ]
+
+        for row in rename_propositions:
+            proposicao = Proposicao.objects.filter(id_externo=row[0]).first()
+
+            if proposicao is None:
+                print("*" * 80)
+                print(f"Proposicao {row[0]} not found")
+                continue
+
+            proposicao.sobre = "".join([row[1], " (", row[2], ")"])
+            proposicao.save()
+
+    def _remove_from_adhesion(self):
+        remove_from_adhesion_calculate = [148658, 140534, 144582]
+
+        for id_prop in remove_from_adhesion_calculate:
+            proposicao = self._find_or_create_proposicao(id_prop)
+            proposicao.calculate_adhesion = False
+            proposicao.save()
 
     def _proposicoes_iterator(self) -> Generator[int, None, None]:
         filepath = "".join(
@@ -93,7 +140,7 @@ class ProposicoesFetcher(ApiFetcher):
 
                 autor_proposicao.proposicoes.add(proposicao)
 
-    def _find_or_create_proposicao(self, id_proposicao: int) -> Proposicao:
+    def _find_or_create_proposicao(self, id_proposicao: int, calculate_adhesion=False) -> Proposicao:
         proposicao = Proposicao.objects.filter(id_externo=id_proposicao).first()
 
         if proposicao is None:
@@ -106,7 +153,7 @@ class ProposicoesFetcher(ApiFetcher):
                 ementa=dados_json["ementa"],
                 sobre="...",
                 casa=str(CasaChoices.CAMARA),
-                calculate_adhesion=False,
+                calculate_adhesion=calculate_adhesion,
                 data=dados_json["dataApresentacao"].split("T")[0],
             )
 

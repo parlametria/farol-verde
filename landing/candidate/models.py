@@ -265,7 +265,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         search_results = self.search_results(request)
         search_results = search_results.filter(live=True) # do not display draft pages
         subject = request.GET.get('subject', None)
-        
+
         candidates_opinions = [''] * len(search_results)
 
         if subject:
@@ -321,6 +321,19 @@ class CasaChoices(models.TextChoices):
 
 
 class Proposicao(models.Model):
+    CAMARA_FIXED_PROPOSITIONS = [
+        2233488,
+        2252589,
+        946475,
+        2236765,
+        2270639,
+        2224662,
+        2190237,
+        46249,
+        257161,
+        2199215,
+    ]
+
     id_externo = models.IntegerField(blank=False, null=False, primary_key=True)
     sigla_tipo = models.CharField(blank=False, null=False, max_length=6)
     numero = models.IntegerField(blank=False, null=False)
