@@ -27,7 +27,6 @@
                 </label>
                 <div class="right">
                     <a href="#" onclick="toggleCountriesModal()">Pular esta etapa</a>
-                    <button onclick="getSelectedStates()">Próximo</button>
                 </div>
             </div>
         </div>
@@ -43,7 +42,7 @@
                     <div class="input-board__content">
                         {% for uf in uf_list %}
                             <label class="btn-toggle">
-                                <input type="checkbox" value="{{ uf }}" name="uf[]">
+                                <input type="radio" value="{{ uf }}" name="uf[]">
                                 <span>{{ uf }}</span>
                             </label>
                         {% endfor %}

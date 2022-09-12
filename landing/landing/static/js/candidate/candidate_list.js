@@ -17,8 +17,6 @@ const states = document.querySelectorAll('#svg-map .estado');
 let params = {};
 let pages = [];
 
-const selectedStates = []
-
 $('#form').ajaxForm( result => {
     candidatesList.innerHTML = result;
 });
@@ -89,23 +87,13 @@ inputs.forEach(obj => obj.addEventListener('change', (e) => {
 nameInput.addEventListener('keypress', () => getCandidatesList());
 
 states.forEach(state => state.addEventListener('click', () => {
-    state.classList.toggle('selected');
     let input = Array.from(inputs)
         .filter(input => input.value == state.id)
-    if (state.classList.contains('selected')) {
-        selectedStates.push(state.id);
-    }
-}));
 
-function getSelectedStates() {
-    selectedStates.forEach(state => {
-        let input = Array.from(inputs)
-            .filter(input => input.value == state)
-        input[0].checked = true;
-    })
+    input[0].checked = true;
     getCandidatesList();
     toggleCountriesModal();
-}
+}));
 
 showModal.addEventListener('click', () => {
     let { value } = modalInput;
