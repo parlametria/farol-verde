@@ -86,8 +86,6 @@
     text-decoration: none;
 }
 
-#svg-map a.selected path {fill: var(--yellow-green);}
-
 #svg-map :is(a:hover path, .circle) {fill: var(--yellow-green) !important;}
 
 #svg-map a:hover .circle {
