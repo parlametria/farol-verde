@@ -4,7 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/candidate.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/activity.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/convergency.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/propositions.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/components/progress.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/templates/candidate/components/social.css' %}">
@@ -27,11 +27,14 @@
     </div>
 
     <div class="tabs">
+        
         {% if page.opinions_answers %}
             <button onclick="openTab('result')" class="tab overline result">Resultados enquete</button>
         {% endif %}
         {% if page.id_autor %}
-        <button onclick="openTab('activity')" class="tab overline activity">Convergência ambiental</button>
+            {% if page.show_convergency %}
+                <button onclick="openTab('convergency')" class="tab overline convergency">Convergência ambiental</button>
+            {% endif %}
         <button onclick="openTab('propositions')" class="tab overline propositions">Proposições</button>
         {% endif %}
         <button onclick="openTab('social')" class="tab overline social">Redes sociais</button>
@@ -44,12 +47,12 @@
     {% endif %}
 
     {% if page.id_autor %}
-      <div class="activity tab__frame hide">
-          {% include 'candidate/tabs/activity.html' %}
-      </div>
-      <div class="propositions tab__frame hide">
-          {% include 'candidate/tabs/propositions.html' %}
-      </div>
+        <div class="convergency tab__frame hide">
+            {% include 'candidate/tabs/convergency.html' %}
+        </div>
+        <div class="propositions tab__frame hide">
+            {% include 'candidate/tabs/propositions.html' %}
+        </div>
     {% endif %}
     <div class="social tab__frame hide">
         {% include 'candidate/tabs/social.html' %}

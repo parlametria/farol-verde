@@ -16,7 +16,7 @@ from django.db.models import CharField, ImageField, EmailField, URLField, DateFi
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords
+from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords, hide_convergency
 from candidate.factories import SurveyCandidateFactory
 
 class GenderChoices(models.TextChoices):
@@ -160,6 +160,10 @@ class CandidatePage(MetadataPageMixin, Page):
     def keywords(self):
         return keywords
 
+    @property
+    def show_convergency(self):
+        return self.id_autor not in hide_convergency
+
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
         FieldPanel("id_parlametria", classname="full"),
@@ -261,9 +265,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 candidate.opinions[0].value.get(subject_dict[subject])
                 for candidate in search_results
             ]
-            context["subject_description"] = (
-                subject_descriptions[subject] + "?"
-            )
+            context["subject_description"] = (subject_descriptions[subject] + "?")
             context["subject"] = subject
         search_results = zip(search_results, candidates_opinions)
         search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
