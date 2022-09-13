@@ -84,7 +84,7 @@ inputs.forEach(obj => obj.addEventListener('change', (e) => {
     getCandidatesList();
 }));
 
-nameInput.addEventListener('keypress', () => getCandidatesList());
+nameInput.addEventListener('input', () => getCandidatesList());
 
 states.forEach(state => state.addEventListener('click', () => {
     let input = Array.from(inputs)
