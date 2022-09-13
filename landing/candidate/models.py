@@ -1,8 +1,9 @@
 from django.db import models
 from django.db.models.signals import post_save
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import EmptyPage, Paginator
 from django.dispatch import receiver
-from django.template.defaultfilters import slugify
+
+import unidecode 
 
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
@@ -223,12 +224,17 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         reelections = []
 
         params_functions = {
-            'name': lambda queryset, value: queryset.filter(title__icontains=value),
             'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
             'party[]': lambda queryset, values: queryset.filter(party__in=values),
             'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
             'id_autor': lambda queryset, value: queryset.filter(id_autor__isnull=value),
         }
+
+        def name_filtering(search, target):
+            simplify = lambda word: unidecode.unidecode(word.lower()) # Remove accents and uppercase chars
+            target = simplify(target)
+            search = simplify(search)
+            return search in target
 
         request_items = dict(request.GET)
         for param, value in list(request_items.items()):
@@ -240,6 +246,9 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 reelections.append(election_dict[param])
             if param not in ['uf[]', 'party[]']:
                 value = value[0]
+            if param == 'name':
+                to_keep = [candidate.id_autor for candidate in queryset if name_filtering(value, candidate.title)]
+                queryset = queryset.filter(id_autor__in=to_keep)
             if value and param in params_functions:
                 pass
                 queryset = params_functions[param](queryset, value)
