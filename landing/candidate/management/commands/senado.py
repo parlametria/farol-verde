@@ -53,6 +53,11 @@ class SenadoVotacoesFetcher(ApiFetcher):
                         f"\t{found}: {found.id_externo} already saved, skipping"
                     )
                 )
+
+                if found.casa == str(CasaChoices.CAMARA):
+                    found.casa = str(CasaChoices.SENADO)
+                    found.save()
+
                 continue
 
             created = Proposicao.objects.create(
