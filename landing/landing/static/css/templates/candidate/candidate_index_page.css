@@ -144,6 +144,12 @@ input::placeholder {color: var(--dark-blue);}
     display: block;
 }
 
+#uf .clear {
+    background: none;
+    color: black;
+    font-weight: 700;
+}
+
 #toggle-icon.closed {transform: rotate(90deg);}
 
 .subject {
