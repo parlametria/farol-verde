@@ -4,11 +4,13 @@ SENADO_API = "https://legis.senado.leg.br/dadosabertos"
 
 FETCH_LIST = [
     ("PLP", 275, 2019, "Linhas de transmissão em terras indígenas"),
-    ("PL", 2015, 2021, "Financiamento de energia solar residencial"),
     ("PL", 4348, 2019, "Regularização de assentamentos"),
-    ("PEC", "004", 2018, "PEC da água potável"),
-    ("PL", 4476, 2020, "Marco legal do gás"),
-    ("PL", 4162, 2019, "Marco legal do saneamento básico"),
+    ("PEC", "004", 2018, "PEC da água potável"), # 132208
+    ("PL", 5028, 2019, "Pagamento por Serviços Ambientais (derrubada de vetos PL 5028/19)"), # senado:138725
+    ("PL", 5466, 2019, "Dia dos povos indigenas (PL 5466/2019)") # senado:152937 camara:2224662
+    # ("PL", 2015, 2021, "Financiamento de energia solar residencial"),
+    # ("PL", 4476, 2020, "Marco legal do gás"),
+    # ("PL", 4162, 2019, "Marco legal do saneamento básico"),
 ]
 
 
@@ -136,6 +138,10 @@ def get_all_materia_iterator():
 
 def get_votacoes_materia_iterator(codigo_materia: int):
     votacoes_data = fetch_votacoes_materia(codigo_materia)
+
+    if "Votacoes" not in votacoes_data["VotacaoMateria"]["Materia"]:
+        return
+
     votacoes_data = votacoes_data["VotacaoMateria"]["Materia"]["Votacoes"]["Votacao"]
 
     for votacoes in votacoes_data:

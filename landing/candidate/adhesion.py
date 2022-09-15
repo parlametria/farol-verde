@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, date
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Union, Optional, Iterable
 
 from django.db.models import Q
 from django.db.models.query import QuerySet
 
 from candidate.models import (
     Proposicao,
+    VotacaoProsicao,
     VotacaoParlamentar,
     CandidatePage,
     CasaChoices,
@@ -106,15 +107,18 @@ class CandidateAdhesion(ABC):
             else self.VOTE_DIFFERENT
         )
 
+    def _get_votacoes(self, proposicao: Proposicao) -> QuerySet[VotacaoProsicao]:
+        # DEFAULT: desconsiderar votações anteriores a 01/01/2019
+        return proposicao.votacoes.filter(data__gte="2019-01-01")
+
     def _adhesion_calculation_on_proposition(
         self, id_parlamentar: int, proposicao: Proposicao
     ):
-        # desconsiderar votações anteriores a 01/01/2019
-        # Issue 147 usa PEC 04/2018, logo vai ter que usar 2018 agora
-        votacoes = proposicao.votacoes.filter(data__gte="2018-01-01")
+        votacoes = self._get_votacoes(proposicao)
         total_votacoes = votacoes.count()
+        total_vetos = proposicao.sessoes_vetos.count()
 
-        if total_votacoes == 0:
+        if total_votacoes == 0 and total_vetos == 0:
             return None
 
         adesao = {
@@ -126,13 +130,13 @@ class CandidateAdhesion(ABC):
             "same": 0,
             "different": 0,
             "total_votacoes": total_votacoes,
-            "total_vetos": 0.0
+            "total_vetos": total_vetos
         }
 
-        if total_votacoes == 0:
-            adesao["adhesion"] = 0
-            adesao["total_com_votos"] = 0
-            return adesao
+        #if total_votacoes == 0:
+        #    adesao["adhesion"] = 0
+        #    adesao["total_com_votos"] = 0
+        #    return adesao
 
         # https://github.com/parlametria/farol-verde/issues/147
         specific_leader = self._get_specific_leader_for_proposition(proposicao)
@@ -166,7 +170,7 @@ class CandidateAdhesion(ABC):
 
         if self.use_vetos:
             total_vetos = 0
-            sessao_vetos = self._get_sessao_vetos_proposition(proposicao)
+            sessao_vetos = proposicao.sessoes_vetos.all()
             candidate = CandidatePage.objects.filter(id_autor=id_parlamentar).first()
 
             for sessao in sessao_vetos:
@@ -202,26 +206,52 @@ class CandidateAdhesion(ABC):
         if propstr == "PLP 275/2019":
             return CandidateAdhesionSenado.ELIZIANE
 
-        if propstr == "PL 4348/2019" or propstr == "PEC 4/2018":
+        fabiano_props = {"PL 4348/2019", "PEC 4/2018", "PL 5028/2019", "PL 5466/2019"}
+        if propstr in fabiano_props:
             return CandidateAdhesionSenado.FABIANO
 
         return None
 
-    def _get_propositions(self) -> QuerySet[Proposicao]:
+    def _get_propositions(self):
         check = _check_camara_or_senado(self.candidate)
 
         if check == str(CasaChoices.CAMARA):
-            return Proposicao.proposicoes_camara().filter(calculate_adhesion=True)
+            return self._camara_propositions_iterator()
         else:
-            return Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
+            return self._senado_propositions_iterator()
 
-    def _get_sessao_vetos_proposition(self, proposition: Proposicao):
-        return SessaoVeto.objects.filter(proposicao=proposition).all()
+    def _camara_propositions_iterator(self) -> Iterable[Proposicao]:
+        ids = set()
+
+        fixed = Proposicao.objects.filter(id_externo__in=Proposicao.CAMARA_FIXED_PROPOSITIONS)
+        other = Proposicao.proposicoes_camara().filter(calculate_adhesion=True)
+
+        for prop in fixed:
+            ids.add(prop.id_externo)
+            yield prop
+
+        for prop in other:
+            if prop.id_externo in ids:
+                continue
+
+            yield prop
+
+    def _senado_propositions_iterator(self) -> Iterable[Proposicao]:
+        return Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
 
     def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
         voted = []
 
         for prop in self._get_propositions():
+            if (
+                prop.data.year < 2019 and
+                prop.id_externo != 132208 and
+                prop.id_externo not in Proposicao.CAMARA_FIXED_PROPOSITIONS
+            ):
+                # não calcular adesão de proposies anteriores a 2019
+                # porem se for PEC 04/2018(id 132208) calcular ela
+                continue
+
             adhesion = self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
 
             if adhesion is not None:
