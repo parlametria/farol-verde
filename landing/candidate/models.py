@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.core.paginator import EmptyPage, Paginator
 from django.dispatch import receiver
 
-import unidecode 
+import unidecode
 
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
@@ -355,11 +355,11 @@ class Proposicao(models.Model):
 
     @staticmethod
     def proposicoes_senado():
-        return Proposicao.objects.filter(casa=str(CasaChoices.SENADO))
+        return Proposicao.objects.order_by('sobre').filter(casa=str(CasaChoices.SENADO))
 
     @staticmethod
     def proposicoes_camara():
-        return Proposicao.objects.filter(casa=str(CasaChoices.CAMARA))
+        return Proposicao.objects.order_by('sobre').filter(casa=str(CasaChoices.CAMARA))
 
 
 class VotacaoProsicao(models.Model):
