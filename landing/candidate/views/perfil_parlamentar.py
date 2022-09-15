@@ -164,6 +164,41 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
         value = {"wildcard": { "social-data.texto": { "value": f"*{keyword}*", "case_insensitive": True },}}
         query["query"]["bool"]["must"].append(value)
     response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
+    # if(response.json().hits)
+    # if(JsonResponse(response.json()).)
+    if len(list(response.json()["hits"]["hits"])) == 0:
+        query = {
+            "from": int(page)*SOCIAL_PAGE_SIZE,
+            "size": SOCIAL_PAGE_SIZE,
+            "query": {
+                "bool":{
+                    "must": [
+                        {
+                            "wildcard": { 
+                                "social-data.tipo": { "value": f"{candidate.title}*", "case_insensitive": True },
+                            }
+                        },
+                        {
+                            "wildcard": {
+                                "social-data.rede": { "value": f"{social_app}*", "case_insensitive": True },
+                            }
+                        }
+                    ]
+                }
+            },
+            "sort": { 
+                "social-data.data criado" : {
+                    "order" : "desc"
+                }
+            },
+            "fields": [ "_source.social-data.*" ]
+        }
+        if len(keyword) > 1:
+            keyword = unquote(keyword)
+            value = {"wildcard": { "social-data.texto": { "value": f"*{keyword}*", "case_insensitive": True },}}
+            query["query"]["bool"]["must"].append(value)
+        response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
+    # response.json()["hits"].append(len(response.json()["hits"]))
     return JsonResponse(response.json())
 
 def keywords_sections_view(request: HttpRequest, slug: str, search: str=''):

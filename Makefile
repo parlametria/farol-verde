@@ -36,14 +36,17 @@ proposicoes-import:
 proposicoes-update-date:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes --update-date
 
+proposicoes-change-adhesion:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes --change-adhesion
+
 proposicoes-votos-interesse: # https://github.com/parlametria/farol-verde/issues/147
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py proposicoes_interesse --votos-senadores-proposicoes-interesse
 
 adesao-to-csv:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py adesao --all-candidates-adhesion-csv
 
-adesao-re-election-csv:
-	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py adesao --re-election-adhesion-csv
+candidates-votos-to-csv:
+	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py adesao --candidates-votos-to-csv
 
 tse-process:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py tse --process

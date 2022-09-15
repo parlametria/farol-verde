@@ -1,6 +1,6 @@
 import csv
 
-from typing import Optional
+from typing import Optional, Tuple, List
 
 from django.core.management.base import BaseCommand
 from django.core.management.base import OutputWrapper
@@ -19,15 +19,15 @@ from candidate.util import get_google_sheet_csv_url, url_to_row_iterator
 SHEET_ID = "1AtqBCT5IwOF6QwiDEWUJjuDBICRBQ4cHV4pw2DWW5JE"
 
 PROPOSICOES_TABS = [
-    "PEC 04/2018",
-    "PL 4348/2019",
-    "PLP 275/2019",
+    ("PEC 04/2018", 132208),
+    ("PL 4348/2019", 140554),
+    ("PLP 275/2019", 140256),
 ]
 
 VETOS_TABS = [
-    "PL 5028/2019 - VETO N. 5/2021 (001 ao 014)",
-    "PL 5028/2019 - VETO N. 5/2021 (015 ao 016)",
-    "PL 5466/2019 - VETO N. 28/2022",
+    ("PL 5028/2019 - VETO N. 5/2021 (001 ao 014)", 138725),
+    ("PL 5028/2019 - VETO N. 5/2021 (015 ao 016)", 138725),
+    ("PL 5466/2019 - VETO N. 28/2022", 152937),
 ]
 
 SENADORES = {
@@ -163,28 +163,45 @@ class VetosSenatoresSheet:
         for tab in PROPOSICOES_TABS:
             self._process_voto_sheet_tab(tab)
 
+    def _get_or_create_sessao_vetos(self, proposicao: Proposicao, dispositivo: str):
+        sessao = (
+            SessaoVeto.objects.filter(proposicao=proposicao)
+            .filter(dispositivo=dispositivo)
+            .first()
+        )
+
+        if sessao is None:
+            sessao = SessaoVeto.objects.create(
+                proposicao=proposicao, dispositivo=dispositivo
+            )
+
+        return sessao
+
     def process_vetos(self):
         global VETOS_TABS
 
         for tab in VETOS_TABS:
             self._process_veto_sheet_tab(tab)
 
-    def _process_voto_sheet_tab(self, tab: str):
+    def _process_voto_sheet_tab(self, tab: Tuple[str, int]):
         global SHEET_ID
         proposition = self._get_proposition_from_tab(tab)
 
+        self.stdout.write(
+            self.style.WARNING(f"FOUND {proposition.id_externo}:{proposition}")
+        )
+
         if proposition is None:
             self.stdout.write(
-                self.style.ERROR(f"Proposition {tab} not found in databse")
+                self.style.ERROR(f"Proposition {tab[0]}={tab[1]} not found in databse")
             )
             return
 
-        self._rename_proposition(proposition)
         votacoes = proposition.votacoes.all()
 
-        self.stdout.write(f"Fetching votos sheet tab {tab}")
+        self.stdout.write(f"Fetching votos sheet tab {tab[0]}")
 
-        sheet_csv_url = get_google_sheet_csv_url(SHEET_ID, tab)
+        sheet_csv_url = get_google_sheet_csv_url(SHEET_ID, tab[0])
         csv_iterator = url_to_row_iterator(sheet_csv_url)
         reader = csv.reader(csv_iterator, delimiter=",")
 
@@ -227,14 +244,13 @@ class VetosSenatoresSheet:
 
         if proposition is None:
             self.stdout.write(
-                self.style.ERROR(f"Proposition {tab} not found in databse")
+                self.style.ERROR(f"Proposition {tab[0]}={tab[1]} not found in databse")
             )
             return
 
-        self._rename_proposition(proposition)
-        self.stdout.write(f"Fetching votos sheet tab {tab}")
+        self.stdout.write(f"Fetching votos sheet tab {tab[0]}")
 
-        sheet_csv_url = get_google_sheet_csv_url(SHEET_ID, tab)
+        sheet_csv_url = get_google_sheet_csv_url(SHEET_ID, tab[0])
         csv_iterator = url_to_row_iterator(sheet_csv_url)
         reader = csv.reader(csv_iterator, delimiter=",")
 
@@ -244,16 +260,12 @@ class VetosSenatoresSheet:
             [nome, *votos] = row
 
             for (idx, dispositivo) in enumerate(sessoes_vetos):
-                sv = (
-                    SessaoVeto.objects.filter(dispositivo=dispositivo)
-                    .filter(proposicao=proposition)
-                    .first()
-                )
+                sv = self._get_or_create_sessao_vetos(proposition, dispositivo)
 
                 if sv is None:
                     self.stdout.write(
                         self.style.ERROR(
-                            f"SessaoVeto with proposition={proposition} and dispositivo={dispositivo} not found"
+                            f"SessaoVeto with proposition={proposition.id_externo}:{proposition} and dispositivo={dispositivo} not found"
                         )
                     )
                     continue
@@ -298,14 +310,19 @@ class VetosSenatoresSheet:
         global SENADORES
         return SENADORES.get(name.strip())
 
-    def _get_proposition_from_tab(self, tabname: str) -> Optional[Proposicao]:
-        codes = tabname.split(" ")[1]
-        [numero, ano] = codes.split("/")
-        return Proposicao.objects.filter(numero=numero, ano=ano).first()
+    def _get_proposition_from_tab(self, tab: Tuple[str, int]) -> Optional[Proposicao]:
+        id_externo = tab[1]
+        # tabname = tab[0]
+        # codes = tabname.split(" ")[1]
+        # [numero, ano] = codes.split("/")
+        # return Proposicao.objects.filter(numero=numero, ano=ano).first()
+        return Proposicao.objects.filter(id_externo=id_externo).first()
 
     def _rename_proposition(self, proposition: Proposicao):
+        # "make proposicoes-change-adhesion" does it
+        pass
         # rename proposition, ex:
         # Linhas de transmissão em terras indígenas --> Linhas de transmissão em terras indígenas (PLP 275/2019)
-        if str(proposition) not in proposition.sobre:
-            proposition.sobre = "".join([proposition.sobre, " (", str(proposition), ")"])
-            proposition.save()
+        # if str(proposition) not in proposition.sobre:
+        #    proposition.sobre = "".join([proposition.sobre, " (", str(proposition), ")"])
+        #    proposition.save()

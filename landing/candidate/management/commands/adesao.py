@@ -1,14 +1,15 @@
 import csv
 from os.path import abspath
-from typing import Iterator
+from typing import Generator
 
 from django.core.management.base import BaseCommand
 from django.core.management.base import OutputWrapper
 from django.core.management.color import Style
+from django.db import connection
 
-from candidate.models import CandidatePage
+from candidate.models import CandidatePage, Proposicao, VotacaoProsicao, VotacaoParlamentar
+
 from candidate.adhesion import get_adhesion_strategy
-from candidate.util import CandidatoTSE, csv_row_iterator
 
 
 class Command(BaseCommand):
@@ -16,56 +17,45 @@ class Command(BaseCommand):
         parser.add_argument(
             "--all-candidates-adhesion-csv",
             action="store_true",
-            help="Generate a CSV file with all candidates adhesion",
+            help="process all candidates adhesion and saves it in a csv file",
         )
 
         parser.add_argument(
-            "--re-election-adhesion-csv",
+            "--candidates-votos-to-csv",
             action="store_true",
-            help="Generate a CSV file with adhesion of only candidate for re-election",
+            help="Saves all candidates votes in a csv file",
         )
 
     def handle(self, *args, **options):
         if options["all_candidates_adhesion_csv"]:
             adhesion_csv = AdhesionCSV(self.stdout, self.style)
-            adhesion_csv.all_candidates_adhesion_to_csv()
+            adhesion_csv.adhesion_to_csv()
 
-        if options["re_election_adhesion_csv"]:
+        if options["candidates_votos_to_csv"]:
             adhesion_csv = AdhesionCSV(self.stdout, self.style)
-            adhesion_csv.re_election_candidates_adhesion_to_csv()
+            adhesion_csv.votes_to_csv()
 
 
 class AdhesionCSV:
-    TSE_CSV_FILENAME = "candidatos_tse_2022"
-    ALL_CANDIDATES_ADHESION_FILENAME = "candidates_adhesion"
-    RE_ELECTION_CANDIDATES_ADHESION_FILENAME = "re_election_candidates_adhesion"
-
     def __init__(self, stdout: OutputWrapper, style: Style):
         self.stdout = stdout
         self.style = style
+        self._filepath_adhesion = "".join(
+            [abspath(""), "/candidate/csv/", "candidates_adhesion_csv.csv"]
+        )
+        self._filepath_votes = "".join(
+            [abspath(""), "/candidate/csv/", "candidates_votes_csv.csv"]
+        )
 
-    def all_candidates_adhesion_to_csv(self):
+    def adhesion_to_csv(self):
+        csvfile = open(self._filepath_adhesion, "w")
+        writer = csv.writer(csvfile, delimiter=";")
+
+        writer.writerow(["id", "candidato", "partigo", "estado", "indice"])
+
         candidates = (
             CandidatePage.objects.filter(live=True).exclude(id_autor=None).all()
         )
-        self._write_adhesion_in_csv(self.ALL_CANDIDATES_ADHESION_FILENAME, candidates)
-
-    def re_election_candidates_adhesion_to_csv(self):
-        self._write_adhesion_in_csv(
-            self.RE_ELECTION_CANDIDATES_ADHESION_FILENAME,
-            self._re_election_candidates_generator(),
-        )
-
-    def _write_adhesion_in_csv(
-        self, csvfilename: str, candidates: Iterator[CandidatePage]
-    ):
-        filepath = "".join([abspath(""), "/candidate/csv/", csvfilename, ".csv"])
-        csvfile = open(filepath, "w")
-        writer = csv.writer(csvfile, delimiter=";")
-
-        self.stdout.write(self.style.WARNING(f"Writing csv on file {csvfilename}"))
-        writer.writerow(["id", "candidato", "partigo", "estado", "indice"])
-
         for candidate in candidates:
             self.stdout.write(f"Calculando adesão candidato: {candidate}")
             strategy = get_adhesion_strategy(candidate)
@@ -92,16 +82,48 @@ class AdhesionCSV:
                 ]
             )
 
-        self.stdout.write(
-            self.style.WARNING(f"FINISHED writing on csv file {csvfilename}")
-        )
         csvfile.close()
 
-    def _re_election_candidates_generator(self):
-        self.stdout.write("Reading TSE csv data")
-        for tse_row in csv_row_iterator(self.TSE_CSV_FILENAME):
-            candidato = CandidatoTSE.from_list(tse_row)
-            found: CandidatePage = CandidatePage.objects.filter(cpf=candidato.cpf).first()
+    def votes_to_csv(self):
+        # candidato / projeto / id votacao / desc votacao / voto
+        candidates = CandidatePage.objects.exclude(id_autor=None).all()
 
-            if found is not None and found.id_autor is not None and found.live:
-                yield found
+        csvfile = open(self._filepath_adhesion, "w")
+        writer = csv.writer(csvfile, delimiter=";")
+
+        writer.writerow(["candidato", "candidato_id", "projeto", "proposicao_id", "votacao_id", "tipo_voto"])
+
+        for candidate in candidates:
+            self.stdout.write(f"Writing votes of candidate: {candidate.id_autor} {candidate.campaign_name}")
+            candidate_votes = self._get_candidate_votes(candidate)
+
+            for vote_data in candidate_votes:
+                projeto = f"{vote_data[3]} {vote_data[4]}/{vote_data[5]}"
+                writer.writerow([candidate.campaign_name,  candidate.id_autor, projeto, vote_data[0], vote_data[1], vote_data[2]])
+
+        csvfile.close()
+
+
+    def _get_candidate_votes(self, candidate: CandidatePage):
+        query = f"""
+        SELECT
+            cp.id_externo as proposicao_id,
+            cv.id_votacao as votacao_id,
+            vp.tipo_voto,
+            cp.sigla_tipo,
+            cp.numero,
+            cp.ano
+        FROM
+            public.candidate_votacaoparlamentar vp
+        INNER JOIN public.candidate_votacaoprosicao cv
+            ON cv.id_votacao=votacao_proposicao_id
+        INNER JOIN public.candidate_proposicao cp
+            ON cp.id_externo=cv.proposicao_id
+        WHERE
+            id_parlamentar={candidate.id_autor}
+        ORDER BY proposicao_id ASC
+        """
+        cursor = connection.cursor()
+        cursor.execute(query)
+        return cursor
+

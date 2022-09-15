@@ -27,7 +27,6 @@
                 </label>
                 <div class="right">
                     <a href="#" onclick="toggleCountriesModal()">Pular esta etapa</a>
-                    <button onclick="getSelectedStates()">Próximo</button>
                 </div>
             </div>
         </div>
@@ -37,7 +36,7 @@
         <input type="hidden" id='page' name='page' value="1">
         <div class="query__select">
             <div id='uf' class="input-board">
-                <button>UF <i class="fas fa-caret-down"></i></button>
+                <button class="input-board__btn" type="button">UF <i class="fas fa-caret-down"></i></button>
                 <div class="input-board__selector">
                     <p>Mostrar candidatos do(s) estado(s):</p>
                     <div class="input-board__content">
@@ -48,22 +47,23 @@
                             </label>
                         {% endfor %}
                     </div>
+                    <button class="clear overline hide">LIMPAR FILTRO</button>
                 </div>
-                </div>
-                <div id='party' class="input-board">
-                    <button>Partido <i class="fas fa-caret-down"></i></button>
-                    <div class="input-board__selector large">
-                        <p>Mostrar candidatos do(s) partido(s):</p>
-                        <div class="input-board__content">
-                            {% for party in party_list %}
-                                <label class="btn-toggle {% if party|length > 4 %} long {% endif %}">
-                                    <input type="checkbox" value="{{ party }}" name="party[]">
-                                    <span>{{ party }}</span>
-                                </label>
-                            {% endfor %}
-                        </div>
+            </div>
+            <div id='party' class="input-board">
+                <button type="button">Partido <i class="fas fa-caret-down"></i></button>
+                <div class="input-board__selector large">
+                    <p>Mostrar candidatos do(s) partido(s):</p>
+                    <div class="input-board__content">
+                        {% for party in party_list %}
+                            <label class="btn-toggle {% if party|length > 4 %} long {% endif %}">
+                                <input type="checkbox" value="{{ party }}" name="party[]">
+                                <span>{{ party }}</span>
+                            </label>
+                        {% endfor %}
                     </div>
                 </div>
+            </div>
             <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
             <div class="query__sortby">
                 <label class="btn-toggle">

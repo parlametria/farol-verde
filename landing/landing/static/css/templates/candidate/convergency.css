@@ -1,10 +1,10 @@
-.activity__content {
+.convergency__content {
     padding-block: 2rem;
     display: grid;
     grid-gap: 3rem;
 }
 
-.activity__content .spinner {
+.convergency__content .spinner {
     margin-inline: auto;
     margin-top: 2rem;
     color: var(--dark-blue);
@@ -60,10 +60,10 @@
     cursor: pointer;
 }
 
-.activity__alert {
+.convergency__alert {
     padding: 1rem;
     border-radius: .5rem;
     background: var(--yellow-alert);
 }
 
-.activity__alert h5:nth-child(2) {font-weight: 700;}
+.convergency__alert h5:nth-child(2) {font-weight: 700;}

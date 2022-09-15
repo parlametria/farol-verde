@@ -1,8 +1,9 @@
 from django.db import models
 from django.db.models.signals import post_save
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import EmptyPage, Paginator
 from django.dispatch import receiver
-from django.template.defaultfilters import slugify
+
+import unidecode
 
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
@@ -16,7 +17,7 @@ from django.db.models import CharField, ImageField, EmailField, URLField, DateFi
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords
+from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords, hide_convergency
 from candidate.factories import SurveyCandidateFactory
 
 class GenderChoices(models.TextChoices):
@@ -160,6 +161,10 @@ class CandidatePage(MetadataPageMixin, Page):
     def keywords(self):
         return keywords
 
+    @property
+    def show_convergency(self):
+        return self.id_autor not in hide_convergency
+
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
         FieldPanel("id_parlametria", classname="full"),
@@ -219,12 +224,17 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         reelections = []
 
         params_functions = {
-            'name': lambda queryset, value: queryset.filter(title__icontains=value),
             'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
             'party[]': lambda queryset, values: queryset.filter(party__in=values),
             'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
             'id_autor': lambda queryset, value: queryset.filter(id_autor__isnull=value),
         }
+
+        def name_filtering(search, target):
+            simplify = lambda word: unidecode.unidecode(word.lower()) # Remove accents and uppercase chars
+            target = simplify(target)
+            search = simplify(search)
+            return search in target
 
         request_items = dict(request.GET)
         for param, value in list(request_items.items()):
@@ -236,6 +246,9 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 reelections.append(election_dict[param])
             if param not in ['uf[]', 'party[]']:
                 value = value[0]
+            if param == 'name':
+                to_keep = [candidate.title for candidate in queryset if name_filtering(value, candidate.title)]
+                queryset = queryset.filter(title__in=to_keep)
             if value and param in params_functions:
                 pass
                 queryset = params_functions[param](queryset, value)
@@ -252,7 +265,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         search_results = self.search_results(request)
         search_results = search_results.filter(live=True) # do not display draft pages
         subject = request.GET.get('subject', None)
-        
+
         candidates_opinions = [''] * len(search_results)
 
         if subject:
@@ -261,9 +274,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 candidate.opinions[0].value.get(subject_dict[subject])
                 for candidate in search_results
             ]
-            context["subject_description"] = (
-                subject_descriptions[subject] + "?"
-            )
+            context["subject_description"] = (subject_descriptions[subject] + "?")
             context["subject"] = subject
         search_results = zip(search_results, candidates_opinions)
         search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
@@ -310,6 +321,19 @@ class CasaChoices(models.TextChoices):
 
 
 class Proposicao(models.Model):
+    CAMARA_FIXED_PROPOSITIONS = [
+        2233488,
+        2252589,
+        946475,
+        2236765,
+        2270639,
+        2224662,
+        2190237,
+        46249,
+        257161,
+        2199215,
+    ]
+
     id_externo = models.IntegerField(blank=False, null=False, primary_key=True)
     sigla_tipo = models.CharField(blank=False, null=False, max_length=6)
     numero = models.IntegerField(blank=False, null=False)
@@ -331,11 +355,11 @@ class Proposicao(models.Model):
 
     @staticmethod
     def proposicoes_senado():
-        return Proposicao.objects.filter(casa=str(CasaChoices.SENADO))
+        return Proposicao.objects.order_by('sobre').filter(casa=str(CasaChoices.SENADO))
 
     @staticmethod
     def proposicoes_camara():
-        return Proposicao.objects.filter(casa=str(CasaChoices.CAMARA))
+        return Proposicao.objects.order_by('sobre').filter(casa=str(CasaChoices.CAMARA))
 
 
 class VotacaoProsicao(models.Model):

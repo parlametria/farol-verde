@@ -7,8 +7,10 @@ const pagination = document.querySelector('#page');
 const partyBoard = document.querySelector('#party .input-board__selector')
 const partyButton = document.querySelector('#party button');
 
-const ufBoard = document.querySelector('#uf .input-board__selector')
-const ufButton = document.querySelector('#uf button');
+const ufBoard = document.querySelector('#uf .input-board__selector');
+const ufButton = document.querySelector('#uf .input-board__btn');
+const ufClearBtn = document.querySelector("#uf .clear");
+
 const countriesModal = document.querySelector('.modal');
 const showModal = document.querySelector('#show-modal');
 const modalInput = showModal.querySelector('input');
@@ -16,8 +18,6 @@ const states = document.querySelectorAll('#svg-map .estado');
 
 let params = {};
 let pages = [];
-
-const selectedStates = []
 
 $('#form').ajaxForm( result => {
     candidatesList.innerHTML = result;
@@ -86,26 +86,36 @@ inputs.forEach(obj => obj.addEventListener('change', (e) => {
     getCandidatesList();
 }));
 
-nameInput.addEventListener('keypress', () => getCandidatesList());
+nameInput.addEventListener('input', () => getCandidatesList());
 
 states.forEach(state => state.addEventListener('click', () => {
-    state.classList.toggle('selected');
     let input = Array.from(inputs)
         .filter(input => input.value == state.id)
-    if (state.classList.contains('selected')) {
-        selectedStates.push(state.id);
-    }
-}));
 
-function getSelectedStates() {
-    selectedStates.forEach(state => {
-        let input = Array.from(inputs)
-            .filter(input => input.value == state)
-        input[0].checked = true;
-    })
+    input[0].checked = true;
     getCandidatesList();
     toggleCountriesModal();
+}));
+
+
+function clearUfBoard() {
+    ufBoard.querySelectorAll('input')
+        .forEach(input => input.checked = false)
 }
+ufBoard.querySelectorAll('label').forEach(label => {
+    label.addEventListener('click', () => {
+        let input = label.querySelector('input');
+        if(!input.checked) {
+            ufClearBtn.classList.add('hide');
+            return;
+        }
+        clearUfBoard();
+        input.checked = true;
+        ufClearBtn.classList.remove('hide');
+    })
+})
+
+ufClearBtn.addEventListener('click', clearUfBoard)
 
 showModal.addEventListener('click', () => {
     let { value } = modalInput;
@@ -115,8 +125,8 @@ showModal.addEventListener('click', () => {
 ufButton.addEventListener('click', toggleUfBoard);
 partyButton.addEventListener('click', togglePartyBoard);
 
-document.addEventListener('click', e => {
-    let comp = e.target;
-    if (comp != partyBoard && comp != partyButton) partyBoard.classList.remove('open');
-    if (comp != ufBoard && comp != ufButton) ufBoard.classList.remove('open');
+document.addEventListener('click', event => {
+    let {target} = event;
+    if (target != partyBoard && target != partyButton) partyBoard.classList.remove('open');
+    if (target != ufBoard && target != ufButton && target != ufButton.querySelector('i')) ufBoard.classList.remove('open');
 })
