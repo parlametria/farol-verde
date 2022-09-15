@@ -66,15 +66,18 @@ class ProposicoesFetcher(ApiFetcher):
             prop.save()
 
     def change_adhesion(self):
-        self._add_new_propositions()
+        self._fix_pagamento_por_servicos_ambientais()
         self._rename_propositions()
         self._remove_from_adhesion()
 
-    def _add_new_propositions(self):
-        new_propositions = [138725, 2224662]
-
-        for id_prop in new_propositions:
-            self._find_or_create_proposicao(id_prop, calculate_adhesion=True)
+    def _fix_pagamento_por_servicos_ambientais(self):
+        proposicao = Proposicao.objects.filter(id_externo=138725).first()
+        proposicao.casa = str(CasaChoices.SENADO)
+        proposicao.ano = 2019
+        proposicao.numero = 5028
+        proposicao.sigla_tipo = "PL"
+        proposicao.data = "2019-09-05"
+        proposicao.save()
 
     def _rename_propositions(self):
         rename_propositions = [
@@ -82,7 +85,7 @@ class ProposicoesFetcher(ApiFetcher):
             [140554, "PL regularização fundiária em Terras da União", "PL 4348/2019"],
             [132208, "Acesso Água Potável como Diraito Fundamental", "PEC 04/2018"],
             [138725, "Pagamento por Serviços Ambientais", "derrubada de vetos PL 5028/19"],
-            [2224662, "Dia dos povos indigenas", "PL 5466/2019"],
+            [152937, "Dia dos povos indigenas", "PL 5466/2019"],
         ]
 
         for row in rename_propositions:
@@ -102,6 +105,13 @@ class ProposicoesFetcher(ApiFetcher):
         for id_prop in remove_from_adhesion_calculate:
             proposicao = self._find_or_create_proposicao(id_prop)
             proposicao.calculate_adhesion = False
+            proposicao.save()
+
+        add_to_adhesion_calculate = [138725, 152937]
+
+        for id_prop in add_to_adhesion_calculate:
+            proposicao = self._find_or_create_proposicao(id_prop)
+            proposicao.calculate_adhesion = True
             proposicao.save()
 
     def _proposicoes_iterator(self) -> Generator[int, None, None]:

@@ -116,8 +116,9 @@ class CandidateAdhesion(ABC):
     ):
         votacoes = self._get_votacoes(proposicao)
         total_votacoes = votacoes.count()
+        total_vetos = proposicao.sessoes_vetos.count()
 
-        if total_votacoes == 0:
+        if total_votacoes == 0 and total_vetos == 0:
             return None
 
         adesao = {
@@ -129,13 +130,13 @@ class CandidateAdhesion(ABC):
             "same": 0,
             "different": 0,
             "total_votacoes": total_votacoes,
-            "total_vetos": 0.0
+            "total_vetos": total_vetos
         }
 
-        if total_votacoes == 0:
-            adesao["adhesion"] = 0
-            adesao["total_com_votos"] = 0
-            return adesao
+        #if total_votacoes == 0:
+        #    adesao["adhesion"] = 0
+        #    adesao["total_com_votos"] = 0
+        #    return adesao
 
         # https://github.com/parlametria/farol-verde/issues/147
         specific_leader = self._get_specific_leader_for_proposition(proposicao)
@@ -169,7 +170,7 @@ class CandidateAdhesion(ABC):
 
         if self.use_vetos:
             total_vetos = 0
-            sessao_vetos = self._get_sessao_vetos_proposition(proposicao)
+            sessao_vetos = proposicao.sessoes_vetos.all()
             candidate = CandidatePage.objects.filter(id_autor=id_parlamentar).first()
 
             for sessao in sessao_vetos:
@@ -237,9 +238,6 @@ class CandidateAdhesion(ABC):
 
     def _senado_propositions_iterator(self) -> Iterable[Proposicao]:
         return Proposicao.proposicoes_senado().filter(calculate_adhesion=True)
-
-    def _get_sessao_vetos_proposition(self, proposition: Proposicao):
-        return SessaoVeto.objects.filter(proposicao=proposition).all()
 
     def adhesion_calculation(self) -> List[Dict[str, Union[int, str]]]:
         voted = []

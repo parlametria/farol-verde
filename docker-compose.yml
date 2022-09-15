@@ -3,6 +3,8 @@ version: "3.3"
 services:
 
   farol_verde_server:
+    environment:
+      - PYTHONUNBUFFERED=1
     env_file:
       - variables.env
     build:

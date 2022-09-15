@@ -38,6 +38,7 @@ class SenadoVotacoesFetcher(ApiFetcher):
         self._fetch_proposicoes()
         self._fetch_votacoes_proposicoes()
         # self._fetch_votacoes_parlamentares()
+        self._change_propositions()
 
     def _fetch_proposicoes(self):
         self.stdout.write(f"\nFetching proposicoes from: {SENADO_API}")
@@ -72,6 +73,9 @@ class SenadoVotacoesFetcher(ApiFetcher):
                 calculate_adhesion=True,
             )
             self.stdout.write(f"\tProposicao {created} created")
+
+    def _change_propositions(self):
+        prop = Proposicao.objects.filter()
 
     def _fetch_votacoes_proposicoes(self):
         self.stdout.write(f"\nFetching votacoes from all Proposicao")
