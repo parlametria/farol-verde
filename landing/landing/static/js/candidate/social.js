@@ -78,7 +78,7 @@ const socialSearch = {
     getUrl: () => {
         let url = './api/social-media/' + socialSearch.media + '/';
         if (socialSearch.keyword) {
-            url += socialSearch.keyword + '/';
+            url += socialSearch.keyword.trim() + '/';
         } else {
             url += '-/';
         }
