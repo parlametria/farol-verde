@@ -34,6 +34,8 @@ class CandidatePage(MetadataPageMixin, Page):
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
     id_serenata = models.IntegerField(blank=True, null=True, unique=True)
 
+    show_social_media = models.BooleanField(blank=False, null=False, default=True)
+
     parent_page_types = [
         "candidate.CandidateIndexPage",
     ]
@@ -138,6 +140,13 @@ class CandidatePage(MetadataPageMixin, Page):
             return f"https://farolverde.org.br/static/tse/F{self.election_state}{self.tse_image_code}_div.jpg"
 
         return ""
+
+    @property
+    def get_social_media(self):
+        social_media = {}
+        for media in self.social_media:
+            social_media[media.block_type] = media.value
+        return social_media
 
 
     def _get_external_picture_link(self):
