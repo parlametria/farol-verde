@@ -291,6 +291,21 @@ class CandidateIndexPage(MetadataPageMixin, Page):
 
         return queryset.filter(charge__in=charges, gender__in=genders)
 
+    @property
+    def get_party_list(self):
+        party_list = [candidate.party for candidate in CandidatePage.objects.live()
+            if candidate.party is not None]
+        party_list = list(set(party_list))
+        party_list.sort()
+        return party_list
+
+    @property
+    def get_uf_list(self):
+        return uf_list
+
+    @property
+    def get_subjects(self):
+        return [subject.name for subject in subjects]
 
     def get_context(self, request):
         context = super(CandidateIndexPage, self).get_context(request)
@@ -309,28 +324,19 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 for candidate in search_results
             ]
             context["subject"] = subject
+        
         search_results = zip(search_results, candidates_opinions)
         search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
 
-        party_list = [candidate.party for candidate in CandidatePage.objects.live()
-            if candidate.party is not None]
-        party_list = list(set(party_list))
-        party_list.sort()
-
         paginator = Paginator(search_results, 20)
-        page = request.GET.get('page', 1)
+        page = int(request.GET.get('page', 1))
         try:
             candidates_list = paginator.page(page)
         except EmptyPage:
             candidates_list = paginator.page(paginator.num_pages)
 
-        page = int(page)
-
         context["candidates_list"] = candidates_list
         context["pagination_range"] = [x for x in range(page-2, page+3) if x > 0 and x <= paginator.num_pages]
-        context["subjects"] = [subject.name for subject in subjects]
-        context["uf_list"] = uf_list
-        context["party_list"] = party_list
 
         return context
 
