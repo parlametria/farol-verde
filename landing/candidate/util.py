@@ -284,8 +284,3 @@ for k in keywords_list:
         key = k[0]
         keywords.append(key)
     keywords.append(k)
-
-
-hide_convergency = [90, 878, 4610, 90842, 105534, 123756, 141401, 141480, 141552,
-                    160517, 204433, 207309, 214865, 219585, 219592,
-                    204563,122466, None]

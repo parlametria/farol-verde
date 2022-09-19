@@ -8,7 +8,7 @@ import unidecode
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
 from wagtail.search import index
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel
 from wagtail.core.fields import StreamField
 from wagtailstreamforms.models import FormSubmission
 
@@ -17,7 +17,7 @@ from django.db.models import CharField, ImageField, EmailField, URLField, DateFi
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords, hide_convergency
+from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords
 from candidate.factories import SurveyCandidateFactory
 
 class GenderChoices(models.TextChoices):
@@ -29,6 +29,8 @@ class GenderChoices(models.TextChoices):
 class CandidatePage(MetadataPageMixin, Page):
     DEPUTADO_CHARGE_TEXT = "Deputado(a) Federal"
     SENADOR_CHARGE_TEXT = "Senador(a)"
+
+    show_convergency = models.BooleanField(blank=False, null=False, default=True)
 
     id_autor = models.IntegerField(blank=True, null=True, unique=True)
     id_parlametria = models.IntegerField(blank=True, null=True, unique=True)
@@ -161,14 +163,11 @@ class CandidatePage(MetadataPageMixin, Page):
     def keywords(self):
         return keywords
 
-    @property
-    def show_convergency(self):
-        return self.id_autor not in hide_convergency
-
     content_panels = Page.content_panels + [
         FieldPanel("id_autor", classname="full"),
         FieldPanel("id_parlametria", classname="full"),
         FieldPanel("id_serenata", classname="full"),
+        FieldPanel("show_convergency"),
         FieldPanel('campaign_name'),
         FieldPanel('party'),
         FieldPanel('cpf'),
