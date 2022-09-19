@@ -23,7 +23,7 @@ def unset_convergency(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0027_set_url_fields'),
+        ('candidate', '0028_candidatepage_show_social_media'),
     ]
 
     operations = [
