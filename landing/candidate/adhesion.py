@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from datetime import datetime, date
 from typing import Dict, List, Union, Optional, Iterable
 
@@ -14,6 +15,25 @@ from candidate.models import (
     SessaoVeto,
     VotacaoDispositivo,
 )
+
+# issue 158: ignore votes of some candidates in these dates
+DATE_EXCEPTIONS = {
+    215044: [{"start": "01/01/2019", "end": "31/12/2020"}],
+    204464: [{"start": "27/05/2020", "end": "24/09/2020"}],
+    204563: [
+        {"start": "11/02/2020", "end": "10/06/2020"},
+        {"start": "17/04/2022", "end": "18/08/2022"},
+    ],
+    204574: [{"start": "20/06/2020", "end": "25/10/2020"}],
+    204462: [{"start": "09/12/2020", "end": "08/04/2021"}],
+    204535: [{"start": "24/06/2021", "end": "22/10/2021"}],
+    878: [{"start": "01/01/2019", "end": "01/08/2021"}],
+}
+
+@dataclass
+class IgnoreVotacao:
+    start: date
+    end: date
 
 
 def _check_camara_or_senado(candidate: CandidatePage):
@@ -58,6 +78,24 @@ class CandidateAdhesion(ABC):
             VotacaoParlamentar.TIPOS_VOTO["senado"]["lp"],
             VotacaoParlamentar.TIPOS_VOTO["senado"]["ls"],
         }
+
+        self.ignore_votes: List[IgnoreVotacao] = []
+        if self.id_parlamentar in DATE_EXCEPTIONS:
+            for ignore in DATE_EXCEPTIONS[self.id_parlamentar]:
+                start = datetime.strptime(ignore["start"], "%d/%m/%Y").date()
+                end = datetime.strptime(ignore["end"], "%d/%m/%Y").date()
+
+                self.ignore_votes.append(IgnoreVotacao(start, end))
+
+    def _check_ignore_votacao(self, date_votacao: date) -> bool:
+        check_ignore = False
+
+        for ignore in self.ignore_votes:
+            if ignore.start <= date_votacao <= ignore.end:
+                check_ignore = True
+                break
+
+        return check_ignore
 
     def _get_leader_votes(
         self, votacao_queryset: QuerySet,
@@ -144,6 +182,10 @@ class CandidateAdhesion(ABC):
         total_calculadas = 0
         for votacao in votacoes.all():
             if votacao.votacoes_parlamentares.count() == 0:
+                continue
+
+            if self._check_ignore_votacao(votacao.data):
+                # issue 158, ignore votacoes of some candidates between some dates
                 continue
 
             votos_lider = self._get_leader_votes(
