@@ -1,16 +1,16 @@
 {% load static i18n wagtailcore_tags %}
 
-{% if subject|length and candidates_list|length%}
+{% if subject and candidates_list|length%}
     <div class="subject">
         <div class="subject__content">
             <div class="subject__header">
                 <div class="subject__heading">
-                    pergunta da enquete no tema <span class="subject__name">{{subject}}</span>:
+                    pergunta da enquete no tema <span class="subject__name">{{subject.name}}</span>:
                 </div>
                 <i onclick="toggleSubjectDescription()" class="fas fa-times"></i>
             </div>
             <div class="subject__description">
-                {{subject_description}}
+                {{subject.description}}
             </div>
         </div>
     </div>
