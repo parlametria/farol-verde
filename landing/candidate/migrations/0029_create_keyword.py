@@ -1,4 +1,5 @@
 from ast import keyword
+from os import remove
 from django.db import migrations, models
 from candidate.models import Keyword
 
@@ -15,7 +16,7 @@ def remove_keywords(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('candidate', '0027_set_url_fields'),
+        ('candidate', '0028_candidatepage_show_social_media'),
     ]
 
     operations = [
@@ -29,4 +30,5 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Social Media Keyword',
             },
         ),
+        migrations.RunPython(insert_keywords, remove_keywords)
     ]
