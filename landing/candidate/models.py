@@ -247,7 +247,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
             if param not in ['uf[]', 'party[]']:
                 value = value[0]
             if param == 'name':
-                to_keep = [candidate.title for candidate in queryset if name_filtering(value, candidate.title)]
+                to_keep = [candidate.campaign_name for candidate in queryset if name_filtering(value, candidate.title)]
                 queryset = queryset.filter(title__in=to_keep)
             if value and param in params_functions:
                 pass
