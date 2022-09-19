@@ -96,7 +96,16 @@
     </div>
 </div>
 
-<div class="social__frame twitter">
+{% if not page.show_social_media %}
+<div class="social__frame">
+    <div class="empty">
+        <img src="{% static 'img/sadboi.svg' %}">
+            <h2>Redes sociais não monitoradas</h2>
+            <p>Clique nos botões acima e acesse as redes sociais do candidato.</p>
+    </div>
+</div>
+{% else %}
+<div class="social__frame twitter ">
     <div class="spinning-load"><i class="spin fa fa-2x fa-spinner"></i></div>
 </div>
 
@@ -114,3 +123,4 @@
     <button class="page-item"></button>
     <button class="page-next" onclick="socialSearch.next()">&#x3e;</button>
 </div>
+{% endif %}
