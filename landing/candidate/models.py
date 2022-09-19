@@ -1,3 +1,4 @@
+from dataclasses import Field
 from django.db import models
 from django.db.models.signals import post_save
 from django.core.paginator import EmptyPage, Paginator
@@ -5,6 +6,7 @@ from django.dispatch import receiver
 
 import unidecode
 
+from wagtail.snippets.models import register_snippet
 from wagtailmetadata.models import MetadataPageMixin
 from wagtail.core.models import Page
 from wagtail.search import index
@@ -12,14 +14,34 @@ from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 from wagtailstreamforms.models import FormSubmission
 
+from wagtail.core.fields import RichTextField
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
 from django.db.models import CharField, ImageField, EmailField, URLField, DateField, BooleanField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from candidate.util import uf_list, subjects_list, subject_dict, subject_descriptions, keywords, hide_convergency
+from candidate.util import uf_list, keywords, hide_convergency
 from candidate.factories import SurveyCandidateFactory
 
+@register_snippet
+class Subject(models.Model):
+    name = models.CharField(max_length=255)
+    label = models.CharField(max_length=255)
+    description = RichTextField(blank=True, null=False)
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("label"),
+        FieldPanel("description"),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Subjects"
+
+subjects = Subject.objects.all()
 class GenderChoices(models.TextChoices):
     MASCULINE = "M", "MASCULINO"
     FEMININE = "F", "FEMININO"
@@ -83,7 +105,6 @@ class CandidatePage(MetadataPageMixin, Page):
     global make_block
 
     def make_block(subject):
-        _, phrase, key = subject.values()
         choices = [
             ("Sim", "Sim"),
             ("Não", "Não"),
@@ -91,11 +112,11 @@ class CandidatePage(MetadataPageMixin, Page):
         ]
 
         return (
-            key,
+            subject.label,
             ChoiceBlock(
                 choices=choices,
                 defult=True,
-                label=f'Opinião do candidato em relação à frase "{phrase}."',
+                label=f'Opinião do candidato em relação à frase "{subject.description}."',
             ),
         )
 
@@ -104,7 +125,7 @@ class CandidatePage(MetadataPageMixin, Page):
             (
                 "opinions",
                 StructBlock(
-                    [make_block(subject) for subject in subjects_list],
+                    [make_block(subject) for subject in subjects],
                 ),
             )
         ],
@@ -113,7 +134,7 @@ class CandidatePage(MetadataPageMixin, Page):
 
     @property
     def opinions_answers(self):
-        answers = list(subjects_list)
+        answers = []
         answer_dict = {
             "Sim": "sim",
             "Não": "nao",
@@ -122,10 +143,13 @@ class CandidatePage(MetadataPageMixin, Page):
         if len(self.opinions) == 0:
             return None
         opinions = self.opinions[0].value
-        for key, answer in enumerate(answers):
-            answer_key = opinions[answer["key"]]
-            answers[key]["phrase"] = answers[key]["phrase"]
-            answers[key]["answer"] = answer_dict[answer_key]
+        for subject in subjects:
+            answer = {
+                'description': subject.description,
+                'answer': opinions[subject.label].lower(),
+                'label': subject.name
+            }
+            answers.append(answer)
         return answers
 
     @property
@@ -278,12 +302,12 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         candidates_opinions = [''] * len(search_results)
 
         if subject:
+            subject = Subject.objects.filter(name=subject)[0]
             search_results = [candidate for candidate in search_results if len(candidate.opinions)]
             candidates_opinions = [
-                candidate.opinions[0].value.get(subject_dict[subject])
+                candidate.opinions[0].value.get(subject.label)
                 for candidate in search_results
             ]
-            context["subject_description"] = (subject_descriptions[subject] + "?")
             context["subject"] = subject
         search_results = zip(search_results, candidates_opinions)
         search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
@@ -304,7 +328,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
 
         context["candidates_list"] = candidates_list
         context["pagination_range"] = [x for x in range(page-2, page+3) if x > 0 and x <= paginator.num_pages]
-        context["subjects"] = list(subject_dict.keys())
+        context["subjects"] = [subject.name for subject in subjects]
         context["uf_list"] = uf_list
         context["party_list"] = party_list
 
