@@ -82,7 +82,9 @@ class BlogIndexPage(MetadataPageMixin, Page):
         tags = [tag["tags__name"] for tag in tags]
 
         context = super().get_context(request)
-        context["filtered_posts"] = list(filtered_post)[start_count : start_count + 10] # TODO: remover isso e usar paginação
+        context["filtered_posts"] = list(filtered_post)[
+            start_count : start_count + 10
+        ]  # TODO: remover isso e usar paginação
         context["have_new_post"] = start_count > 0
         context["all_posts"] = children_objects
         context["tags"] = tags
@@ -103,7 +105,9 @@ class BlogPost(MetadataPageMixin, Page):
     category = models.ForeignKey(
         "blog.BlogCategory", on_delete=models.SET_NULL, null=True
     )
-    cover_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
+    cover_image = models.ForeignKey(
+        Image, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     def get_context(self, request):
         panels = BlogIndexPage.objects.first().specific.sidebar_panels
@@ -146,7 +150,6 @@ class BlogPost(MetadataPageMixin, Page):
             return self.get_next_siblings().live().first()
         else:
             return self.get_siblings().live().first()
-
 
 
 @register_snippet

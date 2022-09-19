@@ -16,12 +16,20 @@ from wagtailstreamforms.models import FormSubmission
 
 from wagtail.core.fields import RichTextField
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
-from django.db.models import CharField, ImageField, EmailField, URLField, DateField, BooleanField
+from django.db.models import (
+    CharField,
+    ImageField,
+    EmailField,
+    URLField,
+    DateField,
+    BooleanField,
+)
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from candidate.util import uf_list, keywords, hide_convergency
 from candidate.factories import SurveyCandidateFactory
+
 
 @register_snippet
 class Subject(models.Model):
@@ -41,7 +49,10 @@ class Subject(models.Model):
     class Meta:
         verbose_name_plural = "Subjects"
 
+
 subjects = Subject.objects.all()
+
+
 class GenderChoices(models.TextChoices):
     MASCULINE = "M", "MASCULINO"
     FEMININE = "F", "FEMININO"
@@ -76,14 +87,18 @@ class CandidatePage(MetadataPageMixin, Page):
     charge = CharField(null=True, max_length=255)
     charge_changed = BooleanField(
         default=False,
-        help_text="Charge changed from parlametria api to TSE 2022 csv data"
+        help_text="Charge changed from parlametria api to TSE 2022 csv data",
     )
-    social_media = StreamField([
-        ('twitter', URLBlock(max_length=255)),
-        ('facebook', URLBlock(max_length=255)),
-        ('instagram', URLBlock(max_length=255)),
-        ('youtube', URLBlock(max_length=255)),
-    ], null=True, blank=True)
+    social_media = StreamField(
+        [
+            ("twitter", URLBlock(max_length=255)),
+            ("facebook", URLBlock(max_length=255)),
+            ("instagram", URLBlock(max_length=255)),
+            ("youtube", URLBlock(max_length=255)),
+        ],
+        null=True,
+        blank=True,
+    )
 
     manager_name = CharField(null=True, max_length=255)
     manager_email = EmailField(null=True)
@@ -129,7 +144,8 @@ class CandidatePage(MetadataPageMixin, Page):
                 ),
             )
         ],
-        null=True, blank=True,
+        null=True,
+        blank=True,
     )
 
     @property
@@ -145,9 +161,9 @@ class CandidatePage(MetadataPageMixin, Page):
         opinions = self.opinions[0].value
         for subject in subjects:
             answer = {
-                'description': subject.description,
-                'answer': opinions[subject.label].lower(),
-                'label': subject.name
+                "description": subject.description,
+                "answer": opinions[subject.label].lower(),
+                "label": subject.name,
             }
             answers.append(answer)
         return answers
@@ -172,15 +188,23 @@ class CandidatePage(MetadataPageMixin, Page):
             social_media[media.block_type] = media.value
         return social_media
 
-
     def _get_external_picture_link(self):
-        senador_picture_url = "https://www.senado.leg.br/senadores/img/fotos-oficiais/senador"
+        senador_picture_url = (
+            "https://www.senado.leg.br/senadores/img/fotos-oficiais/senador"
+        )
         deputado_picture_url = "https://www.camara.leg.br/internet/deputado/bandep/"
 
         if self.charge == self.SENADOR_CHARGE_TEXT:
-            return f"{senador_picture_url}{self.id_autor}.jpg" if not self.charge_changed else f"{deputado_picture_url}{self.id_autor}.jpg"
-        return f"{deputado_picture_url}{self.id_autor}.jpg" if not self.charge_changed else f"{senador_picture_url}{self.id_autor}.jpg"
-
+            return (
+                f"{senador_picture_url}{self.id_autor}.jpg"
+                if not self.charge_changed
+                else f"{deputado_picture_url}{self.id_autor}.jpg"
+            )
+        return (
+            f"{deputado_picture_url}{self.id_autor}.jpg"
+            if not self.charge_changed
+            else f"{senador_picture_url}{self.id_autor}.jpg"
+        )
 
     @property
     def is_deputado(self) -> bool:
@@ -202,24 +226,24 @@ class CandidatePage(MetadataPageMixin, Page):
         FieldPanel("id_autor", classname="full"),
         FieldPanel("id_parlametria", classname="full"),
         FieldPanel("id_serenata", classname="full"),
-        FieldPanel('campaign_name'),
-        FieldPanel('party'),
-        FieldPanel('cpf'),
-        FieldPanel('birth_date'),
-        FieldPanel('email'),
-        FieldPanel('picture'),
-        FieldPanel('charge'),
-        FieldPanel('gender'),
-        FieldPanel('tse_image_code'),
-        FieldPanel('tse_urn_code'),
-        StreamFieldPanel('social_media'),
-        FieldPanel('manager_name'),
-        FieldPanel('manager_email'),
-        FieldPanel('manager_phone'),
-        FieldPanel('manager_site'),
-        FieldPanel('election_state'),
-        FieldPanel('election_city'),
-        StreamFieldPanel('opinions'),
+        FieldPanel("campaign_name"),
+        FieldPanel("party"),
+        FieldPanel("cpf"),
+        FieldPanel("birth_date"),
+        FieldPanel("email"),
+        FieldPanel("picture"),
+        FieldPanel("charge"),
+        FieldPanel("gender"),
+        FieldPanel("tse_image_code"),
+        FieldPanel("tse_urn_code"),
+        StreamFieldPanel("social_media"),
+        FieldPanel("manager_name"),
+        FieldPanel("manager_email"),
+        FieldPanel("manager_phone"),
+        FieldPanel("manager_site"),
+        FieldPanel("election_state"),
+        FieldPanel("election_city"),
+        StreamFieldPanel("opinions"),
     ]
 
     def __str__(self):
@@ -227,7 +251,7 @@ class CandidatePage(MetadataPageMixin, Page):
 
 
 class CandidateIndexPage(MetadataPageMixin, Page):
-    ajax_template = 'candidate/candidate_index_ajax.html'
+    ajax_template = "candidate/candidate_index_ajax.html"
 
     parent_page_types = [
         "home.LandingPage",
@@ -247,24 +271,28 @@ class CandidateIndexPage(MetadataPageMixin, Page):
     ]
 
     def search_results(self, request):
-        queryset = CandidatePage.objects.order_by('title')
+        queryset = CandidatePage.objects.order_by("title")
 
-        charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
+        charges_dict = {"senators": "Senador(a)", "deputies": "Deputado(a) Federal"}
         charges = []
-        gender_dict = {'men': 'M', 'women': 'F', 'others': 'N'}
+        gender_dict = {"men": "M", "women": "F", "others": "N"}
         genders = []
-        election_dict = {'reelection': False, 'no_reelection': True }
+        election_dict = {"reelection": False, "no_reelection": True}
         reelections = []
 
         params_functions = {
-            'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
-            'party[]': lambda queryset, values: queryset.filter(party__in=values),
-            'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
-            'id_autor': lambda queryset, value: queryset.filter(id_autor__isnull=value),
+            "uf[]": lambda queryset, values: queryset.filter(election_state__in=values),
+            "party[]": lambda queryset, values: queryset.filter(party__in=values),
+            "sortby": lambda queryset, value: queryset.order_by("-title")
+            if value == "descending"
+            else queryset,
+            "id_autor": lambda queryset, value: queryset.filter(id_autor__isnull=value),
         }
 
         def name_filtering(search, target):
-            simplify = lambda word: unidecode.unidecode(word.lower()) # Remove accents and uppercase chars
+            simplify = lambda word: unidecode.unidecode(
+                word.lower()
+            )  # Remove accents and uppercase chars
             target = simplify(target)
             search = simplify(search)
             return search in target
@@ -277,24 +305,31 @@ class CandidateIndexPage(MetadataPageMixin, Page):
                 genders.append(gender_dict[param])
             if param in election_dict.keys():
                 reelections.append(election_dict[param])
-            if param not in ['uf[]', 'party[]']:
+            if param not in ["uf[]", "party[]"]:
                 value = value[0]
-            if param == 'name':
-                to_keep = [candidate.campaign_name for candidate in queryset if name_filtering(value, candidate.campaign_name)]
+            if param == "name":
+                to_keep = [
+                    candidate.campaign_name
+                    for candidate in queryset
+                    if name_filtering(value, candidate.campaign_name)
+                ]
                 queryset = queryset.filter(campaign_name__in=to_keep)
             if value and param in params_functions:
                 pass
                 queryset = params_functions[param](queryset, value)
 
         if len(reelections) == 1:
-            queryset = params_functions['id_autor'](queryset, reelections[0])
+            queryset = params_functions["id_autor"](queryset, reelections[0])
 
         return queryset.filter(charge__in=charges, gender__in=genders)
 
     @property
     def get_party_list(self):
-        party_list = [candidate.party for candidate in CandidatePage.objects.live()
-            if candidate.party is not None]
+        party_list = [
+            candidate.party
+            for candidate in CandidatePage.objects.live()
+            if candidate.party is not None
+        ]
         party_list = list(set(party_list))
         party_list.sort()
         return party_list
@@ -311,34 +346,42 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         context = super(CandidateIndexPage, self).get_context(request)
 
         search_results = self.search_results(request)
-        search_results = search_results.filter(live=True) # do not display draft pages
-        subject = request.GET.get('subject', None)
+        search_results = search_results.filter(live=True)  # do not display draft pages
+        subject = request.GET.get("subject", None)
 
-        candidates_opinions = [''] * len(search_results)
+        candidates_opinions = [""] * len(search_results)
 
         if subject:
             subject = Subject.objects.filter(name=subject)[0]
-            search_results = [candidate for candidate in search_results if len(candidate.opinions)]
+            search_results = [
+                candidate for candidate in search_results if len(candidate.opinions)
+            ]
             candidates_opinions = [
                 candidate.opinions[0].value.get(subject.label)
                 for candidate in search_results
             ]
             context["subject"] = subject
-        
+
         search_results = zip(search_results, candidates_opinions)
-        search_results = [{'opinion': opinion, 'candidate': candidate} for candidate, opinion in search_results]
+        search_results = [
+            {"opinion": opinion, "candidate": candidate}
+            for candidate, opinion in search_results
+        ]
 
         paginator = Paginator(search_results, 20)
-        page = int(request.GET.get('page', 1))
+        page = int(request.GET.get("page", 1))
         try:
             candidates_list = paginator.page(page)
         except EmptyPage:
             candidates_list = paginator.page(paginator.num_pages)
 
         context["candidates_list"] = candidates_list
-        context["pagination_range"] = [x for x in range(page-2, page+3) if x > 0 and x <= paginator.num_pages]
+        context["pagination_range"] = [
+            x for x in range(page - 2, page + 3) if x > 0 and x <= paginator.num_pages
+        ]
 
         return context
+
 
 @receiver(
     post_save, sender=FormSubmission, dispatch_uid="form_submission_link_candidate"
@@ -394,11 +437,11 @@ class Proposicao(models.Model):
 
     @staticmethod
     def proposicoes_senado():
-        return Proposicao.objects.order_by('sobre').filter(casa=str(CasaChoices.SENADO))
+        return Proposicao.objects.order_by("sobre").filter(casa=str(CasaChoices.SENADO))
 
     @staticmethod
     def proposicoes_camara():
-        return Proposicao.objects.order_by('sobre').filter(casa=str(CasaChoices.CAMARA))
+        return Proposicao.objects.order_by("sobre").filter(casa=str(CasaChoices.CAMARA))
 
 
 class VotacaoProsicao(models.Model):
@@ -429,14 +472,14 @@ class VotacaoParlamentar(models.Model):
         "senado": {
             "sim": "Sim",
             "nao": "Não",
-            "p_nrv": "P-NRV", # Não registrou voto
-            "ap": "AP", # art. 13, caput - Atividade parlamentar
-            "lp": "LP", # art. 43, II - Licença particular
-            "ls": "LS", # art. 43, I - Licença saúde
+            "p_nrv": "P-NRV",  # Não registrou voto
+            "ap": "AP",  # art. 13, caput - Atividade parlamentar
+            "lp": "LP",  # art. 43, II - Licença particular
+            "ls": "LS",  # art. 43, I - Licença saúde
             "abstencao": "Abstenção",
             "presidente_art_51": "Presidente (art. 51 RISF)",
-            "NCom": "NCom", # Não Compareceu
-            "mis": "MIS" # Presente (art. 40 - em Missão)
+            "NCom": "NCom",  # Não Compareceu
+            "mis": "MIS",  # Presente (art. 40 - em Missão)
         },
     }
 
@@ -465,14 +508,15 @@ class VotacaoParlamentar(models.Model):
         choices=CasaChoices.choices,
     )
 
+
 class AutorProposicao(models.Model):
     id_parlamentar = models.IntegerField(blank=False, null=False, primary_key=True)
     nome = CharField(max_length=120, blank=True, null=True)
     proposicoes = models.ManyToManyField(Proposicao, related_name="autores")
 
 
-#https://www.congressonacional.leg.br/materias/vetos/-/veto/detalhe/13965
-#https://www.congressonacional.leg.br/materias/vetos/-/veto/detalhe/13965/1
+# https://www.congressonacional.leg.br/materias/vetos/-/veto/detalhe/13965
+# https://www.congressonacional.leg.br/materias/vetos/-/veto/detalhe/13965/1
 class SessaoVeto(models.Model):
     proposicao = models.ForeignKey(
         Proposicao,
@@ -480,6 +524,7 @@ class SessaoVeto(models.Model):
         related_name="sessoes_vetos",
     )
     dispositivo = models.CharField(blank=False, null=False, max_length=12)
+
     class Meta:
         indexes = [
             models.Index(
@@ -507,6 +552,7 @@ class VotacaoDispositivo(models.Model):
         max_length=7,
         choices=CasaChoices.choices,
     )
+
     class Meta:
         indexes = [
             models.Index(

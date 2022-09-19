@@ -7,7 +7,12 @@ from django.core.management.base import OutputWrapper
 from django.core.management.color import Style
 from django.db import connection
 
-from candidate.models import CandidatePage, Proposicao, VotacaoProsicao, VotacaoParlamentar
+from candidate.models import (
+    CandidatePage,
+    Proposicao,
+    VotacaoProsicao,
+    VotacaoParlamentar,
+)
 
 from candidate.adhesion import get_adhesion_strategy
 
@@ -91,18 +96,37 @@ class AdhesionCSV:
         csvfile = open(self._filepath_adhesion, "w")
         writer = csv.writer(csvfile, delimiter=";")
 
-        writer.writerow(["candidato", "candidato_id", "projeto", "proposicao_id", "votacao_id", "tipo_voto"])
+        writer.writerow(
+            [
+                "candidato",
+                "candidato_id",
+                "projeto",
+                "proposicao_id",
+                "votacao_id",
+                "tipo_voto",
+            ]
+        )
 
         for candidate in candidates:
-            self.stdout.write(f"Writing votes of candidate: {candidate.id_autor} {candidate.campaign_name}")
+            self.stdout.write(
+                f"Writing votes of candidate: {candidate.id_autor} {candidate.campaign_name}"
+            )
             candidate_votes = self._get_candidate_votes(candidate)
 
             for vote_data in candidate_votes:
                 projeto = f"{vote_data[3]} {vote_data[4]}/{vote_data[5]}"
-                writer.writerow([candidate.campaign_name,  candidate.id_autor, projeto, vote_data[0], vote_data[1], vote_data[2]])
+                writer.writerow(
+                    [
+                        candidate.campaign_name,
+                        candidate.id_autor,
+                        projeto,
+                        vote_data[0],
+                        vote_data[1],
+                        vote_data[2],
+                    ]
+                )
 
         csvfile.close()
-
 
     def _get_candidate_votes(self, candidate: CandidatePage):
         query = f"""
@@ -126,4 +150,3 @@ class AdhesionCSV:
         cursor = connection.cursor()
         cursor.execute(query)
         return cursor
-

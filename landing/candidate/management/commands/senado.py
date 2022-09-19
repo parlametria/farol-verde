@@ -33,7 +33,6 @@ class Command(BaseCommand):
 
 
 class SenadoVotacoesFetcher(ApiFetcher):
-
     def start_fetch(self):
         self._fetch_proposicoes()
         self._fetch_votacoes_proposicoes()
@@ -80,11 +79,9 @@ class SenadoVotacoesFetcher(ApiFetcher):
     def _fetch_votacoes_proposicoes(self):
         self.stdout.write(f"\nFetching votacoes from all Proposicao")
 
-        proposicoes_senado = (
-            Proposicao.objects
-            .filter(casa=str(CasaChoices.SENADO))
-            .filter(calculate_adhesion=True)
-        )
+        proposicoes_senado = Proposicao.objects.filter(
+            casa=str(CasaChoices.SENADO)
+        ).filter(calculate_adhesion=True)
         for prop in proposicoes_senado:
             for votacao_json in get_votacoes_materia_iterator(prop.id_externo):
                 votacao_prosicao = VotacaoProsicao.objects.filter(
@@ -120,8 +117,7 @@ class SenadoVotacoesFetcher(ApiFetcher):
         for voto in votacao_parlamentares:
             id_parlamentar = voto["IdentificacaoParlamentar"]["CodigoParlamentar"]
             found = (
-                VotacaoParlamentar.objects
-                .filter(id_parlamentar=id_parlamentar)
+                VotacaoParlamentar.objects.filter(id_parlamentar=id_parlamentar)
                 .filter(votacao_proposicao=votacao_proposicao)
                 .first()
             )

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0014_add_autorproposicao_model'),
+        ("candidate", "0014_add_autorproposicao_model"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='votacaoprosicao',
-            name='data_hora_registro',
+            model_name="votacaoprosicao",
+            name="data_hora_registro",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
     ]

@@ -7,20 +7,28 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0028_candidatepage_show_social_media'),
+        ("candidate", "0028_candidatepage_show_social_media"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Subject',
+            name="Subject",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('label', models.CharField(max_length=255)),
-                ('description', wagtail.core.fields.RichTextField(blank=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("label", models.CharField(max_length=255)),
+                ("description", wagtail.core.fields.RichTextField(blank=True)),
             ],
             options={
-                'verbose_name_plural': 'Subjects',
+                "verbose_name_plural": "Subjects",
             },
         ),
     ]

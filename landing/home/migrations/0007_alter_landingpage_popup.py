@@ -8,13 +8,45 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0006_alter_landingpage_popup'),
+        ("home", "0006_alter_landingpage_popup"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='landingpage',
-            name='popup',
-            field=wagtail.core.fields.StreamField([('popup', wagtail.core.blocks.StructBlock([('active', wagtail.core.blocks.BooleanBlock(label='Ativo', required=False)), ('title', wagtail.core.blocks.CharBlock(label='Título', required=False)), ('text', wagtail.core.blocks.TextBlock(label='Texto do popup', required=False))], max_num=1, required=False))], blank=True, null=True),
+            model_name="landingpage",
+            name="popup",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "popup",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "active",
+                                    wagtail.core.blocks.BooleanBlock(
+                                        label="Ativo", required=False
+                                    ),
+                                ),
+                                (
+                                    "title",
+                                    wagtail.core.blocks.CharBlock(
+                                        label="Título", required=False
+                                    ),
+                                ),
+                                (
+                                    "text",
+                                    wagtail.core.blocks.TextBlock(
+                                        label="Texto do popup", required=False
+                                    ),
+                                ),
+                            ],
+                            max_num=1,
+                            required=False,
+                        ),
+                    )
+                ],
+                blank=True,
+                null=True,
+            ),
         ),
     ]

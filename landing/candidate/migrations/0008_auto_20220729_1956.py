@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0007_candidatepage_party'),
+        ("candidate", "0007_candidatepage_party"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='candidatepage',
-            name='birth_date',
+            model_name="candidatepage",
+            name="birth_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='candidatepage',
-            name='party',
+            model_name="candidatepage",
+            name="party",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

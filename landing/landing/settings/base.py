@@ -18,11 +18,11 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 TAGGIT_CASE_INSENSITIVE = True
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 WAGTAILSTREAMFORMS_ENABLE_FORM_PROCESSING = False
 
-DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT", 5432)
 POSTGRES_DB = os.environ.get("POSTGRES_DB")

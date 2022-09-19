@@ -67,10 +67,14 @@ class VetosSheet:
 
         for i, dispositivo in enumerate(dispositivos):
             if dispositivo is None or len(dispositivo.strip()) == 0:
-                self.stdout.write(self.style.WARNING(f"dispositivo is None or empty, skipping"))
+                self.stdout.write(
+                    self.style.WARNING(f"dispositivo is None or empty, skipping")
+                )
                 continue
 
-            sessoes.append(self._get_or_create_sessao_veto(proposition, dispositivo.strip()))
+            sessoes.append(
+                self._get_or_create_sessao_veto(proposition, dispositivo.strip())
+            )
 
         casa = str(CasaChoices.CAMARA)
         for votacoes_parlamentar in reader:
