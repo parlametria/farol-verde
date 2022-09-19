@@ -6,6 +6,7 @@ from django.dispatch import receiver
 import unidecode
 
 from wagtailmetadata.models import MetadataPageMixin
+from wagtail.snippets.models import register_snippet
 from wagtail.core.models import Page
 from wagtail.search import index
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
@@ -168,7 +169,14 @@ class CandidatePage(MetadataPageMixin, Page):
 
     @property
     def keywords(self):
-        return keywords
+        keywords_list = Keyword.objects.all()
+        keywords_list = [k.keyword for k in keywords_list]
+        key = ''
+        for index, keyword in enumerate(keywords_list):
+            if keyword[0] != key:
+                key = keyword[0]
+                keywords.insert(index, key)
+        return keywords_list
 
     @property
     def show_convergency(self):
@@ -488,3 +496,17 @@ class VotacaoDispositivo(models.Model):
 
     def __str__(self):
         return f"{self.sessao_veto} -- {self.nome_parlamentar} -- {self.tipo_voto}"
+
+@register_snippet
+class Keyword(models.Model):
+    keyword = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel("keyword"),
+    ]
+
+    def __str__(self):
+        return self.keyword
+
+    class Meta:
+        verbose_name_plural = "Social Media Keyword"
