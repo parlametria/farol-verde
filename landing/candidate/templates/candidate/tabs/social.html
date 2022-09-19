@@ -26,8 +26,13 @@
 <template id="social__empty--tpl">
     <div class="empty">
         <img src="{% static 'img/sadboi.svg' %}">
-        <h2>Redes sociais não monitoradas</h2>
-        <p>Clique nos botões acima e acesse as redes sociais do candidato.</p>
+        {% if page.show_social_media %}
+            <h2>Nenhum resultado encontrado</h2>
+            <p>O monitoramento não identificou postagens do candidato relacionadas às palavras-chave</p>
+        {% else %}
+            <h2>Redes sociais não monitoradas</h2>
+            <p>Clique nos botões acima e acesse as redes sociais do candidato.</p>
+        {% endif %}
     </div>
 </template>
 
