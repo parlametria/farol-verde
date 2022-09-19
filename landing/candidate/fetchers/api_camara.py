@@ -9,9 +9,19 @@ FETCH_LIST = [
     ("PL", 3729, 2004, "Licenciamento ambiental"),
     ("PL", 6299, 2002, "PL do Veneno (PL 6299/02)"),
     ("PL", 2633, 2020, "PL da Grilagem (PL 2633/20)"),
-    ("PL", 5028, 2019, "Pagamento por Serviços Ambientais (derrubada de vetos PL 5028/19)"), # 2267658
+    (
+        "PL",
+        5028,
+        2019,
+        "Pagamento por Serviços Ambientais (derrubada de vetos PL 5028/19)",
+    ),  # 2267658
     ("PL", 191, 2020, "Mineração em Terras Indígenas (req. urgência PL 191/20)"),
-    ("PL", 528, 2021, "Mercado Brasileiro de Redução de Emissões (req. urgência PL 528/21)"),
+    (
+        "PL",
+        528,
+        2021,
+        "Mercado Brasileiro de Redução de Emissões (req. urgência PL 528/21)",
+    ),
     ("PL", 2510, 2019, "APP urbana"),
     ("PL", 5466, 2019, "Dia dos Povos Indígenas"),
     ("PL", 4162, 2019, "Marco legal do saneamento básico"),

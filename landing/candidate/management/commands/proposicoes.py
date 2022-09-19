@@ -43,6 +43,7 @@ class Command(BaseCommand):
             parla_fetcher = ProposicoesFetcher(self.stdout, self.style)
             parla_fetcher.change_adhesion()
 
+
 class ProposicoesFetcher(ApiFetcher):
     def start_fetch(self):
         self._fetch_autors()
@@ -54,12 +55,18 @@ class ProposicoesFetcher(ApiFetcher):
             data = None
 
             if prop.casa == str(CasaChoices.CAMARA):
-                self.stdout.write(f"Fetching date of {prop.id_externo} from {CasaChoices.CAMARA} API")
+                self.stdout.write(
+                    f"Fetching date of {prop.id_externo} from {CasaChoices.CAMARA} API"
+                )
                 dados_json = fetch_dados_proposicao(prop.id_externo)["dados"]
                 data = dados_json["dataApresentacao"].split("T")[0]
             else:
-                self.stdout.write(f"Fetching date of {prop.id_externo} from {CasaChoices.SENADO} API")
-                dados_json = fetch_dados_materia(prop.id_externo)["DetalheMateria"]["Materia"]
+                self.stdout.write(
+                    f"Fetching date of {prop.id_externo} from {CasaChoices.SENADO} API"
+                )
+                dados_json = fetch_dados_materia(prop.id_externo)["DetalheMateria"][
+                    "Materia"
+                ]
                 data = dados_json["DadosBasicosMateria"]["DataApresentacao"]
 
             prop.data = data
@@ -84,7 +91,11 @@ class ProposicoesFetcher(ApiFetcher):
             [140256, "Linhas de Transmissão em Terras indígenas", "PLP 275/2019"],
             [140554, "PL regularização fundiária em Terras da União", "PL 4348/2019"],
             [132208, "Acesso Água Potável como Diraito Fundamental", "PEC 04/2018"],
-            [138725, "Pagamento por Serviços Ambientais", "derrubada de vetos PL 5028/19"],
+            [
+                138725,
+                "Pagamento por Serviços Ambientais",
+                "derrubada de vetos PL 5028/19",
+            ],
             [152937, "Dia dos povos indigenas", "PL 5466/2019"],
         ]
 
@@ -150,7 +161,9 @@ class ProposicoesFetcher(ApiFetcher):
 
                 autor_proposicao.proposicoes.add(proposicao)
 
-    def _find_or_create_proposicao(self, id_proposicao: int, calculate_adhesion=False) -> Proposicao:
+    def _find_or_create_proposicao(
+        self, id_proposicao: int, calculate_adhesion=False
+    ) -> Proposicao:
         proposicao = Proposicao.objects.filter(id_externo=id_proposicao).first()
 
         if proposicao is None:

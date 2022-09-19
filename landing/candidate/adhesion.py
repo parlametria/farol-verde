@@ -30,6 +30,7 @@ DATE_EXCEPTIONS = {
     878: [{"start": "01/01/2019", "end": "01/08/2021"}],
 }
 
+
 @dataclass
 class IgnoreVotacao:
     start: date
@@ -42,20 +43,17 @@ def _check_camara_or_senado(candidate: CandidatePage):
     Se na proxima eleição ele mudou de cargo(dep -> sen or sen -> dep)
     retorna a casa anterior, senao retorna a casa atual
     """
-    if (
-        candidate.is_deputado and not candidate.charge_changed
-    ):  # é deputado, nao mudou
+    if candidate.is_deputado and not candidate.charge_changed:  # é deputado, nao mudou
         return str(CasaChoices.CAMARA)
     elif (
         candidate.is_deputado and candidate.charge_changed
     ):  # é deputado, mas era senador
         return str(CasaChoices.SENADO)
-    elif (
-        candidate.is_senador and not candidate.charge_changed
-    ):  # é senador, nao mudou
+    elif candidate.is_senador and not candidate.charge_changed:  # é senador, nao mudou
         return str(CasaChoices.SENADO)
     else:  # candidate.is_senador and candidate.charge_changed. # é senador, mas era deputado
         return str(CasaChoices.CAMARA)
+
 
 class CandidateAdhesion(ABC):
     VOTE_SAME = "same"
@@ -98,9 +96,7 @@ class CandidateAdhesion(ABC):
         return check_ignore
 
     def _get_leader_votes(
-        self, votacao_queryset: QuerySet,
-        votacao_date: date,
-        specific_leader=None
+        self, votacao_queryset: QuerySet, votacao_date: date, specific_leader=None
     ) -> Optional[QuerySet]:
         date_check = datetime.strptime("2022-02-02", "%Y-%m-%d").date()
         ids_lideres: List[int] = []
@@ -168,10 +164,10 @@ class CandidateAdhesion(ABC):
             "same": 0,
             "different": 0,
             "total_votacoes": total_votacoes,
-            "total_vetos": total_vetos
+            "total_vetos": total_vetos,
         }
 
-        #if total_votacoes == 0:
+        # if total_votacoes == 0:
         #    adesao["adhesion"] = 0
         #    adesao["total_com_votos"] = 0
         #    return adesao
@@ -201,7 +197,10 @@ class CandidateAdhesion(ABC):
                 continue
 
             # Voto artigo 17 deve-se descartar a votação do candidato
-            if votos_parlamentar is not None and votos_parlamentar.tipo_voto in self.skip_session_cases:
+            if (
+                votos_parlamentar is not None
+                and votos_parlamentar.tipo_voto in self.skip_session_cases
+            ):
                 continue
 
             voto = self._compare_votes(votos_parlamentar, votos_lider)
@@ -209,14 +208,15 @@ class CandidateAdhesion(ABC):
             adesao[voto] += 1
             total_calculadas += 1
 
-
         if self.use_vetos:
             total_vetos = 0
             sessao_vetos = proposicao.sessoes_vetos.all()
             candidate = CandidatePage.objects.filter(id_autor=id_parlamentar).first()
 
             for sessao in sessao_vetos:
-                voto_veto = self._compare_votes_veto(sessao, candidate.title, candidate.campaign_name)
+                voto_veto = self._compare_votes_veto(
+                    sessao, candidate.title, candidate.campaign_name
+                )
                 if voto_veto == self.IGNORE_VOTE:
                     continue
 
@@ -265,7 +265,9 @@ class CandidateAdhesion(ABC):
     def _camara_propositions_iterator(self) -> Iterable[Proposicao]:
         ids = set()
 
-        fixed = Proposicao.objects.filter(id_externo__in=Proposicao.CAMARA_FIXED_PROPOSITIONS)
+        fixed = Proposicao.objects.filter(
+            id_externo__in=Proposicao.CAMARA_FIXED_PROPOSITIONS
+        )
         other = Proposicao.proposicoes_camara().filter(calculate_adhesion=True)
 
         for prop in fixed:
@@ -286,23 +288,29 @@ class CandidateAdhesion(ABC):
 
         for prop in self._get_propositions():
             if (
-                prop.data.year < 2019 and
-                prop.id_externo != 132208 and
-                prop.id_externo not in Proposicao.CAMARA_FIXED_PROPOSITIONS
+                prop.data.year < 2019
+                and prop.id_externo != 132208
+                and prop.id_externo not in Proposicao.CAMARA_FIXED_PROPOSITIONS
             ):
                 # não calcular adesão de proposies anteriores a 2019
                 # porem se for PEC 04/2018(id 132208) calcular ela
                 continue
 
-            adhesion = self._adhesion_calculation_on_proposition(self.id_parlamentar, prop)
+            adhesion = self._adhesion_calculation_on_proposition(
+                self.id_parlamentar, prop
+            )
 
             if adhesion is not None:
                 voted.append(adhesion)
 
         return voted
 
-    def _compare_votes_veto(self, sessao: SessaoVeto, candidate_name: str, campaign_name: str):
-        votacao_parlamentar = self._get_votacao_veto_parlamentar(sessao, candidate_name, campaign_name)
+    def _compare_votes_veto(
+        self, sessao: SessaoVeto, candidate_name: str, campaign_name: str
+    ):
+        votacao_parlamentar = self._get_votacao_veto_parlamentar(
+            sessao, candidate_name, campaign_name
+        )
 
         if votacao_parlamentar is None:
             return self.VOTE_DIFFERENT
@@ -321,10 +329,14 @@ class CandidateAdhesion(ABC):
             else self.VOTE_DIFFERENT
         )
 
-    def _get_votacao_veto_parlamentar(self, sessao: SessaoVeto, candidate_name: str, campaign_name: str):
+    def _get_votacao_veto_parlamentar(
+        self, sessao: SessaoVeto, candidate_name: str, campaign_name: str
+    ):
         return (
-            VotacaoDispositivo.objects
-            .filter(Q(nome_parlamentar__icontains=candidate_name) | Q(nome_parlamentar__icontains=campaign_name))
+            VotacaoDispositivo.objects.filter(
+                Q(nome_parlamentar__icontains=candidate_name)
+                | Q(nome_parlamentar__icontains=campaign_name)
+            )
             .filter(sessao_veto=sessao)
             .first()
         )
@@ -341,8 +353,10 @@ class CandidateAdhesion(ABC):
                 continue
 
             votacao_lider = (
-                VotacaoDispositivo.objects
-                .filter(Q(nome_parlamentar__icontains=lider.title) | Q(nome_parlamentar__icontains=lider.campaign_name))
+                VotacaoDispositivo.objects.filter(
+                    Q(nome_parlamentar__icontains=lider.title)
+                    | Q(nome_parlamentar__icontains=lider.campaign_name)
+                )
                 .filter(sessao_veto=sessao)
                 .first()
             )
@@ -367,6 +381,7 @@ class CandidateAdhesionCamara(CandidateAdhesion):
 
     def _get_ids_lideres(self):
         return self.IDS_LIDERES_CAMARA
+
 
 class CandidateAdhesionSenado(CandidateAdhesion):
     FABIANO = 5953

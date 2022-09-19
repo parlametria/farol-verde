@@ -6,55 +6,62 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0009_alter_candidatepage_opinions'),
+        ("candidate", "0009_alter_candidatepage_opinions"),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name='votacaoparlamentar',
-            name='votacao_prop_deputado_idx',
+            model_name="votacaoparlamentar",
+            name="votacao_prop_deputado_idx",
         ),
         migrations.RenameField(
-            model_name='proposicao',
-            old_name='id_camara',
-            new_name='id_externo',
+            model_name="proposicao",
+            old_name="id_camara",
+            new_name="id_externo",
         ),
         migrations.RenameField(
-            model_name='votacaoparlamentar',
-            old_name='id_deputado',
-            new_name='id_parlamentar',
+            model_name="votacaoparlamentar",
+            old_name="id_deputado",
+            new_name="id_parlamentar",
         ),
         migrations.RenameField(
-            model_name='votacaoprosicao',
-            old_name='id_camara',
-            new_name='id_votacao',
+            model_name="votacaoprosicao",
+            old_name="id_camara",
+            new_name="id_votacao",
         ),
         migrations.AddField(
-            model_name='proposicao',
-            name='casa',
-            field=models.CharField(choices=[('senado', 'senado'), ('camara', 'camara')], max_length=6),
+            model_name="proposicao",
+            name="casa",
+            field=models.CharField(
+                choices=[("senado", "senado"), ("camara", "camara")], max_length=6
+            ),
         ),
         migrations.AddField(
-            model_name='proposicao',
-            name='sobre',
+            model_name="proposicao",
+            name="sobre",
             field=models.CharField(max_length=90),
         ),
         migrations.AddField(
-            model_name='votacaoparlamentar',
-            name='casa',
-            field=models.CharField(choices=[('senado', 'senado'), ('camara', 'camara')], max_length=7),
+            model_name="votacaoparlamentar",
+            name="casa",
+            field=models.CharField(
+                choices=[("senado", "senado"), ("camara", "camara")], max_length=7
+            ),
         ),
         migrations.AlterField(
-            model_name='votacaoparlamentar',
-            name='tipo_voto',
+            model_name="votacaoparlamentar",
+            name="tipo_voto",
             field=models.CharField(max_length=26),
         ),
         migrations.AlterUniqueTogether(
-            name='votacaoparlamentar',
-            unique_together={('id_parlamentar', 'votacao_proposicao')},
+            name="votacaoparlamentar",
+            unique_together={("id_parlamentar", "votacao_proposicao")},
         ),
         migrations.AddIndex(
-            model_name='votacaoparlamentar',
-            index=models.Index(fields=['id_parlamentar', 'votacao_proposicao'], name='votacao_prop_deputado_idx'),
+            model_name="votacaoparlamentar",
+            index=models.Index(
+                fields=["id_parlamentar", "votacao_proposicao"],
+                name="votacao_prop_deputado_idx",
+            ),
         ),
     ]

@@ -2,7 +2,12 @@ from django.core.management.base import BaseCommand, CommandError, OutputWrapper
 from django.core.management.color import Style
 
 from candidate.management.commands import ApiFetcher
-from candidate.models import Proposicao, VotacaoProsicao, VotacaoParlamentar, CasaChoices
+from candidate.models import (
+    Proposicao,
+    VotacaoProsicao,
+    VotacaoParlamentar,
+    CasaChoices,
+)
 from candidate.fetchers.api_camara import (
     CAMARA_API,
     get_proposicoes_iterator,
@@ -26,7 +31,6 @@ class Command(BaseCommand):
 
 
 class CamaraVotacoesFetcher(ApiFetcher):
-
     def start_fetch(self):
         self._fetch_proposicoes()
         self._fetch_votacoes_proposicoes()
@@ -65,11 +69,9 @@ class CamaraVotacoesFetcher(ApiFetcher):
     def _fetch_votacoes_proposicoes(self):
         self.stdout.write(f"\nFetching votacoes from all Proposicao")
 
-        proposicoes_camara = (
-            Proposicao.objects
-            .filter(casa=str(CasaChoices.CAMARA))
-            .filter(calculate_adhesion=True)
-        )
+        proposicoes_camara = Proposicao.objects.filter(
+            casa=str(CasaChoices.CAMARA)
+        ).filter(calculate_adhesion=True)
         for prop in proposicoes_camara:
             votacoes = get_votacoes_proposicao(prop.id_externo)["dados"]
 
@@ -122,10 +124,14 @@ class CamaraVotacoesFetcher(ApiFetcher):
         self.stdout.write(f"\tVotacaoProsicao {created.id_votacao} created")
 
     def _fetch_votacoes_parlamentares(self):
-        self.stdout.write(f"\nFetching votos from parlamentares from all VotacaoProsicao")
+        self.stdout.write(
+            f"\nFetching votos from parlamentares from all VotacaoProsicao"
+        )
 
         proposicoes_camara = [p.id_externo for p in Proposicao.proposicoes_camara()]
-        votacoes_proposicoes = VotacaoProsicao.objects.filter(proposicao_id__in=proposicoes_camara)
+        votacoes_proposicoes = VotacaoProsicao.objects.filter(
+            proposicao_id__in=proposicoes_camara
+        )
 
         for votacao_prop in votacoes_proposicoes:
             dados_votacoes = get_dados_votacao(votacao_prop.id_votacao)["dados"]
@@ -163,8 +169,9 @@ class CamaraVotacoesFetcher(ApiFetcher):
         },
         """
         found = (
-            VotacaoParlamentar.objects
-            .filter(id_parlamentar=dados_votacao["deputado_"]["id"])
+            VotacaoParlamentar.objects.filter(
+                id_parlamentar=dados_votacao["deputado_"]["id"]
+            )
             .filter(votacao_proposicao=votacao_proposicao)
             .first()
         )

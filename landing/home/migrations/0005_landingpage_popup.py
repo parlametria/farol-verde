@@ -8,13 +8,35 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0004_add_pages_to_menu'),
+        ("home", "0004_add_pages_to_menu"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='landingpage',
-            name='popup',
-            field=wagtail.core.fields.StreamField([('popup', wagtail.core.blocks.StructBlock([('active', wagtail.core.blocks.BooleanBlock(label='Ativo')), ('text', wagtail.core.blocks.TextBlock(label='Texto do popup'))], max_num=1))], null=True),
+            model_name="landingpage",
+            name="popup",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "popup",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "active",
+                                    wagtail.core.blocks.BooleanBlock(label="Ativo"),
+                                ),
+                                (
+                                    "text",
+                                    wagtail.core.blocks.TextBlock(
+                                        label="Texto do popup"
+                                    ),
+                                ),
+                            ],
+                            max_num=1,
+                        ),
+                    )
+                ],
+                null=True,
+            ),
         ),
     ]

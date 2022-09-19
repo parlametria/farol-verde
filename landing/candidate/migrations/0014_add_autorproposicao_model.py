@@ -6,16 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0013_proposicao_calculate_adhesion'),
+        ("candidate", "0013_proposicao_calculate_adhesion"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AutorProposicao',
+            name="AutorProposicao",
             fields=[
-                ('id_parlamentar', models.IntegerField(primary_key=True, serialize=False)),
-                ('nome', models.CharField(blank=True, max_length=120, null=True)),
-                ('proposicoes', models.ManyToManyField(related_name='autores', to='candidate.Proposicao')),
+                (
+                    "id_parlamentar",
+                    models.IntegerField(primary_key=True, serialize=False),
+                ),
+                ("nome", models.CharField(blank=True, max_length=120, null=True)),
+                (
+                    "proposicoes",
+                    models.ManyToManyField(
+                        related_name="autores", to="candidate.Proposicao"
+                    ),
+                ),
             ],
         ),
     ]

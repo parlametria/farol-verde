@@ -7,46 +7,74 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0005_candidatepage_birth_date'),
+        ("candidate", "0005_candidatepage_birth_date"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Proposicao',
+            name="Proposicao",
             fields=[
-                ('id_camara', models.IntegerField(primary_key=True, serialize=False)),
-                ('sigla_tipo', models.CharField(max_length=6)),
-                ('numero', models.IntegerField()),
-                ('ano', models.IntegerField()),
-                ('ementa', models.TextField(blank=True, null=True)),
+                ("id_camara", models.IntegerField(primary_key=True, serialize=False)),
+                ("sigla_tipo", models.CharField(max_length=6)),
+                ("numero", models.IntegerField()),
+                ("ano", models.IntegerField()),
+                ("ementa", models.TextField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='VotacaoProsicao',
+            name="VotacaoProsicao",
             fields=[
-                ('id_camara', models.CharField(max_length=30, primary_key=True, serialize=False)),
-                ('data', models.DateField()),
-                ('data_hora_registro', models.CharField(max_length=30)),
-                ('proposicao', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='votacoes', to='candidate.proposicao')),
+                (
+                    "id_camara",
+                    models.CharField(max_length=30, primary_key=True, serialize=False),
+                ),
+                ("data", models.DateField()),
+                ("data_hora_registro", models.CharField(max_length=30)),
+                (
+                    "proposicao",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="votacoes",
+                        to="candidate.proposicao",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='VotacaoParlamentar',
+            name="VotacaoParlamentar",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tipo_voto', models.CharField(max_length=20)),
-                ('data', models.DateField()),
-                ('data_registro_voto', models.CharField(max_length=30)),
-                ('id_deputado', models.IntegerField()),
-                ('votacao_proposicao', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='votacoes_parlamentares', to='candidate.votacaoprosicao')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("tipo_voto", models.CharField(max_length=20)),
+                ("data", models.DateField()),
+                ("data_registro_voto", models.CharField(max_length=30)),
+                ("id_deputado", models.IntegerField()),
+                (
+                    "votacao_proposicao",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="votacoes_parlamentares",
+                        to="candidate.votacaoprosicao",
+                    ),
+                ),
             ],
         ),
         migrations.AddIndex(
-            model_name='votacaoparlamentar',
-            index=models.Index(fields=['id_deputado', 'votacao_proposicao'], name='votacao_prop_deputado_idx'),
+            model_name="votacaoparlamentar",
+            index=models.Index(
+                fields=["id_deputado", "votacao_proposicao"],
+                name="votacao_prop_deputado_idx",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='votacaoparlamentar',
-            unique_together={('id_deputado', 'votacao_proposicao')},
+            name="votacaoparlamentar",
+            unique_together={("id_deputado", "votacao_proposicao")},
         ),
     ]

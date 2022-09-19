@@ -40,7 +40,7 @@
                 <div class="input-board__selector">
                     <p>Mostrar candidatos do(s) estado(s):</p>
                     <div class="input-board__content">
-                        {% for uf in uf_list %}
+                        {% for uf in page.get_uf_list %}
                             <label class="btn-toggle">
                                 <input type="checkbox" value="{{ uf }}" name="uf[]">
                                 <span>{{ uf }}</span>
@@ -55,7 +55,7 @@
                 <div class="input-board__selector large">
                     <p>Mostrar candidatos do(s) partido(s):</p>
                     <div class="input-board__content">
-                        {% for party in party_list %}
+                        {% for party in page.get_party_list %}
                             <label class="btn-toggle {% if party|length > 4 %} long {% endif %}">
                                 <input type="checkbox" value="{{ party }}" name="party[]">
                                 <span>{{ party }}</span>
@@ -122,7 +122,7 @@
             </div>
         </div>
         <div class="query__subjects">
-            {% for subject in subjects %}
+            {% for subject in page.get_subjects %}
                 <label class="btn-toggle">
                     <input type='checkbox' class="subject__input" value="{{subject}}" id='subject-{{subject}}' name='subject'>
                     <span>{{subject|lower}}</span>

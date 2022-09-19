@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0025_alter_candidatepage_gender'),
+        ("candidate", "0025_alter_candidatepage_gender"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='candidatepage',
-            name='tse_urn_code',
+            model_name="candidatepage",
+            name="tse_urn_code",
             field=models.CharField(blank=True, max_length=6, null=True),
         ),
     ]

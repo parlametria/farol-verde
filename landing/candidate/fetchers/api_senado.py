@@ -5,9 +5,19 @@ SENADO_API = "https://legis.senado.leg.br/dadosabertos"
 FETCH_LIST = [
     ("PLP", 275, 2019, "Linhas de transmissão em terras indígenas"),
     ("PL", 4348, 2019, "Regularização de assentamentos"),
-    ("PEC", "004", 2018, "PEC da água potável"), # 132208
-    ("PL", 5028, 2019, "Pagamento por Serviços Ambientais (derrubada de vetos PL 5028/19)"), # senado:138725
-    ("PL", 5466, 2019, "Dia dos povos indigenas (PL 5466/2019)") # senado:152937 camara:2224662
+    ("PEC", "004", 2018, "PEC da água potável"),  # 132208
+    (
+        "PL",
+        5028,
+        2019,
+        "Pagamento por Serviços Ambientais (derrubada de vetos PL 5028/19)",
+    ),  # senado:138725
+    (
+        "PL",
+        5466,
+        2019,
+        "Dia dos povos indigenas (PL 5466/2019)",
+    )  # senado:152937 camara:2224662
     # ("PL", 2015, 2021, "Financiamento de energia solar residencial"),
     # ("PL", 4476, 2020, "Marco legal do gás"),
     # ("PL", 4162, 2019, "Marco legal do saneamento básico"),
@@ -121,7 +131,9 @@ def get_all_materia_iterator():
         materia_json = fetch_materia(prop[0], prop[1], prop[2])
         codigo = get_codigo_materia(materia_json)
         ementa = get_ementa_materia(materia_json)
-        data =  materia_json["DetalheMateria"]["Materia"]["DadosBasicosMateria"]["DataApresentacao"]
+        data = materia_json["DetalheMateria"]["Materia"]["DadosBasicosMateria"][
+            "DataApresentacao"
+        ]
 
         row = {
             "id_externo": codigo,
@@ -130,7 +142,7 @@ def get_all_materia_iterator():
             "ano": prop[2],
             "ementa": ementa,
             "sobre": prop[3],
-            "data": data
+            "data": data,
         }
 
         yield row, prop

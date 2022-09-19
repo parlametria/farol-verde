@@ -3,6 +3,7 @@ from wagtailstreamforms.fields import BaseField, register
 from wagtail.core import blocks
 from django.utils.translation import gettext_lazy as _
 
+
 @register("category")
 class CategoryField(BaseField):
     field_class = forms.CharField
@@ -27,6 +28,8 @@ class CategoryField(BaseField):
             }
         )
         return options
+
+
 @register("title")
 class CategoryField(BaseField):
     field_class = forms.CharField
@@ -62,7 +65,7 @@ class RadioField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c['value'], c['value']) for c in block_value.get("choices")]
+        choices = [(c["value"], c["value"]) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
@@ -78,6 +81,7 @@ class RadioField(BaseField):
             label=self.label,
         )
 
+
 @register("dropdown")
 class DropdownField(BaseField):
     field_class = forms.ChoiceField
@@ -86,7 +90,7 @@ class DropdownField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c['value'], c["value"]) for c in block_value.get("choices")]
+        choices = [(c["value"], c["value"]) for c in block_value.get("choices")]
         if block_value.get("empty_label"):
             choices.insert(0, ("", block_value.get("empty_label")))
         options.update({"choices": choices})
@@ -105,6 +109,7 @@ class DropdownField(BaseField):
             label=self.label,
         )
 
+
 @register("multiselect")
 class MultiSelectField(BaseField):
     field_class = forms.MultipleChoiceField
@@ -113,7 +118,7 @@ class MultiSelectField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c['value'], c["value"]) for c in block_value.get("choices")]
+        choices = [(c["value"], c["value"]) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
@@ -128,6 +133,7 @@ class MultiSelectField(BaseField):
             icon=self.icon,
             label=self.label,
         )
+
 
 @register("checkboxes")
 class CheckboxesField(BaseField):
@@ -138,7 +144,7 @@ class CheckboxesField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        choices = [(c['value'], c["value"]) for c in block_value.get("choices")]
+        choices = [(c["value"], c["value"]) for c in block_value.get("choices")]
         options.update({"choices": choices})
         return options
 
@@ -153,6 +159,7 @@ class CheckboxesField(BaseField):
             icon=self.icon,
             label=self.label,
         )
+
 
 @register("date")
 class DateField(BaseField):
@@ -174,7 +181,7 @@ class DateField(BaseField):
 
     def get_options(self, block_value):
         options = super().get_options(block_value)
-        help_text = options.get("help_text") + 'date_field'
+        help_text = options.get("help_text") + "date_field"
         is_birthday = block_value.get("birthday")
         if is_birthday:
             options.update({"help_text": str(help_text) + " birthday_field"})

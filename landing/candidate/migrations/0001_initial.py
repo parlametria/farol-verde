@@ -3,38 +3,59 @@
 from django.db import migrations, models
 import django.db.models.deletion
 
+
 class Migration(migrations.Migration):
 
     initial = True
 
     dependencies = [
-        ('wagtailcore', '0066_collection_management_permissions'),
+        ("wagtailcore", "0066_collection_management_permissions"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CandidateIndexPage',
+            name="CandidateIndexPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('description', models.CharField(blank=True, max_length=255)),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.page",
+                    ),
+                ),
+                ("description", models.CharField(blank=True, max_length=255)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.CreateModel(
-            name='CandidatePage',
+            name="CandidatePage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('id_autor', models.IntegerField(unique=True)),
-                ('id_parlametria', models.IntegerField(unique=True)),
-                ('id_serenata', models.IntegerField(unique=True)),
-                ('name', models.CharField(max_length=255)),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.page",
+                    ),
+                ),
+                ("id_autor", models.IntegerField(unique=True)),
+                ("id_parlametria", models.IntegerField(unique=True)),
+                ("id_serenata", models.IntegerField(unique=True)),
+                ("name", models.CharField(max_length=255)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
     ]

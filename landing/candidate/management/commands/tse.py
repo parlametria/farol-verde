@@ -122,7 +122,9 @@ class TseProcessor:
     def _check_publish_candidate(self, candidate: CandidatePage) -> CandidatePage:
         change_live_status = True
 
-        if candidate.id_autor is None and self._check_candidate_filled_the_poll(candidate):
+        if candidate.id_autor is None and self._check_candidate_filled_the_poll(
+            candidate
+        ):
             # Candidatos que preencheram o formulário devem ser
             # publicados manualmente via painel admin
             change_live_status = False
@@ -131,7 +133,6 @@ class TseProcessor:
             candidate.live = True
 
         return candidate
-
 
     def _tse_csv_iterator(self):
         for row in csv_row_iterator("candidatos_tse_2022"):

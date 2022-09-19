@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidate', '0012_set_opinions_blankable'),
+        ("candidate", "0012_set_opinions_blankable"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='proposicao',
-            name='calculate_adhesion',
+            model_name="proposicao",
+            name="calculate_adhesion",
             field=models.BooleanField(default=True),
         ),
     ]

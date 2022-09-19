@@ -128,103 +128,144 @@ def votacoes_perfil_parlamentar_view(request: HttpRequest, slug: str):
 
     return JsonResponse(candidate_votes)
 
-def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword: str = '', page: str = 0):
+
+def social_media_view(
+    request: HttpRequest, slug: str, social_app: str, keyword: str = "", page: str = 0
+):
     candidate = CandidatePage.objects.filter(slug=slug).first()
     url = os.environ.get("ELASTIC_URL")
     login = os.environ.get("ELASTIC_USER")
     password = os.environ.get("ELASTIC_PASSWORD")
     query = {
-        "from": int(page)*SOCIAL_PAGE_SIZE,
+        "from": int(page) * SOCIAL_PAGE_SIZE,
         "size": SOCIAL_PAGE_SIZE,
         "query": {
-            "bool":{
+            "bool": {
                 "must": [
                     {
-                        "wildcard": { 
-                            "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                        "wildcard": {
+                            "social-data.tipo": {
+                                "value": f"{candidate.campaign_name}*",
+                                "case_insensitive": True,
+                            },
                         }
                     },
                     {
                         "wildcard": {
-                            "social-data.rede": { "value": f"{social_app}*", "case_insensitive": True },
+                            "social-data.rede": {
+                                "value": f"{social_app}*",
+                                "case_insensitive": True,
+                            },
                         }
-                    }
+                    },
                 ]
             }
         },
-        "sort": { 
-            "social-data.data criado" : {
-                "order" : "desc"
-            }
-        },
-        "fields": [ "_source.social-data.*" ]
+        "sort": {"social-data.data criado": {"order": "desc"}},
+        "fields": ["_source.social-data.*"],
     }
     if len(keyword) > 1:
         keyword = unquote(keyword)
-        value = {"wildcard": { "social-data.texto": { "value": f"*{keyword}*", "case_insensitive": True },}}
+        value = {
+            "wildcard": {
+                "social-data.texto": {
+                    "value": f"*{keyword}*",
+                    "case_insensitive": True,
+                },
+            }
+        }
         query["query"]["bool"]["must"].append(value)
-    response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
+    response = requests.get(
+        url,
+        auth=HTTPBasicAuth(login, password),
+        headers={"Content-Type": "application/json"},
+        data=json.dumps(query),
+    )
     # if(response.json().hits)
     # if(JsonResponse(response.json()).)
     if len(list(response.json()["hits"]["hits"])) == 0:
         query = {
-            "from": int(page)*SOCIAL_PAGE_SIZE,
+            "from": int(page) * SOCIAL_PAGE_SIZE,
             "size": SOCIAL_PAGE_SIZE,
             "query": {
-                "bool":{
+                "bool": {
                     "must": [
                         {
-                            "wildcard": { 
-                                "social-data.tipo": { "value": f"{candidate.title}*", "case_insensitive": True },
+                            "wildcard": {
+                                "social-data.tipo": {
+                                    "value": f"{candidate.title}*",
+                                    "case_insensitive": True,
+                                },
                             }
                         },
                         {
                             "wildcard": {
-                                "social-data.rede": { "value": f"{social_app}*", "case_insensitive": True },
+                                "social-data.rede": {
+                                    "value": f"{social_app}*",
+                                    "case_insensitive": True,
+                                },
                             }
-                        }
+                        },
                     ]
                 }
             },
-            "sort": { 
-                "social-data.data criado" : {
-                    "order" : "desc"
-                }
-            },
-            "fields": [ "_source.social-data.*" ]
+            "sort": {"social-data.data criado": {"order": "desc"}},
+            "fields": ["_source.social-data.*"],
         }
         if len(keyword) > 1:
             keyword = unquote(keyword)
-            value = {"wildcard": { "social-data.texto": { "value": f"*{keyword}*", "case_insensitive": True },}}
+            value = {
+                "wildcard": {
+                    "social-data.texto": {
+                        "value": f"*{keyword}*",
+                        "case_insensitive": True,
+                    },
+                }
+            }
             query["query"]["bool"]["must"].append(value)
-        response = requests.get(url, auth=HTTPBasicAuth(login, password), headers={'Content-Type': 'application/json'}, data=json.dumps(query))
+        response = requests.get(
+            url,
+            auth=HTTPBasicAuth(login, password),
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(query),
+        )
     # response.json()["hits"].append(len(response.json()["hits"]))
     return JsonResponse(response.json())
 
-def keywords_sections_view(request: HttpRequest, slug: str, search: str=''):
+
+def keywords_sections_view(request: HttpRequest, slug: str, search: str = ""):
     keywords_list = list(keywords)
     sections = []
     if len(search) > 0:
         keywords_list = [keyword for keyword in keywords_list if search in keyword]
     for i in range(0, len(keywords_list), 36):
-        sections.append(keywords_list[i:i+36])
+        sections.append(keywords_list[i : i + 36])
     sections = [f"{section[0][0]} - {section[-1][0]}".upper() for section in sections]
     response = {"sections": sections, "total": len(keywords_list) - 1}
     return JsonResponse(response)
 
-def keywords_view(request: HttpRequest, slug:str, page:int, search=''):
+
+def keywords_view(request: HttpRequest, slug: str, page: int, search=""):
     page = 36 * page
     keywords_list = list(keywords)
     if len(search) > 0:
         keywords_list = [keyword for keyword in keywords_list if search in keyword]
-    keywords_list = keywords_list[page:page+36]
+    keywords_list = keywords_list[page : page + 36]
     return JsonResponse(keywords_list, safe=False)
 
-def propositions_view(request: HttpRequest, slug: str, search: str=''):
+
+def propositions_view(request: HttpRequest, slug: str, search: str = ""):
     candidate = CandidatePage.objects.filter(slug=slug).first()
-    propositionsAutor = AutorProposicao.objects.filter(id_parlamentar=candidate.id_autor).first()
+    propositionsAutor = AutorProposicao.objects.filter(
+        id_parlamentar=candidate.id_autor
+    ).first()
     propositions = propositionsAutor.proposicoes.values()
-    propositions = propositions.order_by('-data')
+    propositions = propositions.order_by("-data")
     if len(search) > 0:
-        propositions = propositions.filter(ementa__icontains=search) | propositions.filter(sigla_tipo__icontains=search) | propositions.filter(numero__icontains=search) | propositions.filter(data__icontains=search)
+        propositions = (
+            propositions.filter(ementa__icontains=search)
+            | propositions.filter(sigla_tipo__icontains=search)
+            | propositions.filter(numero__icontains=search)
+            | propositions.filter(data__icontains=search)
+        )
     return JsonResponse(list(propositions), safe=False)
