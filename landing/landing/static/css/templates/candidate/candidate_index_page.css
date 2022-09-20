@@ -144,7 +144,7 @@ input::placeholder {color: var(--dark-blue);}
     display: block;
 }
 
-#uf .clear {
+:is(#uf, #party) .clear {
     background: none;
     color: black;
     font-weight: 700;

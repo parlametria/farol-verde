@@ -4,12 +4,14 @@ const subjectsInputs = document.querySelectorAll('form .subject__input');
 const nameInput = document.getElementById('query__input');
 const subjects = document.querySelector('.query__subjects');
 const pagination = document.querySelector('#page');
-const partyBoard = document.querySelector('#party .input-board__selector')
-const partyButton = document.querySelector('#party button');
 
 const ufBoard = document.querySelector('#uf .input-board__selector');
 const ufButton = document.querySelector('#uf .input-board__btn');
 const ufClearBtn = document.querySelector("#uf .clear");
+
+const partyBoard = document.querySelector('#party .input-board__selector')
+const partyButton = document.querySelector('#party button');
+const partyClearBtn = document.querySelector("#party .clear");
 
 const countriesModal = document.querySelector('.modal');
 const showModal = document.querySelector('#show-modal');
@@ -61,6 +63,26 @@ function toggleSubjectDescription() {
 function toggleUfBoard() {
     ufBoard.classList.toggle('open');
 }
+
+function clearPartyBoard() {
+    partyBoard.querySelectorAll('input')
+        .forEach(input => input.checked = false);
+}
+
+partyBoard.querySelectorAll('label').forEach(label => {
+    label.addEventListener('click', () => {
+        let input = label.querySelector('input');
+        if(!input.checked) {
+            partyClearBtn.classList.add('hide');
+            return;
+        }
+        clearPartyBoard();
+        input.checked = true;
+        partyClearBtn.classList.remove('hide');
+    })
+})
+
+partyClearBtn.addEventListener('click', clearPartyBoard);
 
 function togglePartyBoard() {
     partyBoard.classList.toggle('open');
