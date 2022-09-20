@@ -1,7 +1,11 @@
-SERVER_CONTAINER=farol_verde_server
+SERVER_CONTAINER=farolwagtail
+TEST_CONTAINER=faroltests
 
 attach:
 	docker exec -it $(SERVER_CONTAINER) bash
+
+test-attach:
+	docker exec -it $(TEST_CONTAINER) bash
 
 up:
 	docker-compose up
@@ -11,6 +15,9 @@ stop:
 
 rm:
 	docker-compose rm
+
+test:
+	docker exec $(TEST_CONTAINER) /bin/bash -c "cd /tests && cypress run"
 
 createsu:
 	docker exec -it $(SERVER_CONTAINER) poetry run python manage.py createsuperuser
