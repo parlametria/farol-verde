@@ -14,6 +14,28 @@
 
     <div class="heading fade-up">
         {{page.heading|richtext}}
+        <h3><a class="know-more__link" onclick="openKnowMore()">Saiba mais</a> sobre o Farol</h3>
+    </div>
+
+    <div class="know-more popup">
+        <div class="popup__content fade-down">
+            <div class="popup__header">
+                <div class="popup__title">
+                    {{ popup.value.title }}
+                </div>
+            </div>
+            <div class="popup__body">
+                <h3>Saiba mais sobre o Farol</h3>
+                <p>O Painel Farol Verde é uma ferramenta para o exercício da cidadania, construída e apoiada por dezenas de organizações e redes da sociedade civil brasileira, com o propósito de fortalecer a nossa Democracia ao oferecer ao eleitorado nacional informações e dados sistematizados e atualizados sobre a “adesão” e o “potencial” comprometimento de candidaturas à Câmara Federal e ao Senado com relação às pautas de Mudanças Climáticas, Sustentabilidade Ambiental e Direitos Socioambientais nessas eleições de 2022.  </p>
+                <p>Para você, candidata e candidato ao Legislativo Federal, é uma plataforma para divulgar informações e posicionamentos de campanhas comprometidos com os temas Clima, Sustentabilidade e Direitos Socioambientais. A adesão de sua candidatura ao Painel é voluntária e gratuita e a publicação é republicana e suprapartidária.  </p>
+                <p>Para você, eleitora e eleitor brasileiro, é um mapa prático e ágil que facilita sua pesquisa de informações e posicionamentos de candidaturas ao Congresso Nacional nas Eleições de 2022, ampliando suas opções para um voto mais consciente e consequente com a Mudança Climática, com o Meio Ambiente, com a Biodiversidade e com os Direitos Socioambientais.  </p>
+                <p>Façam bom uso do Farol Verde e divulguem-no em suas redes para que mais cidadãos possam escolher candidaturas Sustentáveis e Democráticas ao Congresso Nacional.  </p>
+                <p><a href="https://farolverde.org.br/documents/2/Relatorio_Lancamento_FAROL_VERDE_-_eleicoes_2022_Final_esBxfHc.pdf" target="_blank">Clique AQUI</a> e leia o RELATÓRIO SOBRE OS DADOS CONTIDOS NO FAROL VERDE.</p>
+            </div>
+            <div class="popup__footer">
+                <div class="popup__close">Fechar</div>
+            </div>
+        </div>
     </div>
 
     {% for popup in page.popup %}
@@ -43,6 +65,7 @@
             </div>
         </div>
     {% endif %}
+
 
     <section>
         <div class="home__ctas fade-up">

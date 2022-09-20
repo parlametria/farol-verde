@@ -121,6 +121,15 @@
   justify-content: center;
 }
 
+.know-more .popup__body {display: block;}
+
+.know-more__link {
+  color: var(--blue);
+  text-decoration: underline;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .carousel__dot {
   width: .875rem;
   height: .875rem;
