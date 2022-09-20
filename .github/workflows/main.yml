@@ -1,0 +1,30 @@
+name: Farol Verde Tests
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  Cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository content
+        uses: actions/checkout@v2
+      - name: Run Project containers
+        run: docker-compose up -d
+      - name: Run Migrate
+        run: docker exec farol_verde_server /bin/bash -c "python manage.py migrate"
+      - name: Run Cypress
+        run: docker exec farol_verde_tests /bin/bash -c "cd /tests && cypress run"
+
+  Black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository content
+        uses: actions/checkout@v2 
+      - name: Run Project containers
+        run: docker-compose up -d
+      - name: Run Black Check
+        run: docker exec farolwagtail /bin/bash -c "black --check ."

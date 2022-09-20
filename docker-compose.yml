@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
 
-  farol_verde_server:
+  server:
     environment:
       - PYTHONUNBUFFERED=1
     env_file:
@@ -15,7 +15,7 @@ services:
       - ./landing:/landing
       - farol_verde:/tmp/farol_verde_db
       - media:/landing/media
-    container_name: farol_verde_server
+    container_name: farolwagtail
     depends_on:
       - farol_verde_db
     entrypoint: ["/bin/bash", "run.sh"]
@@ -37,6 +37,16 @@ services:
     command: -p 5656
     ports:
       - "5656:5656"
+
+  tests:
+    image: cypress/included:10.7.0
+    container_name: faroltests
+    working_dir: /tests
+    volumes:
+      - ./tests:/tests
+    depends_on:
+      - server
+    entrypoint: ["tail", "-f", "/dev/null"]
 
 volumes:
   farol_verde:
