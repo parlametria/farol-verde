@@ -5,6 +5,7 @@ from typing import Generator
 from django.core.management.base import BaseCommand
 from django.core.management.base import OutputWrapper
 from django.core.management.color import Style
+from django.db.models.query import QuerySet
 from django.db import connection
 
 from candidate.models import CandidatePage, Proposicao, VotacaoProsicao, VotacaoParlamentar
@@ -53,7 +54,7 @@ class AdhesionCSV:
 
         writer.writerow(["id", "candidato", "partigo", "estado", "indice"])
 
-        candidates = (
+        candidates: QuerySet[CandidatePage] = (
             CandidatePage.objects.filter(live=True).exclude(id_autor=None).all()
         )
         for candidate in candidates:
@@ -71,6 +72,9 @@ class AdhesionCSV:
 
             if calculated > 0:
                 adhesion_mean = total / calculated
+
+            candidate.adhesion_mean = adhesion_mean
+            candidate.save()
 
             writer.writerow(
                 [
