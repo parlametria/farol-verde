@@ -13,7 +13,7 @@ from wagtail.core.fields import StreamField
 from wagtailstreamforms.models import FormSubmission
 
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
-from django.db.models import CharField, ImageField, EmailField, URLField, DateField, BooleanField
+from django.db.models import CharField, ImageField, EmailField, URLField, DateField, BooleanField, FloatField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -79,6 +79,7 @@ class CandidatePage(MetadataPageMixin, Page):
     )
     tse_image_code = CharField(null=True, blank=True, max_length=60)
     tse_urn_code = CharField(null=True, blank=True, max_length=6)
+    adhesion_mean = FloatField(default=0.0)
 
     global make_block
 
@@ -223,7 +224,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
     ]
 
     def search_results(self, request):
-        queryset = CandidatePage.objects.order_by('title')
+        queryset = CandidatePage.objects.order_by('-adhesion_mean')
 
         charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
         charges = []
@@ -235,7 +236,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         params_functions = {
             'uf[]': lambda queryset, values: queryset.filter(election_state__in=values),
             'party[]': lambda queryset, values: queryset.filter(party__in=values),
-            'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset,
+            'sortby': lambda queryset, value: queryset.order_by('-title') if value == 'descending' else queryset.order_by('title'),
             'id_autor': lambda queryset, value: queryset.filter(id_autor__isnull=value),
         }
 
@@ -273,6 +274,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
 
         search_results = self.search_results(request)
         search_results = search_results.filter(live=True) # do not display draft pages
+
         subject = request.GET.get('subject', None)
 
         candidates_opinions = [''] * len(search_results)
