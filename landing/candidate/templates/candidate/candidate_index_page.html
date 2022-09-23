@@ -68,7 +68,7 @@
             <input type='text' placeholder='Busca pelo nome' name='name' id='query__input'>
             <div class="query__sortby">
                 <label class="btn-toggle">
-                    <input type="radio" name="sortby" value="ascending" id="sortby_desc" checked>
+                    <input type="radio" name="sortby" value="ascending" id="sortby_desc">
                     <span><i class="fas fa-sort-alpha-down fa-lg"></i></span>
                 </label>
                 <label class="btn-toggle">
@@ -80,7 +80,7 @@
         <div class="query__heading">Mostrar candidatos:</div>
         <div class="query__show">
             <div class="query__section">
-                Reeleição: 
+                Reeleição:
                 <label for='reelection'>
                     <input type='checkbox' id='reelection' name='reelection' checked>
                     Sim
@@ -139,6 +139,6 @@
 {% endblock %}
 {% block extra_js %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://malsup.github.io/jquery.form.js"></script> 
+    <script src="https://malsup.github.io/jquery.form.js"></script>
     <script src="{% static 'js/candidate/candidate_index_page.js' %}"></script>
 {% endblock extra_js %}
