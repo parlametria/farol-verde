@@ -13,7 +13,7 @@ from wagtail.core.fields import StreamField
 from wagtailstreamforms.models import FormSubmission
 
 from wagtail.core.blocks import StructBlock, ChoiceBlock, URLBlock
-from django.db.models import CharField, ImageField, EmailField, URLField, DateField, BooleanField
+from django.db.models import CharField, ImageField, EmailField, URLField, DateField, BooleanField, FloatField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -79,6 +79,7 @@ class CandidatePage(MetadataPageMixin, Page):
     )
     tse_image_code = CharField(null=True, blank=True, max_length=60)
     tse_urn_code = CharField(null=True, blank=True, max_length=6)
+    adhesion_mean = FloatField(default=0.0)
 
     global make_block
 
