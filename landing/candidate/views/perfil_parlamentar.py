@@ -133,6 +133,7 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
     url = os.environ.get("ELASTIC_URL")
     login = os.environ.get("ELASTIC_USER")
     password = os.environ.get("ELASTIC_PASSWORD")
+    
     query = {
         "from": int(page)*SOCIAL_PAGE_SIZE,
         "size": SOCIAL_PAGE_SIZE,
@@ -141,7 +142,7 @@ def social_media_view(request: HttpRequest, slug: str, social_app: str, keyword:
                 "must": [
                     {
                         "wildcard": { 
-                            "social-data.tipo": { "value": f"{candidate.campaign_name}*", "case_insensitive": True },
+                            "social-data.tipo": { "value": f"{candidate.campaign_name} (*", "case_insensitive": True },
                         }
                     },
                     {
