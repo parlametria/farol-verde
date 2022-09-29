@@ -82,7 +82,7 @@ class BlogIndexPage(MetadataPageMixin, Page):
         tags = [tag["tags__name"] for tag in tags]
 
         context = super().get_context(request)
-        context["filtered_posts"] = list(filtered_post)[start_count : start_count + 10] # TODO: remover isso e usar paginação
+        context["filtered_posts"] = list(filtered_post)[start_count : start_count + 1000] # TODO: remover isso e usar paginação
         context["have_new_post"] = start_count > 0
         context["all_posts"] = children_objects
         context["tags"] = tags
