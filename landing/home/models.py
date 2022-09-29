@@ -34,6 +34,9 @@ class LandingPage(MetadataPageMixin, Page):
     @property
     def blog_posts(self):
         return BlogPost.objects.live().public().order_by("-date")[:4]
+    
+    def surveysLive(self):
+        return SurveysPage.objects.get(title="Enquete").live
 
     def get_context(self, request):
         context = super(LandingPage, self).get_context(request)
