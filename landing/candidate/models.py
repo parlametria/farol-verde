@@ -226,6 +226,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
     def search_results(self, request):
         queryset = CandidatePage.objects.order_by('-adhesion_mean')
 
+        
         charges_dict = {'senators': 'Senador(a)', 'deputies': 'Deputado(a) Federal'}
         charges = []
         gender_dict = {'men': 'M', 'women': 'F', 'others': 'N'}
@@ -247,6 +248,7 @@ class CandidateIndexPage(MetadataPageMixin, Page):
             return search in target
 
         request_items = dict(request.GET)
+
         for param, value in list(request_items.items()):
             if param in charges_dict.keys():
                 charges.append(charges_dict[param])
@@ -266,10 +268,19 @@ class CandidateIndexPage(MetadataPageMixin, Page):
         if len(reelections) == 1:
             queryset = params_functions['id_autor'](queryset, reelections[0])
 
+        if len(charges) != 1:
+            charges = [charges_dict['senators']]
+            charges.append(charges_dict['deputies'])
+
+        if len(genders) != 1:
+            genders = [gender_dict['men']]
+            genders.append(gender_dict['women'])
+
         return queryset.filter(charge__in=charges, gender__in=genders)
 
 
     def get_context(self, request):
+        print(123)
         context = super(CandidateIndexPage, self).get_context(request)
 
         search_results = self.search_results(request)
