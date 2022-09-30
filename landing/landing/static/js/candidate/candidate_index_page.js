@@ -18,6 +18,19 @@ const showModal = document.querySelector('#show-modal');
 const modalInput = showModal.querySelector('input');
 const states = document.querySelectorAll('#svg-map .estado');
 
+const reelection = document.querySelector('#reelection')
+const no_reelection = document.querySelector('#no_reelection')
+
+const queryString = window.location.search;
+
+if(queryString=="?reelection=on"){
+    reelection.checked=true
+}
+
+if(queryString=="?no_reelection=on"){
+    no_reelection.checked=true
+}
+
 let params = {};
 let pages = [];
 
